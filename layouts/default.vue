@@ -4,6 +4,6 @@
 
 <style lang="postcss">
 html {
-  @apply text-notion-text bg-notion-bg dark:text-notion-text-dark dark:bg-notion-bg-dark;
+  @apply text-notion-text bg-notion-bg dark:text-notion-text-dark dark:bg-notion-bg-dark font-serif;
 }
 </style>
