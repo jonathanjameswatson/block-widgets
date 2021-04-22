@@ -23,12 +23,7 @@ export default {
     }
   },
   async mounted() {
-    const { weekday, meal, menu } = await this.$axios.$get(
-      this.dev
-        ? '/buttery/menu/'
-        : 'https://????????????????????????????/menu/',
-      { headers: { 'Access-Control-Allow-Origin': '*' } }
-    )
+    const { weekday, meal, menu } = await this.$axios.$get('/buttery/menu/')
     this.weekday = [
       'Sunday',
       'Monday',

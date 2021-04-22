@@ -44,7 +44,6 @@ export default {
   axios: {
     baseUrl: '/',
     proxy: true,
-    credentials: false,
   },
 
   proxy: {
