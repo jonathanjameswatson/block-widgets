@@ -23,7 +23,11 @@ export default {
     }
   },
   async mounted() {
-    const { weekday, meal, menu } = await this.$axios.$get('/buttery/menu/')
+    const { weekday, meal, menu } = await this.$axios.$get(
+      process.static
+        ? 'https://????????????????????????????/menu/'
+        : '/buttery/menu/'
+    )
     this.weekday = [
       'Sunday',
       'Monday',
