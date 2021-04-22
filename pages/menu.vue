@@ -7,7 +7,9 @@
         :key="i"
         class="text-sm leading-notion-outer flex items-center h-notion"
       >
-        <p class="leading-notion-inner">
+        <p
+          class="leading-notion-inner border-b border-opacity-10 dark:border-opacity-10 border-notion-text dark:border-notion-text-dark"
+        >
           {{ menuItem }}
         </p>
       </div>
