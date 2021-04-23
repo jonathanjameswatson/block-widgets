@@ -5,12 +5,29 @@
       <div
         v-for="(menuItem, i) in menu"
         :key="i"
-        class="text-sm leading-notion-outer flex items-center h-notion"
+        class="text-sm leading-notion-outer min-h-notion flex items-center"
       >
-        <p
-          class="leading-notion-inner border-b border-opacity-10 dark:border-opacity-10 border-notion-text dark:border-notion-text-dark"
+        <div
+          class="flex flex-none items-center"
+          style="height: 22px; width: 22px"
         >
-          {{ menuItem }}
+          <div
+            style="
+              height: 15.4px;
+              width: 15.4px;
+              font-size: 15.4px;
+              line-height: 1.1;
+              margin-left: 0px;
+              color: white;
+              margin-right: 4px;
+            "
+            v-html="menuItem.emoji"
+          ></div>
+        </div>
+        <p
+          class="block leading-notion-inner border-b border-opacity-10 dark:border-opacity-10 border-notion-text dark:border-notion-text-dark my-notion-padding"
+        >
+          {{ menuItem.menuItem }}
         </p>
       </div>
     </div>
@@ -18,6 +35,11 @@
 </template>
 
 <script>
+import twemoji from 'twemoji'
+import emojiDict from '~/foodemojis.js'
+
+const keywords = Object.keys(emojiDict)
+
 export default {
   data() {
     return {
@@ -38,7 +60,19 @@ export default {
       'Saturday',
     ][weekday]
     this.meal = meal
-    this.menu = menu
+    this.menu = menu.map((menuItem) => {
+      return {
+        menuItem,
+        emoji: twemoji.parse(this.getEmoji(menuItem)),
+      }
+    })
+  },
+  methods: {
+    getEmoji(string) {
+      const lowerString = string.toLowerCase()
+      const keyword = keywords.find((x) => lowerString.includes(x)) || '❓'
+      return emojiDict[keyword]
+    },
   },
 }
 </script>

@@ -20,6 +20,10 @@ export default {
         'notion-outer': 1.6,
       },
       spacing: {
+        'notion-padding': '5px',
+        notion: '30px',
+      },
+      minHeight: {
         notion: '30px',
       },
     },
