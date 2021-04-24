@@ -70,7 +70,10 @@ export default {
   methods: {
     getEmoji(string) {
       const lowerString = string.toLowerCase()
-      const keyword = keywords.find((x) => lowerString.includes(x)) || '❓'
+      const keyword = keywords.find((x) => lowerString.includes(x))
+      if (keyword === undefined) {
+        return '❓'
+      }
       return emojiDict[keyword]
     },
   },
