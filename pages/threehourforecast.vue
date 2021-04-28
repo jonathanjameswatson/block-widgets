@@ -1,10 +1,8 @@
 <template>
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
-      <div class="text-md mb-3 font-semibold">{{ locationName }} weather</div>
-      <div v-for="(item, i) in forecast" :key="i">
-        <i class="wi text-4xl" :class="[`wi-${item.icon}`]"></i>
-      </div>
+      <div class="text-md mb-3 font-semibold">{{ title }}</div>
+      <weather-item v-for="(item, i) in forecast" :key="i" :item="item" />
     </div>
   </div>
 </template>
@@ -15,35 +13,54 @@ import exampleThreeHours from '~/examplethreehours'
 
 export default {
   data() {
-    const { features } = exampleThreeHours
-    const [feature] = features
-    const { properties } = feature
-    const { location, timeSeries } = properties
-    const { name } = location
-    const [shortenedName] = name.split(',')
-
-    const forecast = timeSeries.slice(0, 3).map((x) => {
-      const { significantWeatherCode } = x
-      const { icon } = this.getWeather(significantWeatherCode)
-      return {
-        icon,
-      }
-    })
-
     return {
+      rawData: {},
       longitude: 52.2018,
       latitude: 0.1144,
-      locationName: shortenedName,
-      forecast,
     }
   },
-  async mounted() {},
+  computed: {
+    title() {
+      const { location } = this.rawData
+      if (location === undefined) {
+        return ''
+      }
+
+      const { name } = location
+      const [shortenedName] = name.split(',')
+      return `${shortenedName} weather`
+    },
+    forecast() {
+      const { timeSeries } = this.rawData
+      if (timeSeries === undefined) {
+        return []
+      }
+
+      return timeSeries.slice(0, 3).map((x) => {
+        const { significantWeatherCode } = x
+        const { icon } = this.getWeather(significantWeatherCode)
+        return {
+          icon,
+        }
+      })
+    },
+  },
+  mounted() {
+    this.setRawData()
+  },
   methods: {
     getWeather(code) {
       return significantWeatherCodes[code]
+    },
+    setRawData() {
+      const { features } = exampleThreeHours
+      const [feature] = features
+      const { properties: rawData } = feature
+
+      this.rawData = rawData
     },
   },
 }
 </script>
 
-<style scoped src="@/assets/css/weather-icons.min.css" />
+<style src="@/assets/css/weather-icons.min.css" />
