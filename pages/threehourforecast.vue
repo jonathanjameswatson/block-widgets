@@ -28,7 +28,7 @@ export default {
 
       const { name } = location
       const [shortenedName] = name.split(',')
-      return `${shortenedName} weather`
+      return `${shortenedName.toLowerCase()} weather`
     },
     forecast() {
       const { timeSeries } = this.rawData

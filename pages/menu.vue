@@ -58,11 +58,11 @@ export default {
       'Thursday',
       'Friday',
       'Saturday',
-    ][weekday]
-    this.meal = meal
+    ][weekday].toLowerCase()
+    this.meal = meal.toLowerCase()
     this.menu = menu.map((menuItem) => {
       return {
-        menuItem,
+        menuItem: menuItem.toLowerCase(),
         emoji: twemoji.parse(this.getEmoji(menuItem)),
       }
     })
