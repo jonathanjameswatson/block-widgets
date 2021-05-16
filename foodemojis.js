@@ -94,5 +94,7 @@ export default {
   lasagna: '🍝',
   feast: '🥘',
   flatbread: '🥖',
+  garlic: '🧄',
+  vegetarian: '🥕',
   'no meal': '😔',
 }
