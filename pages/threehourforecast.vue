@@ -8,29 +8,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent, ref, computed, onMounted } from '@vue/composition-api'
 
-import significantWeatherCodes from '~/ts/significantWeather'
+import significantWeatherCodes from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
 
-declare interface Data {
-  rawData: definitions["Properties"] | null
-  longitude: number
-  latitude: number
-}
+const getWeatherInformation = (code: number) => significantWeatherCodes[code];
 
-export default Vue.extend({
-  data(): Data {
-    return {
-      rawData: null,
-      longitude: 52.2018 as number,
-      latitude: 0.1144,
-    }
-  },
-  computed: {
-    title(): string {
-      const { location } = this.rawData
+export default defineComponent({
+  setup() {
+    const rawData = ref<definitions["Properties"]>({
+      requestPointDistance: 0,
+      modelRunDate: '?',
+      timeSeries: []
+    })
+    const longitude = ref(52.2018)
+    const latitude = ref(0.1144)
+
+    const title = computed(() => {
+      const { location } = rawData.value;
+
       if (location === undefined) {
         return ''
       }
@@ -38,36 +36,35 @@ export default Vue.extend({
       const { name } = location
       const [shortenedName] = name.split(',')
       return `${shortenedName.toLowerCase()} weather`
-    },
-    forecast() {
-      const { timeSeries } = this.rawData
-      if (timeSeries === undefined) {
-        return []
-      }
+    })
+
+    const forecast = computed(() => {
+      const { timeSeries } = rawData.value
 
       return timeSeries.slice(0, 3).map((x) => {
-        const { significantWeatherCode } = x
-        const { icon } = this.getWeather(significantWeatherCode)
+        const significantWeatherCode = x.significantWeatherCode as number
+        const { icon } = getWeatherInformation(significantWeatherCode)
         return {
           icon,
         }
       })
-    },
-  },
-  mounted() {
-    this.setRawData()
-  },
-  methods: {
-    getWeather(code: number) {
-      return significantWeatherCodes[code]
-    },
-    setRawData() {
+    })
+
+    onMounted(() => {
       const { features } = exampleThreeHours
       const [feature] = features
-      const { properties: rawData } = feature
+      const { properties: newData } = feature
 
-      this.rawData = rawData
-    },
+      rawData.value = newData
+    })
+
+    return {
+      rawData,
+      longitude,
+      latitude,
+      title,
+      forecast,
+    }
   },
 })
 </script>
