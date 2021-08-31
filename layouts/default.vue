@@ -3,7 +3,7 @@
 </template>
 
 <style lang="postcss">
-html {
+body {
   @apply text-notion-text bg-notion-bg dark:text-notion-text-dark dark:bg-notion-bg-dark font-serif;
 }
 </style>

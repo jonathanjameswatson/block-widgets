@@ -31,6 +31,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -42,7 +43,10 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseUrl: '/',
+    baseURL:
+      process.env.NETLIFY === 'true'
+        ? 'https://jjw-widgets.netlify.app:443'
+        : 'http://localhost:8888',
     proxy: true,
   },
 
@@ -61,5 +65,10 @@ export default {
   // Tailwind CSS configuration
   tailwindcss: {
     jit: true,
+  },
+
+  // Color mode configuration
+  colorMode: {
+    classSuffix: '',
   },
 }
