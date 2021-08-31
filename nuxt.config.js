@@ -63,11 +63,6 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  // Tailwind CSS configuration
-  tailwindcss: {
-    jit: true,
-  },
-
   // Color mode configuration
   colorMode: {
     classSuffix: '',
