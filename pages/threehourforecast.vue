@@ -7,20 +7,29 @@
   </div>
 </template>
 
-<script>
-import significantWeatherCodes from '~/significantweather.js'
-import exampleThreeHours from '~/examplethreehours'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
-  data() {
+import significantWeatherCodes from '~/ts/significantWeather'
+import exampleThreeHours from '~/ts/exampleThreeHours'
+import definitions from '~/ts/threeHourSchema'
+
+declare interface Data {
+  rawData: definitions["Properties"] | null
+  longitude: number
+  latitude: number
+}
+
+export default Vue.extend({
+  data(): Data {
     return {
-      rawData: {},
-      longitude: 52.2018,
+      rawData: null,
+      longitude: 52.2018 as number,
       latitude: 0.1144,
     }
   },
   computed: {
-    title() {
+    title(): string {
       const { location } = this.rawData
       if (location === undefined) {
         return ''
@@ -49,7 +58,7 @@ export default {
     this.setRawData()
   },
   methods: {
-    getWeather(code) {
+    getWeather(code: number) {
       return significantWeatherCodes[code]
     },
     setRawData() {
@@ -60,7 +69,7 @@ export default {
       this.rawData = rawData
     },
   },
-}
+})
 </script>
 
 <style src="@/assets/css/weather-icons.min.css" />

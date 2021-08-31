@@ -1,5 +1,10 @@
-export default {
-  null: {
+export interface WeatherInformation {
+  name: string;
+  icon: string;
+}
+
+const codeToWeatherInformation : Record<number | "null", WeatherInformation> = {
+  "null": {
     name: 'Not available',
     icon: 'alien',
   },
@@ -128,3 +133,5 @@ export default {
     icon: 'thunderstorm',
   },
 }
+
+export default codeToWeatherInformation
