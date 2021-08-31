@@ -9874,6 +9874,10 @@ watchpack@^1.7.4:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
 
+"weather-icons@https://github.com/erikflowers/weather-icons.git":
+  version "2.0.12"
+  resolved "https://github.com/erikflowers/weather-icons.git#2eec50d931bdafbe6c927a2c6097a7390bf6b08e"
+
 webpack-bundle-analyzer@^4.4.1:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-4.4.2.tgz#39898cf6200178240910d629705f0f3493f7d666"
