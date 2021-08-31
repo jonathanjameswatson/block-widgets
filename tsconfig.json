@@ -25,6 +25,8 @@
     },
     "types": [
       "@nuxt/types",
+      "@nuxtjs/color-mode",
+      "@nuxtjs/axios",
       "@types/node"
     ]
   },
