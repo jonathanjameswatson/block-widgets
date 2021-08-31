@@ -35,7 +35,7 @@
             my-notion-padding
           "
         >
-          {{ menuItem.menuItem }}
+          {{ menuItem.name }}
         </p>
       </div>
     </div>
@@ -60,11 +60,32 @@ const getEmoji = (string: string) => {
   return wordToFoodEmoji[keyword]
 }
 
+enum Weekday {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
+
+interface ApiResponse {
+  weekday: Weekday
+  meal: 'Lunch' | 'Dinner' | 'Night' | 'Formal'
+  menu: string[]
+}
+
+interface MenuItem {
+  name: string
+  emoji: string
+}
+
 export default defineComponent({
   setup() {
     const weekday = ref('')
     const meal = ref('')
-    const menu = ref([])
+    const menu = ref<MenuItem[]>([])
 
     const { $axios } = useContext()
     onMounted(async () => {
@@ -72,21 +93,13 @@ export default defineComponent({
         weekday: weekdayNumber,
         meal: newMeal,
         menu: rawMenu,
-      } = await $axios.$get('/buttery/menu/')
-      weekday.value = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-      ][weekdayNumber].toLowerCase()
+      } = (await $axios.$get('/buttery/menu/')) as ApiResponse
+      weekday.value = Weekday[weekdayNumber].toLowerCase()
       meal.value = newMeal.toLowerCase()
-      menu.value = rawMenu.map((menuItem: string) => {
+      menu.value = rawMenu.map((menuItemName: string) => {
         return {
-          menuItem: menuItem.toLowerCase(),
-          emoji: twemoji.parse(getEmoji(menuItem)),
+          name: menuItemName.toLowerCase(),
+          emoji: twemoji.parse(getEmoji(menuItemName)),
         }
       })
     })
