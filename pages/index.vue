@@ -3,12 +3,12 @@
     <h1 class="extravagant-title">
       https://jjw-widgets.netlify.app/{{ page }}
     </h1>
-    <button class="extravagant-button" @click="() => (page = 'menu')">
+    <button class="extravagant-button" @click="() => (page = Page.Menu)">
       Buttery menu
     </button>
     <button
       class="extravagant-button"
-      @click="() => (page = 'threehourforecast')"
+      @click="() => (page = Page.ThreeHourForecast)"
     >
       Three hour forecast
     </button>
@@ -37,15 +37,26 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
+<script lang="ts">
+import { defineComponent, ref } from '@vue/composition-api'
+
+enum Page {
+  Menu = 'menu',
+  ThreeHourForecast = 'threehourforecast',
+}
+
+export default defineComponent({
+  setup() {
+    const page = ref(Page.Menu)
+    const resizing = ref(false)
+
     return {
-      page: 'menu',
-      resizing: false,
+      page,
+      resizing,
+      Page,
     }
   },
-}
+})
 </script>
 
 <style scoped lang="postcss">

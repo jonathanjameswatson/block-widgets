@@ -14,20 +14,20 @@ import significantWeatherCodes from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
 
-const getWeatherInformation = (code: number) => significantWeatherCodes[code];
+const getWeatherInformation = (code: number) => significantWeatherCodes[code]
 
 export default defineComponent({
   setup() {
-    const rawData = ref<definitions["Properties"]>({
+    const rawData = ref<definitions['Properties']>({
       requestPointDistance: 0,
       modelRunDate: '?',
-      timeSeries: []
+      timeSeries: [],
     })
     const longitude = ref(52.2018)
     const latitude = ref(0.1144)
 
     const title = computed(() => {
-      const { location } = rawData.value;
+      const { location } = rawData.value
 
       if (location === undefined) {
         return ''

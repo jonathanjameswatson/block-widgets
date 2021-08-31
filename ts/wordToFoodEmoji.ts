@@ -1,4 +1,4 @@
-export default {
+const wordToEmoji: { [Key: string]: string } = {
   soup: '🍲',
   pizza: '🍕',
   doughnut: '🍩',
@@ -98,3 +98,5 @@ export default {
   vegetarian: '🥕',
   'no meal': '😔',
 }
+
+export default wordToEmoji

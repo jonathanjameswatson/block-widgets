@@ -25,7 +25,15 @@
           ></div>
         </div>
         <p
-          class="block leading-notion-inner border-b border-opacity-10 dark:border-opacity-10 border-notion-text dark:border-notion-text-dark my-notion-padding"
+          class="
+            block
+            leading-notion-inner
+            border-b border-opacity-10
+            dark:border-opacity-10
+            border-notion-text
+            dark:border-notion-text-dark
+            my-notion-padding
+          "
         >
           {{ menuItem.menuItem }}
         </p>
@@ -34,48 +42,60 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref, onMounted } from '@vue/composition-api'
+import { useContext } from '@nuxtjs/composition-api'
 import twemoji from 'twemoji'
-import emojiDict from '~/foodemojis.js'
 
-const keywords = Object.keys(emojiDict)
+import wordToFoodEmoji from '~/ts/wordToFoodEmoji'
 
-export default {
-  data() {
+const keywords = Object.keys(wordToFoodEmoji)
+
+const getEmoji = (string: string) => {
+  const lowerString = string.toLowerCase()
+  const keyword = keywords.find((x) => lowerString.includes(x))
+  if (keyword === undefined) {
+    return '❓'
+  }
+  return wordToFoodEmoji[keyword]
+}
+
+export default defineComponent({
+  setup() {
+    const weekday = ref('')
+    const meal = ref('')
+    const menu = ref([])
+
+    const { $axios } = useContext()
+    onMounted(async () => {
+      const {
+        weekday: weekdayNumber,
+        meal: newMeal,
+        menu: rawMenu,
+      } = await $axios.$get('/buttery/menu/')
+      weekday.value = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ][weekdayNumber].toLowerCase()
+      meal.value = newMeal.toLowerCase()
+      menu.value = rawMenu.map((menuItem: string) => {
+        return {
+          menuItem: menuItem.toLowerCase(),
+          emoji: twemoji.parse(getEmoji(menuItem)),
+        }
+      })
+    })
+
     return {
-      weekday: '',
-      meal: '',
-      menu: [],
+      weekday,
+      meal,
+      menu,
     }
   },
-  async mounted() {
-    const { weekday, meal, menu } = await this.$axios.$get('/buttery/menu/')
-    this.weekday = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ][weekday].toLowerCase()
-    this.meal = meal.toLowerCase()
-    this.menu = menu.map((menuItem) => {
-      return {
-        menuItem: menuItem.toLowerCase(),
-        emoji: twemoji.parse(this.getEmoji(menuItem)),
-      }
-    })
-  },
-  methods: {
-    getEmoji(string) {
-      const lowerString = string.toLowerCase()
-      const keyword = keywords.find((x) => lowerString.includes(x))
-      if (keyword === undefined) {
-        return '❓'
-      }
-      return emojiDict[keyword]
-    },
-  },
-}
+})
 </script>
