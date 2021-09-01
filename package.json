@@ -17,9 +17,13 @@
     "@nuxtjs/proxy": "^2.1.0",
     "core-js": "^3.16.4",
     "nuxt": "^2.15.8",
+    "reflect-metadata": "^0.1.10",
     "twemoji": "^13.1.0",
     "vue-draggable-resizable": "^2.3.0",
     "weather-icons": "https://github.com/erikflowers/weather-icons.git"
+  },
+  "dependenciesComments": {
+    "reflect-metadata": "Version 0.1.13 does not work for some reason"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.0",

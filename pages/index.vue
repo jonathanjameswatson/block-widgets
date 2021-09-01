@@ -15,6 +15,10 @@
 
     <br /><br />
 
+    <configurator :configuration="configuration" />
+
+    <br /><br />
+
     <vue-draggable-resizable
       :w="600"
       :h="300"
@@ -40,6 +44,8 @@
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
 
+import Configuration from '~/ts/configuration'
+
 enum Page {
   Menu = 'menu',
   ThreeHourForecast = 'threehourforecast',
@@ -49,11 +55,13 @@ export default defineComponent({
   setup() {
     const page = ref(Page.Menu)
     const resizing = ref(false)
+    const configuration = ref(new Configuration())
 
     return {
       page,
       resizing,
       Page,
+      configuration,
     }
   },
 })
