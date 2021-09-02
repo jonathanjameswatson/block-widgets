@@ -69,4 +69,4 @@ export default defineComponent({
 })
 </script>
 
-<style src="@/node_modules/weather-icons/css/weather-icons.min.css" />
+<style src="@/assets/css/weather.css" />
