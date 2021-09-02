@@ -8,7 +8,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from '@vue/composition-api'
+import {
+  defineComponent,
+  ref,
+  computed,
+  onMounted,
+} from '@nuxtjs/composition-api'
 
 import significantWeatherCodes from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'

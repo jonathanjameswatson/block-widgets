@@ -43,8 +43,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from '@vue/composition-api'
-import { useContext } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  useContext,
+} from '@nuxtjs/composition-api'
 import twemoji from 'twemoji'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji'
