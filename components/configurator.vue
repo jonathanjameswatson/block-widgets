@@ -13,6 +13,7 @@
         <template v-else-if="property.parameter.type === 'string'">
           <blue-input
             :value="mutableConfiguration[property.propertyKey]"
+            :placeholder="property.parameter.placeholder"
             @input="
               (event) => updateValue(property.propertyKey, event.target.value)
             "
@@ -55,6 +56,7 @@ export default defineComponent({
     }
 
     watch(props.configuration, () => {
+      console.log('yee')
       mutableConfiguration.value = props.configuration
     })
 

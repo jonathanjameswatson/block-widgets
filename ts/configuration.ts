@@ -11,6 +11,7 @@ type UnionParameter = {
 
 type StringParameter = {
   type: 'string'
+  placeholder: string
 }
 
 type ParameterType = UnionParameter | StringParameter
@@ -61,9 +62,10 @@ const unionParameter = (options: string[]): UnionParameter => {
   }
 }
 
-const stringParameter = (): StringParameter => {
+const stringParameter = (placeholder: string): StringParameter => {
   return {
     type: 'string',
+    placeholder,
   }
 }
 
@@ -80,6 +82,6 @@ export default class Configuration {
   @parameter('Capitalisation', unionParameter(capitalisations))
   public capitalisation: typeof capitalisations[number] = 'Normal'
 
-  @parameter('Custom CSS', stringParameter())
+  @parameter('Custom CSS', stringParameter('/* p { color: red; } */'))
   public css: string = ''
 }

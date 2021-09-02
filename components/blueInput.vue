@@ -1,8 +1,17 @@
 <template>
   <input
-    class="text-white py-2 px-4 font-bold mb-2 mr-2 focus:outline-none"
+    class="
+      text-white
+      placeholder-gray-200 placeholder-opacity-60
+      py-2
+      px-4
+      font-bold
+      mb-2
+      mr-2
+      focus:outline-none
+    "
     :class="classes"
-    v-bind="attrs"
+    v-bind="$attrs"
     @input="input"
   />
 </template>
