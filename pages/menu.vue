@@ -1,7 +1,9 @@
 <template>
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
-      <div class="text-md mb-3 font-semibold">{{ weekday }} {{ meal }}</div>
+      <div class="text-md mb-3 font-semibold">
+        {{ failed ? 'Buttery bot did not respond.' : `${weekday} ${meal}` }}
+      </div>
       <div
         v-for="(menuItem, i) in menu"
         :key="i"
@@ -90,6 +92,7 @@ export default defineComponent({
     const weekday = ref('')
     const meal = ref('')
     const menu = ref<MenuItem[]>([])
+    const failed = ref(false)
 
     const { $axios } = useContext()
     onMounted(async () => {
@@ -97,7 +100,19 @@ export default defineComponent({
         weekday: weekdayNumber,
         meal: newMeal,
         menu: rawMenu,
-      } = (await $axios.$get('/buttery/menu/')) as ApiResponse
+      } = (await $axios.$get('/buttery/menu/').catch((_err) => {
+        failed.value = true
+        return {
+          weekday: Weekday.Sunday,
+          meal: 'Lunch',
+          menu: [],
+        }
+      })) as ApiResponse
+
+      if (failed.value === true) {
+        return
+      }
+
       weekday.value = Weekday[weekdayNumber].toLowerCase()
       meal.value = newMeal.toLowerCase()
       menu.value = rawMenu.map((menuItemName: string) => {
@@ -112,6 +127,7 @@ export default defineComponent({
       weekday,
       meal,
       menu,
+      failed,
     }
   },
 })
