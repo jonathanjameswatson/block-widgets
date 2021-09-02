@@ -1,25 +1,25 @@
 <template>
   <div>
-    <p v-for="property in properties" :key="property.propertyKey">
-      <span class="text-blue-700 font-bold mr-2">{{ property.name }}:</span>
-      <template v-if="property.parameter.type === 'union'">
-        <blue-select
-          :options="property.parameter.options"
-          :value="mutableConfiguration[property.propertyKey]"
-          @input="(event) => updateValue(property.propertyKey, event)"
-        />
-      </template>
-      <template v-else-if="property.parameter.type === 'string'">
-        <blue-input
-          :value="mutableConfiguration[property.propertyKey]"
-          @input="
-            (event) => updateValue(property.propertyKey, event.target.value)
-          "
-        />
-      </template>
-
-      <br /><br />
-    </p>
+    <div v-for="property in properties" :key="property.propertyKey">
+      <p class="text-blue-700 font-bold mr-2 mb-2">{{ property.name }}</p>
+      <p class="mb-4">
+        <template v-if="property.parameter.type === 'union'">
+          <blue-select
+            :options="property.parameter.options"
+            :value="mutableConfiguration[property.propertyKey]"
+            @input="(event) => updateValue(property.propertyKey, event)"
+          />
+        </template>
+        <template v-else-if="property.parameter.type === 'string'">
+          <blue-input
+            :value="mutableConfiguration[property.propertyKey]"
+            @input="
+              (event) => updateValue(property.propertyKey, event.target.value)
+            "
+          />
+        </template>
+      </p>
+    </div>
   </div>
 </template>
 

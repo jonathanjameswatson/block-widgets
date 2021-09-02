@@ -8,15 +8,15 @@
 
     <div class="flex flex-1">
       <div class="flex-initial pr-16">
-        <span class="text-blue-700 font-bold mr-2">Widget:</span>
-        <blue-select
-          :options="Object.values(Page)"
-          :option-names="['Buttery menu', 'Three hour forecast']"
-          :value="page"
-          @input="(event) => (page = event)"
-        />
-
-        <br /><br />
+        <p class="text-blue-700 font-bold mr-2 mb-2">Widget</p>
+        <p class="mb-4">
+          <blue-select
+            :options="Object.values(Page)"
+            :option-names="['Buttery menu', 'Three hour forecast']"
+            :value="page"
+            @input="(event) => (page = event)"
+          />
+        </p>
 
         <configurator :configuration="configuration" />
       </div>
