@@ -6,23 +6,15 @@
         <blue-select
           :options="property.parameter.options"
           :value="mutableConfiguration[property.propertyKey]"
-          @input="updateValue(property.propertyKey, $event)"
+          @input="(event) => updateValue(property.propertyKey, event)"
         />
       </template>
       <template v-else-if="property.parameter.type === 'string'">
-        <input
-          class="
-            inline-block
-            font-bold
-            bg-blue-500
-            hover:bg-blue-700
-            rounded
-            p-2
-            focus:outline-none focus:shadow-outline
-            z-20
-          "
+        <blue-input
           :value="mutableConfiguration[property.propertyKey]"
-          @input="updateValue(property.propertyKey, $event.target.value)"
+          @input="
+            (event) => updateValue(property.propertyKey, event.target.value)
+          "
         />
       </template>
 
@@ -58,6 +50,7 @@ export default defineComponent({
     })
 
     const updateValue = (propertyKey: string, propertyValue: string) => {
+      console.log(propertyValue)
       // @ts-ignore
       mutableConfiguration.value[propertyKey] = propertyValue
     }

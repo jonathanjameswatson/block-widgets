@@ -3,21 +3,14 @@
     <h1 class="extravagant-title">
       https://jjw-widgets.netlify.app/{{ page }}
     </h1>
-    <button class="extravagant-button" @click="() => (page = Page.Menu)">
-      Buttery menu
-    </button>
-    <button
-      class="extravagant-button"
-      @click="() => (page = Page.ThreeHourForecast)"
-    >
+    <blue-button @click="() => (page = Page.Menu)">Buttery menu</blue-button>
+    <blue-button @click="() => (page = Page.ThreeHourForecast)">
       Three hour forecast
-    </button>
+    </blue-button>
 
     <br /><br />
 
     <configurator :configuration="configuration" />
-
-    <br /><br />
 
     <vue-draggable-resizable
       :w="600"
