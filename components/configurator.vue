@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-for="property in properties" :key="property.propertyKey">
-      <span class="text-blue-800 font-bold mr-2">{{ property.name }}:</span>
+      <span class="text-blue-700 font-bold mr-2">{{ property.name }}:</span>
       <template v-if="property.parameter.type === 'union'">
         <blue-select
           :options="property.parameter.options"
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from '@vue/composition-api'
+import { defineComponent, ref, computed, watch } from '@vue/composition-api'
 
 import Configuration, {
   getEditableProperties,
@@ -41,19 +41,22 @@ export default defineComponent({
   setup(props) {
     const mutableConfiguration = ref(props.configuration)
     const propertyNames = computed(() =>
-      getEditableProperties(mutableConfiguration.value)
+      getEditableProperties(props.configuration)
     )
     const properties = computed(() => {
       return propertyNames.value.map((propertyName) =>
-        getPropertyMetadata(mutableConfiguration.value, propertyName)
+        getPropertyMetadata(props.configuration, propertyName)
       )
     })
 
     const updateValue = (propertyKey: string, propertyValue: string) => {
-      console.log(propertyValue)
       // @ts-ignore
       mutableConfiguration.value[propertyKey] = propertyValue
     }
+
+    watch(props.configuration, () => {
+      mutableConfiguration.value = props.configuration
+    })
 
     return { mutableConfiguration, propertyNames, properties, updateValue }
   },

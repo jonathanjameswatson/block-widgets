@@ -8,7 +8,7 @@
       :active="option === value"
       @click="() => updateValue(option)"
     >
-      {{ option }}
+      {{ optionNames[i] !== undefined ? optionNames[i] : option }}
     </blue-button>
   </div>
 </template>
@@ -25,6 +25,11 @@ export default defineComponent({
     options: {
       type: Array as () => string[],
       required: true,
+    },
+    optionNames: {
+      type: Array as () => string[],
+      required: false,
+      default: () => [],
     },
   },
   setup(_props, { emit }) {

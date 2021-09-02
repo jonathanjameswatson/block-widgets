@@ -1,36 +1,47 @@
 <template>
-  <div class="w-screen h-screen bg-gradient-to-tr from-orange to-red">
-    <h1 class="extravagant-title">
+  <div
+    class="w-full h-screen bg-gradient-to-tr from-orange to-red flex flex-col"
+  >
+    <h1 class="extravagant-title mb-12 flex-initial">
       https://jjw-widgets.netlify.app/{{ page }}
     </h1>
-    <blue-button @click="() => (page = Page.Menu)">Buttery menu</blue-button>
-    <blue-button @click="() => (page = Page.ThreeHourForecast)">
-      Three hour forecast
-    </blue-button>
 
-    <br /><br />
+    <div class="flex flex-1">
+      <div class="flex-initial pr-16">
+        <span class="text-blue-700 font-bold mr-2">Widget:</span>
+        <blue-select
+          :options="Object.values(Page)"
+          :option-names="['Buttery menu', 'Three hour forecast']"
+          :value="page"
+          @input="(event) => (page = event)"
+        />
 
-    <configurator :configuration="configuration" />
+        <br /><br />
 
-    <vue-draggable-resizable
-      :w="600"
-      :h="300"
-      :handles="['br']"
-      :active="true"
-      :prevent-deactivation="true"
-      :parent="true"
-      :draggable="false"
-      @resizing="() => (resizing = true)"
-      @resizestop="() => (resizing = false)"
-    >
-      <div v-if="resizing" class="w-full h-full z-10 absolute"></div>
-      <iframe
-        :src="page"
-        frameborder="0"
-        sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
-        class="w-full h-full"
-      ></iframe>
-    </vue-draggable-resizable>
+        <configurator :configuration="configuration" />
+      </div>
+      <div class="flex-auto">
+        <vue-draggable-resizable
+          :w="600"
+          :h="300"
+          :handles="['br']"
+          :active="true"
+          :prevent-deactivation="true"
+          :parent="true"
+          :draggable="false"
+          @resizing="() => (resizing = true)"
+          @resizestop="() => (resizing = false)"
+        >
+          <div v-if="resizing" class="w-full h-full z-10 absolute"></div>
+          <iframe
+            :src="page"
+            frameborder="0"
+            sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
+            class="w-full h-full"
+          ></iframe>
+        </vue-draggable-resizable>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,7 +73,7 @@ export default defineComponent({
 
 <style scoped lang="postcss">
 .extravagant-title {
-  @apply transform-gpu text-6xl font-extrabold p-6 pt-0 pl-2 bg-clip-text text-transparent bg-gradient-to-br from-blue-400 to-blue-600;
+  @apply transform-gpu text-4xl font-extrabold p-6 pt-0 bg-clip-text text-transparent bg-gradient-to-br from-blue-400 to-blue-600;
 
   animation-name: spin;
   animation-timing-function: linear;

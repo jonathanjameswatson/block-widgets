@@ -49,9 +49,9 @@ export const parameter = (name: string, parameter: ParameterType) => {
   }
 }
 
-const themes = ['Light', 'Dark', 'System']
+const themes = ['System', 'Light', 'Dark']
 const styles = ['Default', 'Serif', 'Mono']
-const textSizes = ['Small', 'Normal']
+const textSizes = ['Normal', 'Small']
 const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 
 const unionParameter = (options: string[]): UnionParameter => {
@@ -72,7 +72,7 @@ export default class Configuration {
   public theme: typeof themes[number] = 'System'
 
   @parameter('Style', unionParameter(styles))
-  public style: typeof styles[number] = 'Mono'
+  public style: typeof styles[number] = 'Default'
 
   @parameter('Text size', unionParameter(textSizes))
   public textSize: typeof textSizes[number] = 'Normal'
