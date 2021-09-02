@@ -7,17 +7,19 @@ const parameterSymbol = Symbol('parameter')
 type UnionParameter = {
   type: 'union'
   options: string[]
+  predicate: (input: string) => boolean
 }
 
 type StringParameter = {
   type: 'string'
   placeholder: string
+  predicate: (input: string) => boolean
 }
 
 type ParameterType = UnionParameter | StringParameter
 
-export const getEditableProperties = (target: Configuration) =>
-  Reflect.getMetadata(editablePropertySymbol, target) as string[]
+export const getEditableProperties = <T>(target: Configuration) =>
+  Reflect.getMetadata(editablePropertySymbol, target) as (keyof T)[]
 
 export const getPropertyMetadata = (
   target: Configuration,
@@ -37,8 +39,9 @@ export const getPropertyMetadata = (
 }
 
 export const parameter = (name: string, parameter: ParameterType) => {
-  return (target: any, propertyKey: string) => {
-    const properties: string[] = getEditableProperties(target) || []
+  return (target: Configuration, propertyKey: string) => {
+    const properties: string[] =
+      getEditableProperties<Configuration>(target) || []
 
     if (!properties.includes(propertyKey)) {
       properties.push(propertyKey)
@@ -59,6 +62,7 @@ const unionParameter = (options: string[]): UnionParameter => {
   return {
     type: 'union',
     options,
+    predicate: (input: string) => options.includes(input),
   }
 }
 
@@ -66,10 +70,15 @@ const stringParameter = (placeholder: string): StringParameter => {
   return {
     type: 'string',
     placeholder,
+    predicate: (string: string) => string !== '',
   }
 }
 
 export default class Configuration {
+  constructor(query: Object = {}) {
+    this.fromParameterObject(query)
+  }
+
   @parameter('Theme', unionParameter(themes))
   public theme: typeof themes[number] = 'System'
 
@@ -84,4 +93,27 @@ export default class Configuration {
 
   @parameter('Custom CSS', stringParameter('/* p { color: red; } */'))
   public css: string = ''
+
+  toParameterObject() {
+    // @ts-ignore
+    const original = new this.constructor()
+    return Object.fromEntries(
+      getEditableProperties<this>(this)
+        .filter((key) => this[key] !== original[key])
+        .map((key) => [key, this[key]])
+    )
+  }
+
+  fromParameterObject(query: Object) {
+    const editableProperties = getEditableProperties<this>(this) as string[]
+    Object.entries(query).forEach(([key, value]) => {
+      if (
+        editableProperties.includes(key) &&
+        getPropertyMetadata(this, key).parameter.predicate(value)
+      ) {
+        // @ts-ignore
+        this[key] = value
+      }
+    })
+  }
 }

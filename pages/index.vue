@@ -10,7 +10,7 @@
     "
   >
     <h1 class="extravagant-title mb-12 flex-initial">
-      https://jjw-widgets.netlify.app/{{ page }}
+      {{ `https://jjw-widgets.netlify.app/${queryPage}` }}
     </h1>
 
     <div class="flex flex-1">
@@ -41,7 +41,7 @@
         >
           <div v-if="resizing" class="w-full h-full z-10 absolute"></div>
           <iframe
-            :src="page"
+            :src="queryPage"
             frameborder="0"
             sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
             class="w-full h-full"
@@ -53,9 +53,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
 
 import Configuration from '~/ts/configuration'
+import stringifyQuery from '~/ts/stringifyQuery'
 
 enum Page {
   Menu = 'menu',
@@ -68,11 +69,21 @@ export default defineComponent({
     const resizing = ref(false)
     const configuration = ref(new Configuration())
 
+    const queryPage = computed(() => {
+      const parameterObject = configuration.value.toParameterObject() as {
+        [key: string]: string
+      }
+      const queryString = stringifyQuery(parameterObject)
+      return `${page.value}${queryString}`
+    })
+
     return {
       page,
+      queryPage,
       resizing,
       Page,
       configuration,
+      stringifyQuery,
     }
   },
 })
