@@ -1,6 +1,13 @@
 <template>
   <div
-    class="w-full h-screen bg-gradient-to-tr from-orange to-red flex flex-col"
+    class="
+      w-full
+      min-h-screen
+      bg-gradient-to-tr
+      from-orange
+      to-red
+      flex flex-col
+    "
   >
     <h1 class="extravagant-title mb-12 flex-initial">
       https://jjw-widgets.netlify.app/{{ page }}
