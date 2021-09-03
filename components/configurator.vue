@@ -25,7 +25,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  toRefs,
+} from '@nuxtjs/composition-api'
 
 import Configuration, {
   getEditableProperties,
@@ -40,13 +46,20 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const mutableConfiguration = ref(props.configuration)
+    const { configuration } = toRefs(props)
+
+    const mutableConfiguration = ref(configuration)
+
+    watch(configuration, () => {
+      mutableConfiguration.value = configuration.value
+    })
+
     const propertyNames = computed(() =>
-      getEditableProperties(props.configuration)
+      getEditableProperties(configuration.value)
     )
     const properties = computed(() => {
       return propertyNames.value.map((propertyName) =>
-        getPropertyMetadata(props.configuration, propertyName)
+        getPropertyMetadata(configuration.value, propertyName)
       )
     })
 
@@ -54,11 +67,6 @@ export default defineComponent({
       // @ts-ignore
       mutableConfiguration.value[propertyKey] = propertyValue
     }
-
-    watch(props.configuration, () => {
-      console.log('yee')
-      mutableConfiguration.value = props.configuration
-    })
 
     return { mutableConfiguration, propertyNames, properties, updateValue }
   },

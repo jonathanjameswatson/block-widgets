@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@nuxtjs/composition-api'
+import { defineComponent, computed, toRefs } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   inheritAttrs: false,
@@ -40,8 +40,10 @@ export default defineComponent({
   },
   emits: ['input'],
   setup(props, { emit }) {
+    const { disabled, active, rounding } = toRefs(props)
+
     const input = (event: InputEvent) => {
-      if (!props.disabled) {
+      if (!disabled.value) {
         emit('input', event)
       }
     }
@@ -49,20 +51,20 @@ export default defineComponent({
     const classes = computed(() => {
       const classes: string[] = []
 
-      if (props.active) {
+      if (active.value) {
         classes.push('bg-blue-700')
       } else {
         classes.push('bg-blue-500')
       }
 
-      if (props.disabled) {
+      if (disabled.value) {
         classes.push('opacity-50', 'cursor-not-allowed')
-      } else if (props.active) {
+      } else if (active.value) {
         classes.push('hover:bg-blue-900')
       } else {
         classes.push('hover:bg-blue-700')
       }
-      classes.push(props.rounding)
+      classes.push(rounding.value)
       return classes
     })
 
