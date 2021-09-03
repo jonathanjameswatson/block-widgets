@@ -130,10 +130,6 @@ export const booleanParameter = (): BooleanParameter => {
 }
 
 export default class Configuration {
-  constructor(query: Object = {}) {
-    this.fromParameterObject(query)
-  }
-
   @parameter('Theme', unionParameter(themes))
   public theme: typeof themes[number] = 'System'
 
@@ -149,17 +145,17 @@ export default class Configuration {
   @parameter('Custom CSS', stringParameter('/* p { color: red; } */'))
   public css: string = ''
 
-  toParameterObject() {
+  public toParameterObject() {
     // @ts-ignore
     const original = new this.constructor()
     return Object.fromEntries(
       getEditableProperties<this>(this)
         .filter((key) => this[key] !== original[key])
         .map((key) => [key, this[key]])
-    )
+    ) as { [key: string]: any }
   }
 
-  fromParameterObject(query: Object) {
+  public setFromParameterObject(query: Object) {
     const editableProperties = getEditableProperties<this>(this) as string[]
     Object.entries(query).forEach(([key, value]) => {
       if (
