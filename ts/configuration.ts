@@ -16,17 +16,63 @@ type StringParameter = {
   predicate: (input: string) => boolean
 }
 
-type ParameterType = UnionParameter | StringParameter
+type BooleanParameter = {
+  type: 'boolean'
+  predicate: (input: boolean) => boolean
+}
 
-export const getEditableProperties = <T>(target: Configuration) =>
-  Reflect.getMetadata(editablePropertySymbol, target) as (keyof T)[]
+type ParameterType = UnionParameter | StringParameter | BooleanParameter
 
-export const getPropertyMetadata = (
-  target: Configuration,
+const collectMetadataArray = <T extends Configuration>(
+  metadataKey: any,
+  target: T
+) => {
+  const array = []
+  let currentPrototype = Object.getPrototypeOf(target)
+  while (currentPrototype !== Object.prototype) {
+    const currentArray =
+      Reflect.getOwnMetadata(metadataKey, currentPrototype) || []
+    array.push(...currentArray)
+    currentPrototype = Object.getPrototypeOf(currentPrototype)
+  }
+  return array
+}
+
+const collectMetadataPropertyValue = <T extends Configuration>(
+  metadataKey: any,
+  target: T,
+  propertyKey: string | symbol
+) => {
+  let currentPrototype = Object.getPrototypeOf(target)
+  while (currentPrototype !== Object.prototype) {
+    const current = Reflect.getOwnMetadata(
+      metadataKey,
+      currentPrototype,
+      propertyKey
+    )
+    if (current !== undefined) {
+      return current
+    }
+    currentPrototype = Object.getPrototypeOf(currentPrototype)
+  }
+  return undefined
+}
+
+export const getEditableProperties = <T extends Configuration>(
+  target: T
+): (keyof T)[] =>
+  collectMetadataArray(editablePropertySymbol, target) as (keyof T)[]
+
+export const getPropertyMetadata = <T extends Configuration>(
+  target: T,
   propertyKey: string
 ) => {
-  const name = Reflect.getMetadata(nameSymbol, target, propertyKey) as string
-  const parameter = Reflect.getMetadata(
+  const name = collectMetadataPropertyValue(
+    nameSymbol,
+    target,
+    propertyKey
+  ) as string
+  const parameter = collectMetadataPropertyValue(
     parameterSymbol,
     target,
     propertyKey
@@ -39,9 +85,11 @@ export const getPropertyMetadata = (
 }
 
 export const parameter = (name: string, parameter: ParameterType) => {
-  return (target: Configuration, propertyKey: string) => {
-    const properties: string[] =
-      getEditableProperties<Configuration>(target) || []
+  return <T extends Configuration>(target: T, propertyKey: string) => {
+    const properties = (Reflect.getOwnMetadata(
+      editablePropertySymbol,
+      target
+    ) || []) as string[]
 
     if (!properties.includes(propertyKey)) {
       properties.push(propertyKey)
@@ -58,7 +106,7 @@ const styles = ['Default', 'Serif', 'Mono']
 const textSizes = ['Normal', 'Small']
 const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 
-const unionParameter = (options: string[]): UnionParameter => {
+export const unionParameter = (options: string[]): UnionParameter => {
   return {
     type: 'union',
     options,
@@ -66,11 +114,18 @@ const unionParameter = (options: string[]): UnionParameter => {
   }
 }
 
-const stringParameter = (placeholder: string): StringParameter => {
+export const stringParameter = (placeholder: string): StringParameter => {
   return {
     type: 'string',
     placeholder,
-    predicate: (string: string) => string !== '',
+    predicate: (input: string) => input !== '',
+  }
+}
+
+export const booleanParameter = (): BooleanParameter => {
+  return {
+    type: 'boolean',
+    predicate: (_input: boolean) => true,
   }
 }
 
@@ -109,7 +164,7 @@ export default class Configuration {
     Object.entries(query).forEach(([key, value]) => {
       if (
         editableProperties.includes(key) &&
-        getPropertyMetadata(this, key).parameter.predicate(value)
+        getPropertyMetadata(this, key).parameter.predicate(value as never)
       ) {
         // @ts-ignore
         this[key] = value

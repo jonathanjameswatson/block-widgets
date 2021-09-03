@@ -19,11 +19,11 @@ import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   props: {
     value: {
-      type: String,
+      type: undefined as any,
       required: true,
     },
     options: {
-      type: Array as () => string[],
+      type: Array as () => object[],
       required: true,
     },
     optionNames: {
@@ -33,7 +33,7 @@ export default defineComponent({
     },
   },
   setup(_props, { emit }) {
-    const updateValue = (value: string) => {
+    const updateValue = (value: object) => {
       emit('input', value)
     }
 

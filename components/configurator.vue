@@ -19,6 +19,14 @@
             "
           />
         </template>
+        <template v-else-if="property.parameter.type === 'boolean'">
+          <blue-select
+            :options="[false, true]"
+            :option-names="['Off', 'On']"
+            :value="mutableConfiguration[property.propertyKey]"
+            @input="(event) => updateValue(property.propertyKey, event)"
+          />
+        </template>
       </p>
     </div>
   </div>
@@ -41,7 +49,7 @@ import Configuration, {
 export default defineComponent({
   props: {
     configuration: {
-      type: Object as () => Configuration,
+      type: Object as <T extends Configuration>() => T,
       required: true,
     },
   },
@@ -57,11 +65,12 @@ export default defineComponent({
     const propertyNames = computed(() =>
       getEditableProperties(configuration.value)
     )
-    const properties = computed(() => {
-      return propertyNames.value.map((propertyName) =>
-        getPropertyMetadata(configuration.value, propertyName)
+
+    const properties = computed(() =>
+      propertyNames.value.map((propertyName) =>
+        getPropertyMetadata(mutableConfiguration.value, propertyName)
       )
-    })
+    )
 
     const updateValue = (propertyKey: string, propertyValue: string) => {
       // @ts-ignore
