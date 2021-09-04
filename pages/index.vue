@@ -63,7 +63,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  inject,
+  Ref,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 import ThreeHourForecast from './threehourforecast.vue'
 import Menu from '~/components/menuWidget.vue'
@@ -100,7 +108,7 @@ export default defineComponent({
   setup() {
     const widget = ref(widgets[0])
     const resizing = ref(false)
-    const configuration = ref(new Configuration())
+    const configuration = inject('configuration') as Ref<Configuration>
     const preview = ref<Preview>('Normal')
 
     const queryPage = computed(() => {
@@ -110,6 +118,24 @@ export default defineComponent({
       const queryString = stringifyQuery(parameterObject)
       return `${widget.value.url}${queryString}`
     })
+
+    const StartConfiguration = widgets[0].configuration
+    configuration.value = new StartConfiguration()
+
+    watch(widget, () => {
+      const WidgetConfiguration = widget.value.configuration
+      configuration.value = new WidgetConfiguration()
+    })
+
+    const { $colorMode } = useContext()
+    watch(
+      () => configuration.value.theme,
+      (newTheme: string, oldTheme: string) => {
+        if (newTheme !== oldTheme) {
+          $colorMode.preference = newTheme.toLowerCase()
+        }
+      }
+    )
 
     return {
       widget,
