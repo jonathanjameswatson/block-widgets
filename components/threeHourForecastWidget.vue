@@ -1,7 +1,9 @@
 <template>
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
-      <div class="text-md mb-3 font-semibold">{{ title }}</div>
+      <div class="text-md mb-3 font-semibold">
+        <widget-text :text="title" />
+      </div>
       <weather-item v-for="(item, i) in forecast" :key="i" :item="item" />
     </div>
   </div>
@@ -18,10 +20,12 @@ import {
 import significantWeatherCodes from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
+import widgetText from './widgetText.vue'
 
 const getWeatherInformation = (code: number) => significantWeatherCodes[code]
 
 export default defineComponent({
+  components: { widgetText },
   setup() {
     const rawData = ref<definitions['Properties']>({
       requestPointDistance: 0,
@@ -40,7 +44,7 @@ export default defineComponent({
 
       const { name } = location
       const [shortenedName] = name.split(',')
-      return `${shortenedName.toLowerCase()} weather`
+      return `${shortenedName} weather`
     })
 
     const forecast = computed(() => {

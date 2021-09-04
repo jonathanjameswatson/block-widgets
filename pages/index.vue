@@ -76,7 +76,7 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
-import ThreeHourForecast from './threehourforecast.vue'
+import ThreeHourForecast from '~/components/threeHourForecastWidget.vue'
 import Menu from '~/components/menuWidget.vue'
 
 import Configuration from '~/ts/configuration'

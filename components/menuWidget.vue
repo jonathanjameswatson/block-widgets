@@ -2,7 +2,9 @@
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
       <div class="text-md mb-3 font-semibold">
-        {{ failed ? 'Buttery bot did not respond.' : `${weekday} ${meal}` }}
+        <widget-text
+          :text="failed ? 'Could not access buttery bot' : `${weekday} ${meal}`"
+        />
       </div>
       <div
         v-for="(menuItem, i) in menu"
@@ -38,7 +40,7 @@
             my-notion-padding
           "
         >
-          {{ menuItem.name }}
+          <widget-text :text="menuItem.name" />
         </p>
       </div>
     </div>
