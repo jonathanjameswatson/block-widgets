@@ -16,15 +16,17 @@
 
     <div class="flex flex-1">
       <div class="flex-initial pr-16">
-        <p class="text-blue-700 font-bold mr-2 mb-2">Widget</p>
-        <p class="mb-4">
+        <blue-control label="Widget">
           <blue-select
-            :options="Object.values(Page)"
-            :option-names="['Buttery menu', 'Three hour forecast']"
-            :value="page"
-            @input="(event) => (page = event)"
+            v-model="widget"
+            :options="widgets"
+            :option-names="widgets.map((widget) => widget.name)"
           />
-        </p>
+        </blue-control>
+
+        <blue-control label="Preview">
+          <blue-select v-model="preview" :options="['Normal', 'iFrame']" />
+        </blue-control>
 
         <configurator :configuration="configuration" />
       </div>
@@ -40,8 +42,15 @@
           @resizing="() => (resizing = true)"
           @resizestop="() => (resizing = false)"
         >
-          <div v-if="resizing" class="w-full h-full z-10 absolute"></div>
+          <div v-if="resizing" class="w-full h-full z-10 absolute" />
+          <div
+            v-if="preview === 'Normal'"
+            class="widget-preview min-w-full min-h-full overflow-auto"
+          >
+            <component :is="widget.component" />
+          </div>
           <iframe
+            v-else
             :src="queryPage"
             frameborder="0"
             sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
@@ -56,35 +65,60 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
 
+import ThreeHourForecast from './threehourforecast.vue'
+import Menu from '~/components/menuWidget.vue'
+
 import Configuration from '~/ts/configuration'
+import MenuConfiguration from '~/ts/menuConfiguration'
 import stringifyQuery from '~/ts/stringifyQuery'
 
-enum Page {
-  Menu = 'menu',
-  ThreeHourForecast = 'threehourforecast',
+interface Widget {
+  name: string
+  url: string
+  component: Vue.Component
+  configuration: typeof Configuration
 }
+
+const widgets: Widget[] = [
+  {
+    name: 'Buttery menu',
+    url: 'menu',
+    component: Menu,
+    configuration: MenuConfiguration,
+  },
+  {
+    name: 'Three hour forecast',
+    url: 'threehourforecast',
+    component: ThreeHourForecast,
+    configuration: Configuration,
+  },
+]
+
+type Preview = 'Normal' | 'iFrame'
 
 export default defineComponent({
   setup() {
-    const page = ref(Page.Menu)
+    const widget = ref(widgets[0])
     const resizing = ref(false)
     const configuration = ref(new Configuration())
+    const preview = ref<Preview>('Normal')
 
     const queryPage = computed(() => {
       const parameterObject = configuration.value.toParameterObject() as {
         [key: string]: string
       }
       const queryString = stringifyQuery(parameterObject)
-      return `${page.value}${queryString}`
+      return `${widget.value.url}${queryString}`
     })
 
     return {
-      page,
+      widget,
+      widgets,
       queryPage,
       resizing,
-      Page,
       configuration,
       stringifyQuery,
+      preview,
     }
   },
 })

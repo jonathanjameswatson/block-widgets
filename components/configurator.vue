@@ -1,34 +1,35 @@
 <template>
   <div>
-    <div v-for="property in properties" :key="property.propertyKey">
-      <p class="text-blue-700 font-bold mr-2 mb-2">{{ property.name }}</p>
-      <p class="mb-4">
-        <template v-if="property.parameter.type === 'union'">
-          <blue-select
-            :options="property.parameter.options"
-            :value="mutableConfiguration[property.propertyKey]"
-            @input="(event) => updateValue(property.propertyKey, event)"
-          />
-        </template>
-        <template v-else-if="property.parameter.type === 'string'">
-          <blue-input
-            :value="mutableConfiguration[property.propertyKey]"
-            :placeholder="property.parameter.placeholder"
-            @input="
-              (event) => updateValue(property.propertyKey, event.target.value)
-            "
-          />
-        </template>
-        <template v-else-if="property.parameter.type === 'boolean'">
-          <blue-select
-            :options="[false, true]"
-            :option-names="['Off', 'On']"
-            :value="mutableConfiguration[property.propertyKey]"
-            @input="(event) => updateValue(property.propertyKey, event)"
-          />
-        </template>
-      </p>
-    </div>
+    <blue-control
+      v-for="property in properties"
+      :key="property.propertyKey"
+      :label="property.name"
+    >
+      <template v-if="property.parameter.type === 'union'">
+        <blue-select
+          :options="property.parameter.options"
+          :value="mutableConfiguration[property.propertyKey]"
+          @input="(event) => updateValue(property.propertyKey, event)"
+        />
+      </template>
+      <template v-else-if="property.parameter.type === 'string'">
+        <blue-input
+          :value="mutableConfiguration[property.propertyKey]"
+          :placeholder="property.parameter.placeholder"
+          @input="
+            (event) => updateValue(property.propertyKey, event.target.value)
+          "
+        />
+      </template>
+      <template v-else-if="property.parameter.type === 'boolean'">
+        <blue-select
+          :options="[false, true]"
+          :option-names="['Off', 'On']"
+          :value="mutableConfiguration[property.propertyKey]"
+          @input="(event) => updateValue(property.propertyKey, event)"
+        />
+      </template>
+    </blue-control>
   </div>
 </template>
 
