@@ -18,6 +18,9 @@ type StringParameter = {
 
 type BooleanParameter = {
   type: 'boolean'
+  falseLabel: string
+  trueLabel: string
+  defaultBoolean: boolean
   predicate: (input: boolean) => boolean
 }
 
@@ -103,7 +106,6 @@ export const parameter = (name: string, parameter: ParameterType) => {
 
 const themes = ['System', 'Light', 'Dark']
 const styles = ['Default', 'Serif', 'Mono']
-const textSizes = ['Normal', 'Small']
 const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 
 export const unionParameter = (options: string[]): UnionParameter => {
@@ -122,9 +124,16 @@ export const stringParameter = (placeholder: string): StringParameter => {
   }
 }
 
-export const booleanParameter = (): BooleanParameter => {
+export const booleanParameter = (
+  falseLabel: string,
+  trueLabel: string,
+  defaultBoolean: boolean
+): BooleanParameter => {
   return {
     type: 'boolean',
+    falseLabel,
+    trueLabel,
+    defaultBoolean,
     predicate: (_input: boolean) => true,
   }
 }
@@ -136,8 +145,8 @@ export default class Configuration {
   @parameter('Style', unionParameter(styles))
   public style: typeof styles[number] = 'Default'
 
-  @parameter('Text size', unionParameter(textSizes))
-  public textSize: typeof textSizes[number] = 'Normal'
+  @parameter('Text size', booleanParameter('Normal', 'Small', false))
+  public textSize: boolean = false
 
   @parameter('Capitalisation', unionParameter(capitalisations))
   public capitalisation: typeof capitalisations[number] = 'Normal'

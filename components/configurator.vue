@@ -23,8 +23,15 @@
       </template>
       <template v-else-if="property.parameter.type === 'boolean'">
         <blue-select
-          :options="[false, true]"
-          :option-names="['Off', 'On']"
+          :options="[
+            property.parameter.defaultBoolean,
+            !property.parameter.defaultBoolean,
+          ]"
+          :option-names="
+            (property.parameter.defaultBoolean ? (x) => x : (x) => x.reverse())(
+              [property.parameter.trueLabel, property.parameter.falseLabel]
+            )
+          "
           :value="mutableConfiguration[property.propertyKey]"
           @input="(event) => updateValue(property.propertyKey, event)"
         />
