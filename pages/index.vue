@@ -3,6 +3,7 @@
     class="
       w-full
       min-h-screen
+      p-4
       bg-gradient-to-tr
       from-orange
       to-red
