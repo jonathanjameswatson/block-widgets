@@ -10,11 +10,11 @@
       flex flex-col
     "
   >
-    <h1 class="extravagant-title mb-12 flex-initial">
+    <h1 class="extravagant-title mb-12 w-full break-all flex-initial">
       {{ `https://jjw-widgets.netlify.app/${queryPage}` }}
     </h1>
 
-    <div class="flex flex-1">
+    <div class="lg:flex flex-1">
       <div class="flex-initial pr-16">
         <blue-control label="Widget">
           <blue-select
@@ -30,10 +30,13 @@
 
         <configurator :configuration="configuration" />
       </div>
-      <div class="flex-auto">
+
+      <hr class="mt-6 mb-8 border-blue-700 border-t-4 lg:hidden" />
+
+      <div class="flex-auto" style="min-height: 500px">
         <vue-draggable-resizable
-          :w="600"
-          :h="300"
+          :w="343"
+          :h="500"
           :handles="['br']"
           :active="true"
           :prevent-deactivation="true"
