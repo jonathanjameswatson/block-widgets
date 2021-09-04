@@ -35,7 +35,7 @@ const collectMetadataArray = <T extends Configuration>(
   while (currentPrototype !== Object.prototype) {
     const currentArray =
       Reflect.getOwnMetadata(metadataKey, currentPrototype) || []
-    array.push(...currentArray)
+    array.unshift(...currentArray)
     currentPrototype = Object.getPrototypeOf(currentPrototype)
   }
   return array
