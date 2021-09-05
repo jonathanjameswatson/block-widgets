@@ -20,12 +20,10 @@ import {
 import significantWeatherCodes from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
-import widgetText from './widgetText.vue'
 
 const getWeatherInformation = (code: number) => significantWeatherCodes[code]
 
 export default defineComponent({
-  components: { widgetText },
   setup() {
     const rawData = ref<definitions['Properties']>({
       requestPointDistance: 0,
