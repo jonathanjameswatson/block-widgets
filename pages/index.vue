@@ -11,7 +11,9 @@
     "
   >
     <h1 class="extravagant-title mb-12 w-full break-all flex-initial">
-      {{ `https://jjw-widgets.netlify.app/${queryPage}` }}
+      <a :href="queryPage" target="_blank" rel="noreferrer noopener">
+        {{ `https://jjw-widgets.netlify.app/${queryPage}` }}
+      </a>
     </h1>
 
     <div class="lg:flex flex-1">
