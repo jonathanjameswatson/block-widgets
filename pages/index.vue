@@ -48,7 +48,7 @@
           <div v-if="resizing" class="w-full h-full z-10 absolute" />
           <div
             v-if="preview === 'Normal'"
-            class="widget-preview min-w-full min-h-full overflow-auto"
+            class="widget-preview w-full h-full overflow-auto"
           >
             <component :is="widget.component" />
           </div>
