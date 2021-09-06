@@ -5,18 +5,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  inject,
-  computed,
-  toRefs,
-  Ref,
-} from '@nuxtjs/composition-api'
-
-import Configuration from '~/ts/configuration'
+import { getConfiguration } from '~/ts/configurationControllers'
 
 const wordRegexp = /[^ ]+/g
-
 const capitalisers: { [option: string]: (x: string) => string } = {
   Normal: (x: string) => x,
   'Lower case': (x: string) => x.toLowerCase(),
@@ -27,23 +18,17 @@ const capitalisers: { [option: string]: (x: string) => string } = {
       (y: string) => y.charAt(0).toUpperCase() + y.slice(1)
     ),
 }
+</script>
 
-export default defineComponent({
-  props: {
-    text: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { text } = toRefs(props)
-    const configuration = inject('configuration') as Ref<Configuration>
-    const capitalisedText = computed(() =>
-      capitalisers[configuration.value.capitalisation](text.value)
-    )
-    return {
-      capitalisedText,
-    }
-  },
-})
+<script setup lang="ts">
+const configuration = getConfiguration()
+
+const props =
+  defineProps<{
+    text: string
+  }>()
+
+const capitalisedText = computed(() =>
+  capitalisers[configuration.value.capitalisation](props.text)
+)
 </script>

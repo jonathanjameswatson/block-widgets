@@ -31,6 +31,12 @@ export default {
     'nuxt-vite',
     '@nuxt/typescript-build',
     '@nuxtjs/composition-api/module',
+    [
+      'unplugin-auto-import/nuxt',
+      {
+        imports: ['@nuxtjs/composition-api'],
+      },
+    ],
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss

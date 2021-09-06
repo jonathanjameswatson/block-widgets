@@ -2,9 +2,7 @@
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
       <div class="text-md mb-3 font-semibold">
-        <widget-text
-          :text="failed ? 'Could not access buttery bot' : `${weekday} ${meal}`"
-        />
+        <widget-text :text="title" />
       </div>
       <div
         v-for="(menuItem, i) in menu"
@@ -48,21 +46,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  useContext,
-  inject,
-  Ref,
-} from '@nuxtjs/composition-api'
 import twemoji from 'twemoji'
-import MenuConfiguration from '~/ts/menuConfiguration'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji'
+import { getConfiguration } from '~/ts/configurationControllers'
+import MenuConfiguration from '~/ts/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
-
 const getEmoji = (string: string) => {
   const lowerString = string.toLowerCase()
   const keyword = keywords.find((x) => lowerString.includes(x))
@@ -92,52 +82,48 @@ interface MenuItem {
   name: string
   emoji: string
 }
+</script>
 
-export default defineComponent({
-  setup() {
-    const configuration = inject('configuration') as Ref<MenuConfiguration>
+<script setup lang="ts">
+const configuration = getConfiguration<MenuConfiguration>()
 
-    const weekday = ref('')
-    const meal = ref('')
-    const menu = ref<MenuItem[]>([])
-    const failed = ref(false)
+const weekday = ref('')
+const meal = ref('')
+const menu = ref<MenuItem[]>([])
+const failed = ref(false)
 
-    const { $axios } = useContext()
-    onMounted(async () => {
-      const {
-        weekday: weekdayNumber,
-        meal: newMeal,
-        menu: rawMenu,
-      } = (await $axios.$get('/buttery/menu/').catch((_err) => {
-        failed.value = true
-        return {
-          weekday: Weekday.Sunday,
-          meal: 'Lunch',
-          menu: [],
-        }
-      })) as ApiResponse
-
-      if (failed.value === true) {
-        return
-      }
-
-      weekday.value = Weekday[weekdayNumber].toLowerCase()
-      meal.value = newMeal.toLowerCase()
-      menu.value = rawMenu.map((menuItemName: string) => {
-        return {
-          name: menuItemName.toLowerCase(),
-          emoji: twemoji.parse(getEmoji(menuItemName)),
-        }
-      })
-    })
-
+const { $axios } = useContext()
+onMounted(async () => {
+  const {
+    weekday: weekdayNumber,
+    meal: newMeal,
+    menu: rawMenu,
+  } = (await $axios.$get('/buttery/menu/').catch((_err) => {
+    failed.value = true
     return {
-      configuration,
-      weekday,
-      meal,
-      menu,
-      failed,
+      weekday: Weekday.Sunday,
+      meal: 'Lunch',
+      menu: [],
     }
-  },
+  })) as ApiResponse
+
+  if (failed.value === true) {
+    return
+  }
+
+  weekday.value = Weekday[weekdayNumber].toLowerCase()
+  meal.value = newMeal.toLowerCase()
+  menu.value = rawMenu.map((menuItemName: string) => {
+    return {
+      name: menuItemName.toLowerCase(),
+      emoji: twemoji.parse(getEmoji(menuItemName)),
+    }
+  })
 })
+
+const title = computed(() =>
+  failed.value
+    ? 'Could not access buttery bot'
+    : `${weekday.value} ${meal.value}`
+)
 </script>

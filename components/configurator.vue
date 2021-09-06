@@ -1,91 +1,89 @@
 <template>
   <div>
     <blue-control
-      v-for="property in properties"
-      :key="property.propertyKey"
-      :label="property.name"
+      v-for="(parameter, i) in parameters"
+      :key="parameter.propertyKey"
+      :label="parameter.name"
     >
-      <template v-if="property.parameter.type === 'union'">
+      <template v-if="parameter.type === 'union'">
         <blue-select
-          :options="property.parameter.options"
-          :value="mutableConfiguration[property.propertyKey]"
-          @input="(event) => updateValue(property.propertyKey, event)"
+          :options="getOptions(parameter)"
+          :value="configuration[parameter.propertyKey]"
+          @input="parameterHandlers[i]"
         />
       </template>
-      <template v-else-if="property.parameter.type === 'string'">
+      <template v-else-if="parameter.type === 'string'">
         <blue-input
-          :value="mutableConfiguration[property.propertyKey]"
-          :placeholder="property.parameter.placeholder"
-          @input="
-            (event) => updateValue(property.propertyKey, event.target.value)
-          "
+          :value="configuration[parameter.propertyKey]"
+          :placeholder="parameter.placeholder"
+          @input="parameterHandlers[i]"
         />
       </template>
-      <template v-else-if="property.parameter.type === 'boolean'">
+      <template v-else-if="parameter.type === 'boolean'">
         <blue-select
-          :options="[
-            property.parameter.defaultBoolean,
-            !property.parameter.defaultBoolean,
-          ]"
-          :option-names="
-            (property.parameter.defaultBoolean ? (x) => x : (x) => x.reverse())(
-              [property.parameter.trueLabel, property.parameter.falseLabel]
-            )
-          "
-          :value="mutableConfiguration[property.propertyKey]"
-          @input="(event) => updateValue(property.propertyKey, event)"
+          :options="[parameter.defaultBoolean, !parameter.defaultBoolean]"
+          :option-names="getBooleanOptionNames(parameter)"
+          :value="configuration[parameter.propertyKey]"
+          @input="parameterHandlers[i]"
         />
       </template>
     </blue-control>
   </div>
 </template>
 
-<script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  toRefs,
-} from '@nuxtjs/composition-api'
-
+<script setup lang="ts">
 import Configuration, {
-  getEditableProperties,
-  getPropertyMetadata,
+  getParameterNames,
+  getParameter,
+  UnionParameter,
+  BooleanParameter,
 } from '~/ts/configuration'
+import { getConfiguration } from '~/ts/configurationControllers'
 
-export default defineComponent({
-  props: {
-    configuration: {
-      type: Object as <T extends Configuration>() => T,
-      required: true,
-    },
+const configuration = getConfiguration()
+
+const parameterNames = computed(() => getParameterNames(configuration.value))
+
+const parameters = computed(() =>
+  parameterNames.value.map((parameterName) =>
+    getParameter(configuration.value, parameterName)
+  )
+)
+
+const updateValue = (propertyKey: keyof Configuration, value: any) => {
+  configuration.value[propertyKey] = value as never
+}
+
+const getOptions = <T extends Configuration>(parameter: UnionParameter<T>) => {
+  return parameter.options
+}
+
+const getBooleanOptionNames = <T extends Configuration>(
+  parameter: BooleanParameter<T>
+) =>
+  (parameter.defaultBoolean
+    ? (x: string[]) => x
+    : (x: string[]) => x.reverse())([parameter.trueLabel, parameter.falseLabel])
+
+const inputMethods = {
+  union(propertyKey: keyof Configuration) {
+    return (selection: any) => updateValue(propertyKey, selection)
   },
-  setup(props) {
-    const { configuration } = toRefs(props)
-
-    const mutableConfiguration = ref(configuration)
-
-    watch(configuration, () => {
-      mutableConfiguration.value = configuration.value
-    })
-
-    const propertyNames = computed(() =>
-      getEditableProperties(configuration.value)
-    )
-
-    const properties = computed(() =>
-      propertyNames.value.map((propertyName) =>
-        getPropertyMetadata(mutableConfiguration.value, propertyName)
+  string(propertyKey: keyof Configuration) {
+    return (event: Event) =>
+      updateValue(
+        propertyKey,
+        (event.target as unknown as { value: string }).value
       )
-    )
-
-    const updateValue = (propertyKey: string, propertyValue: string) => {
-      // @ts-ignore
-      mutableConfiguration.value[propertyKey] = propertyValue
-    }
-
-    return { mutableConfiguration, propertyNames, properties, updateValue }
   },
-})
+  boolean(propertyKey: keyof Configuration) {
+    return (value: object) => updateValue(propertyKey, value)
+  },
+}
+
+const parameterHandlers = computed(() =>
+  parameters.value.map((parameter) =>
+    inputMethods[parameter.type](parameter.propertyKey)
+  )
+)
 </script>

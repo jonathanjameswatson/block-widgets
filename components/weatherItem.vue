@@ -1,16 +1,16 @@
 <template>
   <div>
-    <i class="wi text-4xl" :class="[`wi-${item.icon}`]"></i>
+    <i class="wi text-4xl" :class="[`wi-${weatherInformation.icon}`]"></i>
   </div>
 </template>
 
-<script>
-import { defineComponent } from '@nuxtjs/composition-api'
+<script lang="ts">
+import WeatherInformation from '~/ts/weatherInformation'
 
 export default defineComponent({
   props: {
-    item: {
-      type: Object,
+    weatherInformation: {
+      type: Object as () => WeatherInformation,
       required: true,
     },
   },

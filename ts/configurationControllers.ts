@@ -2,10 +2,16 @@ import { inject, useRoute, useContext, Ref } from '@nuxtjs/composition-api'
 
 import Configuration from '~/ts/configuration'
 
-export default (Creator: typeof Configuration) => {
-  const configuration = inject('configuration') as Ref<Configuration>
+export const getConfiguration = <T extends Configuration = Configuration>() => {
+  return inject('configuration') as Ref<T>
+}
+
+export const setConfiguration = <T extends Configuration>(Constructor: {
+  new (): T
+}) => {
+  const configuration = getConfiguration<T>()
   const route = useRoute()
-  const newConfiguration = new Creator()
+  const newConfiguration = new Constructor()
   newConfiguration.setFromParameterObject(route.value.query)
   configuration.value = newConfiguration
   const { $colorMode } = useContext()

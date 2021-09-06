@@ -2,15 +2,9 @@
   <menu-widget />
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
-
-import setConfiguration from '~/ts/setConfiguration'
+<script setup lang="ts">
+import { setConfiguration } from '~/ts/configurationControllers'
 import MenuConfiguration from '~/ts/menuConfiguration'
 
-export default defineComponent({
-  setup() {
-    setConfiguration(MenuConfiguration)
-  },
-})
+setConfiguration(MenuConfiguration)
 </script>

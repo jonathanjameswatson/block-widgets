@@ -28,8 +28,13 @@
       "@nuxt/types",
       "@nuxtjs/color-mode",
       "@nuxtjs/axios",
-      "@types/node"
-    ]
+      "@types/node",
+      "unplugin-vue2-script-setup/types"
+    ],
+    "noUnusedLocals": true
+  },
+  "vueCompilerOptions": {
+    "experimentalCompatMode": 2
   },
   "exclude": [
     "node_modules",

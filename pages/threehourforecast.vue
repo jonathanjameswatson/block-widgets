@@ -2,15 +2,9 @@
   <three-hour-forecast-widget />
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
-
-import setConfiguration from '~/ts/setConfiguration'
+<script setup lang="ts">
+import { setConfiguration } from '~/ts/configurationControllers'
 import Configuration from '~/ts/configuration'
 
-export default defineComponent({
-  setup() {
-    setConfiguration(Configuration)
-  },
-})
+setConfiguration(Configuration)
 </script>

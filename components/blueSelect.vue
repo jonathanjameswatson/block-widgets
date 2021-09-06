@@ -1,56 +1,45 @@
 <template>
   <div class="inline-block">
     <blue-button
-      v-for="(option, i) in options"
+      v-for="(option, i) in props.options"
       :key="i"
       class="mr-0"
-      :rounding="getRounding(i, options.length)"
-      :active="option === value"
+      :rounding="getRounding(i, props.options.length)"
+      :active="option === props.value"
       @click="() => updateValue(option)"
     >
-      {{ optionNames[i] !== undefined ? optionNames[i] : option }}
+      {{ optionNames[i] !== undefined ? props.optionNames[i] : option }}
     </blue-button>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+<script setup lang="ts">
+interface Props<T> {
+  value: T
+  options: T[]
+  optionNames?: string[]
+}
 
-export default defineComponent({
-  props: {
-    value: {
-      type: undefined as any,
-      required: true,
-    },
-    options: {
-      type: Array as () => object[],
-      required: true,
-    },
-    optionNames: {
-      type: Array as () => string[],
-      required: false,
-      default: () => [],
-    },
-  },
-  setup(_props, { emit }) {
-    const updateValue = (value: object) => {
-      emit('input', value)
-    }
-
-    const getRounding = (i: number, length: number) => {
-      if (i === 0) {
-        return 'rounded-l'
-      } else if (i === length - 1) {
-        return 'rounded-r'
-      } else {
-        return ''
-      }
-    }
-
-    return {
-      updateValue,
-      getRounding,
-    }
-  },
+const props = withDefaults(defineProps<Props<any>>(), {
+  optionNames: () => [],
 })
+
+const emit =
+  defineEmits<{
+    (e: 'input', value: any): void
+  }>()
+
+const updateValue = (value: any) => {
+  emit('input', value)
+}
+
+const getRounding = (i: number, length: number) => {
+  if (i === 0) {
+    return 'rounded-l'
+  } else if (i === length - 1) {
+    return 'rounded-r'
+  } else {
+    return ''
+  }
+}
 </script>

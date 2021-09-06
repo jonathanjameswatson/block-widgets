@@ -1,5 +1,6 @@
 .vscode
 target
+auto-imports.d.ts
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template

@@ -28,7 +28,7 @@
           <blue-select v-model="preview" :options="['Normal', 'iFrame']" />
         </blue-control>
 
-        <configurator :configuration="configuration" />
+        <configurator />
       </div>
 
       <hr class="mt-6 mb-8 border-blue-700 border-t-4 lg:hidden" />
@@ -66,22 +66,13 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  inject,
-  Ref,
-  useContext,
-} from '@nuxtjs/composition-api'
-
 import ThreeHourForecast from '~/components/threeHourForecastWidget.vue'
 import Menu from '~/components/menuWidget.vue'
 
 import Configuration from '~/ts/configuration'
 import MenuConfiguration from '~/ts/menuConfiguration'
 import stringifyQuery from '~/ts/stringifyQuery'
+import { getConfiguration } from '~/ts/configurationControllers'
 
 interface Widget {
   name: string
@@ -90,6 +81,10 @@ interface Widget {
   configuration: typeof Configuration
 }
 
+type Preview = 'Normal' | 'iFrame'
+</script>
+
+<script setup lang="ts">
 const widgets: Widget[] = [
   {
     name: 'Buttery menu',
@@ -105,52 +100,36 @@ const widgets: Widget[] = [
   },
 ]
 
-type Preview = 'Normal' | 'iFrame'
+const widget = ref(widgets[0])
+const resizing = ref(false)
+const configuration = getConfiguration()
+const preview = ref<Preview>('Normal')
 
-export default defineComponent({
-  setup() {
-    const widget = ref(widgets[0])
-    const resizing = ref(false)
-    const configuration = inject('configuration') as Ref<Configuration>
-    const preview = ref<Preview>('Normal')
-
-    const queryPage = computed(() => {
-      const parameterObject = configuration.value.toParameterObject() as {
-        [key: string]: string
-      }
-      const queryString = stringifyQuery(parameterObject)
-      return `${widget.value.url}${queryString}`
-    })
-
-    const StartConfiguration = widgets[0].configuration
-    configuration.value = new StartConfiguration()
-
-    watch(widget, () => {
-      const WidgetConfiguration = widget.value.configuration
-      configuration.value = new WidgetConfiguration()
-    })
-
-    const { $colorMode } = useContext()
-    watch(
-      () => configuration.value.theme,
-      (newTheme: string, oldTheme: string) => {
-        if (newTheme !== oldTheme) {
-          $colorMode.preference = newTheme.toLowerCase()
-        }
-      }
-    )
-
-    return {
-      widget,
-      widgets,
-      queryPage,
-      resizing,
-      configuration,
-      stringifyQuery,
-      preview,
-    }
-  },
+const queryPage = computed(() => {
+  const parameterObject = configuration.value.toParameterObject() as {
+    [key: string]: string
+  }
+  const queryString = stringifyQuery(parameterObject)
+  return `${widget.value.url}${queryString}`
 })
+
+const StartConfiguration = widgets[0].configuration
+configuration.value = new StartConfiguration()
+
+watch(widget, () => {
+  const WidgetConfiguration = widget.value.configuration
+  configuration.value = new WidgetConfiguration()
+})
+
+const { $colorMode } = useContext()
+watch(
+  () => configuration.value.theme,
+  (newTheme: string, oldTheme: string) => {
+    if (newTheme !== oldTheme) {
+      $colorMode.preference = newTheme.toLowerCase()
+    }
+  }
+)
 </script>
 
 <style scoped lang="postcss">

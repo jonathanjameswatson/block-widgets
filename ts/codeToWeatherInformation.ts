@@ -1,10 +1,7 @@
-export interface WeatherInformation {
-  name: string;
-  icon: string;
-}
+import WeatherInformation from '~/ts/weatherInformation'
 
-const codeToWeatherInformation : Record<number | "null", WeatherInformation> = {
-  "null": {
+const codeToWeatherInformation: Record<number | 'null', WeatherInformation> = {
+  null: {
     name: 'Not available',
     icon: 'alien',
   },

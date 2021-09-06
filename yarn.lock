@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@antfu/utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-0.3.0.tgz#6306c43b52a883bd8e973e3ed8dd64248418bcc4"
+  integrity sha512-UU8TLr/EoXdg7OjMp0h9oDoIAVr+Z/oW9cpOxQQyrsz6Qzd2ms/1CdWx8fl2OQdFpxGmq5Vc4TwfLHId6nAZjA==
+  dependencies:
+    "@types/throttle-debounce" "^2.1.0"
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -1726,7 +1733,7 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.20.tgz#111b5db0f501aa89b05076fa31f0ea0e0c292cd3"
   integrity sha512-88p7+M0QGxKpmnkfXjS4V26AnoC/eiqZutE8GLdaI5X12NY75bXSdTY9NkmYb2Xyk1O+MmkuO6Frmsj84V6I8Q==
 
-"@rollup/pluginutils@^4.1.0":
+"@rollup/pluginutils@^4.1.0", "@rollup/pluginutils@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
   integrity sha512-clDjivHqWGXi7u+0d2r2sBi4Ie6VLEAzWMIkvJLnDmxoOhBYOTfzGbOQBA32THHm11/LiJbd01tJUpJsbshSWQ==
@@ -2022,6 +2029,11 @@
     "@types/webpack" "^4"
     terser "^4.6.13"
 
+"@types/throttle-debounce@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/throttle-debounce/-/throttle-debounce-2.1.0.tgz#1c3df624bfc4b62f992d3012b84c56d41eab3776"
+  integrity sha512-5eQEtSCoESnh2FsiLTxE121IiE60hnMqcb435fShf4bpLRjEu1Eoekht23y6zXS9Ts3l+Szu3TARnTsA0GkOkQ==
+
 "@types/twemoji@^12.1.2":
   version "12.1.2"
   resolved "https://registry.yarnpkg.com/@types/twemoji/-/twemoji-12.1.2.tgz#52578fd22665311e6a78d04f800275449d51c97e"
@@ -2284,6 +2296,13 @@
   dependencies:
     tslib "^2.3.0"
 
+"@vue/reactivity@3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.2.8.tgz#b27200ccfaa06f312ac467b12a38161377c557ed"
+  integrity sha512-/Hj3Uz28SG+xB5SDWPOXUs0emvHkq82EmTgk44/plTVFeswCZ3i3Hd7WmsrPT4rGajlDKd5uqMmW0ith1ED0FA==
+  dependencies:
+    "@vue/shared" "3.2.8"
+
 "@vue/ref-transform@^3.2.6":
   version "3.2.8"
   resolved "https://registry.yarnpkg.com/@vue/ref-transform/-/ref-transform-3.2.8.tgz#a527047bab43ce50ef3d400ce71312ab30f825dc"
@@ -2294,6 +2313,23 @@
     "@vue/shared" "3.2.8"
     estree-walker "^2.0.2"
     magic-string "^0.25.7"
+
+"@vue/runtime-core@3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.2.8.tgz#8a2342c0baa0fee192f819a3bdc19547d7430b88"
+  integrity sha512-hwzXLGw1njBEY5JSyRXIIdCtzMFFF6F38WcKMmoIE3p7da30jEbWt8EwwrBomjT8ZbqzElOGlewBcnXNOiiIUg==
+  dependencies:
+    "@vue/reactivity" "3.2.8"
+    "@vue/shared" "3.2.8"
+
+"@vue/runtime-dom@^3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.2.8.tgz#c6631b507049d39844b0434e81df1aa79efcc6cb"
+  integrity sha512-A/aRrlGLJ5y4Z7eNbnO/xHwx2RiPijQo7D3OIwESroG3HNP+dpuoqamajo5TXS9ZGjbMOih82COoe7xb9P4BZw==
+  dependencies:
+    "@vue/runtime-core" "3.2.8"
+    "@vue/shared" "3.2.8"
+    csstype "^2.6.8"
 
 "@vue/shared@3.2.8", "@vue/shared@^3.2.6":
   version "3.2.8"
@@ -4413,6 +4449,11 @@ csso@^4.0.2:
   dependencies:
     css-tree "^1.1.2"
 
+csstype@^2.6.8:
+  version "2.6.17"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.17.tgz#4cf30eb87e1d1a005d8b6510f95292413f6a1c0e"
+  integrity sha512-u1wmTI1jJGzCJzWndZo8mk4wnPTZd1eOIYTYvuEyOQGfmDl3TrabCCfKnOC86FZwW/9djqTl933UF/cS425i9A==
+
 cuint@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/cuint/-/cuint-0.2.2.tgz#408086d409550c2631155619e9fa7bcadc3b991b"
@@ -5760,6 +5801,11 @@ has-flag@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
+
+has-pkg@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/has-pkg/-/has-pkg-0.0.1.tgz#f9d9139ed83e2487deae5eb4ac13182a2e903857"
+  integrity sha512-UuzsNxcEOdEwRsz4HtaceT7jg71L2gopEq8OMOGKtPLYhHhF4RJZtkcZ4Xn0jmAmBSNhm0xPhrywgZkLu4aMYQ==
 
 has-symbols@^1.0.1, has-symbols@^1.0.2:
   version "1.0.2"
@@ -10501,6 +10547,17 @@ unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
+
+unplugin-auto-import@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/unplugin-auto-import/-/unplugin-auto-import-0.4.1.tgz#1a27f08ad47910db89dbb2769a2010c6db37a4b5"
+  integrity sha512-OsNs+r9kQZyfgO0cKegrA0ZTg3bjpDogAUDjNzDR+7v+f80XLORbQNXO/PtyNdLuYM81nUrmnSQnHkopxIt6UQ==
+  dependencies:
+    "@antfu/utils" "^0.3.0"
+    "@rollup/pluginutils" "^4.1.1"
+    has-pkg "^0.0.1"
+    magic-string "^0.25.7"
+    unplugin "^0.2.7"
 
 unplugin-vue2-script-setup@^0.5.6:
   version "0.5.6"
