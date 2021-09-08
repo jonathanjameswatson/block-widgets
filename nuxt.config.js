@@ -29,7 +29,7 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     'nuxt-vite',
-    '@nuxt/typescript-build',
+    ['@nuxt/typescript-build', { typeCheck: false }],
     '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/composition-api/module',
     [

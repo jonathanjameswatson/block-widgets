@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "vue-tsc --noEmit --skipLibCheck && nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
+    "generate": "vue-tsc --noEmit --skipLibCheck && nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:ts": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:ts"
@@ -20,6 +20,7 @@
     "nuxt": "^2.15.8",
     "reflect-metadata": "^0.1.10",
     "twemoji": "^13.1.0",
+    "typescript": "^4.4.2",
     "vue-draggable-resizable": "^2.3.0",
     "weather-icons": "https://github.com/erikflowers/weather-icons.git"
   },
@@ -44,9 +45,11 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.17.0",
     "fs-extra": "^10.0.0",
-    "nuxt-vite": "^0.2.2",
+    "nuxt-vite": "^0.2.4",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
-    "unplugin-auto-import": "^0.4.1"
+    "ts-loader": "8.2.0",
+    "unplugin-auto-import": "^0.4.1",
+    "vue-tsc": "^0.3.0"
   }
 }
