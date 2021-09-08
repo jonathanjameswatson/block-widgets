@@ -1,0 +1,5 @@
+font-default
+font-serif
+font-mono
+text-notion-normal
+text-notion-small

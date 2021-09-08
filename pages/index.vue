@@ -52,7 +52,9 @@
             v-if="preview === 'Normal'"
             class="widget-preview w-full h-full overflow-auto"
           >
-            <component :is="widget.component" />
+            <widget-wrapper modify-css="widget-preview">
+              <component :is="widget.component" />
+            </widget-wrapper>
           </div>
           <iframe
             v-else
@@ -84,6 +86,10 @@ interface Widget {
 }
 
 type Preview = 'Normal' | 'iFrame'
+
+export default {
+  layout: 'index',
+}
 </script>
 
 <script setup lang="ts">
