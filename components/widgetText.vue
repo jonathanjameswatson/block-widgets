@@ -7,14 +7,14 @@
 <script lang="ts">
 import { getConfiguration } from '~/ts/configurationControllers'
 
-const wordRegexp = /[^ ]+/g
+const wordRegExp = /[^ ]+/g
 const capitalisers: { [option: string]: (x: string) => string } = {
   Normal: (x: string) => x,
   'Lower case': (x: string) => x.toLowerCase(),
   'Upper case': (x: string) => x.toUpperCase(),
   'Title case': (x: string) =>
     x.replaceAll(
-      wordRegexp,
+      wordRegExp,
       (y: string) => y.charAt(0).toUpperCase() + y.slice(1)
     ),
 }
