@@ -62,5 +62,3 @@ onMounted(() => {
   rawData.value = newData
 })
 </script>
-
-<style scoped src="@/assets/css/weather.css" />

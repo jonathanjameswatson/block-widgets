@@ -16,3 +16,5 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped src="@/assets/css/weather.css" />
