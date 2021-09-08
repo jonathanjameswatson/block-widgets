@@ -30,6 +30,7 @@ export default {
   buildModules: [
     'nuxt-vite',
     '@nuxt/typescript-build',
+    '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/composition-api/module',
     [
       'unplugin-auto-import/nuxt',
