@@ -3,8 +3,7 @@
     <blue-button
       v-for="(option, i) in props.options"
       :key="i"
-      class="mr-0"
-      :rounding="getRounding(i, props.options.length)"
+      class="mr-2"
       :active="option === props.value"
       @click="() => updateValue(option)"
     >
@@ -31,15 +30,5 @@ const emit =
 
 const updateValue = (value: any) => {
   emit('input', value)
-}
-
-const getRounding = (i: number, length: number) => {
-  if (i === 0) {
-    return 'rounded-l'
-  } else if (i === length - 1) {
-    return 'rounded-r'
-  } else {
-    return ''
-  }
 }
 </script>

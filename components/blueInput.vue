@@ -3,11 +3,13 @@
     class="
       text-white
       placeholder-gray-200 placeholder-opacity-60
+      w-full
       py-2
       px-4
       font-bold
       mb-2
       mr-2
+      leading-relaxed
       focus:outline-none
     "
     :class="classes"

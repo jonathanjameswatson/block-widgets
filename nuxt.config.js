@@ -72,7 +72,14 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    postcss: {
+      plugins: {
+        'postcss-simple-vars': {},
+        'postcss-nested': {},
+      },
+    },
+  },
 
   // Color mode configuration
   colorMode: {

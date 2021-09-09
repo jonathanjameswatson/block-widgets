@@ -1,69 +1,85 @@
 <template>
-  <div
-    class="
-      w-full
-      min-h-screen
-      p-4
-      bg-gradient-to-tr
-      from-orange
-      to-red
-      flex flex-col
-    "
-  >
-    <h1 class="extravagant-title mb-12 w-full break-all flex-initial">
-      <a :href="queryPage" target="_blank" rel="noreferrer noopener">
-        {{ url }}
-      </a>
-    </h1>
-
-    <div class="lg:flex flex-1">
-      <div class="flex-initial pr-16">
-        <blue-control label="Widget">
-          <blue-select
-            v-model="widget"
-            :options="widgets"
-            :option-names="widgets.map((widget) => widget.name)"
-          />
-        </blue-control>
-
-        <blue-control label="Preview">
-          <blue-select v-model="preview" :options="['Normal', 'iFrame']" />
-        </blue-control>
-
-        <configurator />
-      </div>
-
-      <hr class="mt-6 mb-8 border-blue-700 border-t-4 lg:hidden" />
-
-      <div class="flex-auto" style="min-height: 500px">
-        <vue-draggable-resizable
-          :w="343"
-          :h="500"
-          :handles="['br']"
-          :active="true"
-          :prevent-deactivation="true"
-          :parent="true"
-          :draggable="false"
-          @resizing="() => (resizing = true)"
-          @resizestop="() => (resizing = false)"
+  <div class="lg:flex w-full min-h-screen lg:h-screen bg-gray-100">
+    <div
+      class="
+        lg:w-1/4
+        lg:h-screen
+        lg:inline-block
+        bg-gray-200
+        p-8
+        pb-2
+        overflow-y-auto
+      "
+    >
+      <h1 class="text-blue-700 text-4xl font-bold mb-9">
+        <a
+          class="hover:text-blue-900"
+          href="https://github.com/jonathanjameswatson/widgets"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <div v-if="resizing" class="w-full h-full z-10 absolute" />
-          <div
-            v-if="preview === 'Normal'"
-            class="widget-preview w-full h-full overflow-auto"
+          jjw-widgets
+        </a>
+      </h1>
+
+      <blue-control label="Widget">
+        <blue-select
+          v-model="widget"
+          :options="widgets"
+          :option-names="widgets.map((widget) => widget.name)"
+        />
+      </blue-control>
+
+      <blue-control label="Preview">
+        <blue-select v-model="preview" :options="['Normal', 'iFrame']" />
+      </blue-control>
+
+      <configurator />
+
+      <blue-control label="Link">
+        <span class="flex">
+          <blue-input class="flex-shrink" :value="url" disabled />
+          <blue-button class="mr-0" :disabled="!canCopy" @click="copy">
+            {{ copyText }}
+          </blue-button>
+        </span>
+      </blue-control>
+    </div>
+
+    <div class="lg:inline-block lg:w-3/4 p-8 h-screen overflow-auto">
+      <div class="w-full h-full flex justify-center">
+        <div class="flex flex-col items-center self-center">
+          <vue-draggable-resizable
+            :w="343"
+            :h="500"
+            :min-width="20"
+            :min-height="20"
+            :active="true"
+            :prevent-deactivation="true"
+            :draggable="false"
+            class-name="custom-resizable"
+            class-name-handle="custom-handle"
+            @resizing="() => (resizing = true)"
+            @resizestop="() => (resizing = false)"
           >
-            <widget-wrapper modify-css="widget-preview">
-              <component :is="widget.component" />
-            </widget-wrapper>
-          </div>
-          <iframe
-            v-else
-            :src="queryPage"
-            frameborder="0"
-            sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
-            class="w-full h-full"
-          ></iframe>
-        </vue-draggable-resizable>
+            <div v-if="resizing" class="w-full h-full z-10 absolute" />
+            <div
+              v-if="preview === 'Normal'"
+              class="widget-preview w-full h-full overflow-auto"
+            >
+              <widget-wrapper modify-css="widget-preview">
+                <component :is="widget.component" />
+              </widget-wrapper>
+            </div>
+            <iframe
+              v-else
+              :src="queryPage"
+              frameborder="0"
+              sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
+              class="w-full h-full"
+            ></iframe>
+          </vue-draggable-resizable>
+        </div>
       </div>
     </div>
   </div>
@@ -113,6 +129,9 @@ const resizing = ref(false)
 const configuration = getConfiguration()
 const preview = ref<Preview>('Normal')
 const titleBase = ref('')
+const canCopy = ref(false)
+const copyText = ref('Copy')
+const copyTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
 
 const queryPage = computed(() => {
   const parameterObject = configuration.value.toParameterObject() as {
@@ -142,35 +161,112 @@ watch(
 
 onMounted(() => {
   titleBase.value = window.location.host
+
+  if (navigator.clipboard) {
+    canCopy.value = true
+  }
 })
 
 const url = computed(() => `https://${titleBase.value}/${queryPage.value}`)
+
+const copy = async () => {
+  try {
+    await navigator.clipboard.writeText(url.value)
+    copyText.value = 'Copied'
+  } catch {
+    copyText.value = 'Could not copy'
+  } finally {
+    if (copyTimeout.value !== null) {
+      clearTimeout(copyTimeout.value)
+    }
+
+    copyTimeout.value = setTimeout(() => {
+      copyText.value = 'Copy'
+      copyTimeout.value = null
+    }, 2500)
+  }
+}
 </script>
 
-<style scoped lang="postcss">
-.extravagant-title {
-  @apply transform-gpu text-4xl font-extrabold p-6 pt-0 bg-clip-text text-transparent bg-gradient-to-br from-blue-400 to-blue-600;
+<style lang="postcss">
+$radius: 0.25rem;
+$border: 1rem;
+$overlap: 0.5rem;
 
-  animation-name: spin;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-duration: 5s;
-  text-align: center;
+.custom-resizable {
+  transform: translate(0px) !important;
+
+  & .widget-preview {
+    outline: 4px dashed rgb(29, 78, 216);
+    outline-offset: 0px;
+    border-radius: $radius;
+    overflow: hidden;
+  }
 }
 
-.extravagant-button {
-  @apply bg-blue-500 hover:bg-blue-700 text-white rounded py-2 px-4 font-bold mr-2;
-}
+.custom-handle {
+  position: absolute;
+  height: $border;
+  width: $border;
 
-@keyframes spin {
-  0% {
-    transform: rotateY(0deg);
+  &-tl {
+    width: calc($border + $radius / 2);
+    height: calc($border + $radius / 2);
+    top: calc(-$border + $overlap);
+    left: calc(-$border + $overlap);
+    cursor: nw-resize;
   }
-  50% {
-    transform: rotateY(-90deg);
+
+  &-tr {
+    width: calc($border + $radius / 2);
+    height: calc($border + $radius / 2);
+    top: calc(-$border + $overlap);
+    right: calc(-$border + $overlap);
+    cursor: ne-resize;
   }
-  100% {
-    transform: rotateY(0deg);
+
+  &-bl {
+    width: calc($border + $radius / 2);
+    height: calc($border + $radius / 2);
+    bottom: calc(-$border + $overlap);
+    left: calc(-$border + $overlap);
+    cursor: sw-resize;
+  }
+
+  &-br {
+    width: calc($border + $radius / 2);
+    height: calc($border + $radius / 2);
+    bottom: calc(-$border + $overlap);
+    right: calc(-$border + $overlap);
+    cursor: se-resize;
+  }
+
+  &-tm {
+    top: calc(-$border + $overlap);
+    left: calc($overlap + $radius / 2);
+    width: calc(100% - 2 * $overlap - $radius);
+    cursor: n-resize;
+  }
+
+  &-bm {
+    bottom: calc(-$border + $overlap);
+    left: calc($overlap + $radius / 2);
+    width: calc(100% - 2 * $overlap - $radius);
+    cursor: s-resize;
+  }
+
+  &-ml {
+    left: calc(-$border + $overlap);
+    top: calc($overlap + $radius / 2);
+    height: calc(100% - 2 * $overlap - $radius);
+    cursor: w-resize;
+  }
+
+  &-mr {
+    right: calc(-$border + $overlap);
+    top: calc($overlap + $radius / 2);
+    height: calc(100% - 2 * $overlap - $radius);
+    cursor: e-resize;
   }
 }
 </style>
