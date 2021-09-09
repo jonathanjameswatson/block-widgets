@@ -38,6 +38,7 @@
     "@nuxtjs/tailwindcss": "^4.2.1",
     "@types/css-tree": "^1.0.6",
     "@types/fs-extra": "^9.0.12",
+    "@types/prettier": "^2.3.2",
     "@types/twemoji": "^12.1.2",
     "@vue/runtime-dom": "^3.2.8",
     "eslint": "^7.32.0",

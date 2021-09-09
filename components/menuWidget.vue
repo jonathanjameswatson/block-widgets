@@ -48,7 +48,7 @@
 <script lang="ts">
 import twemoji from 'twemoji'
 
-import wordToFoodEmoji from '~/ts/wordToFoodEmoji'
+import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
 import { getConfiguration } from '~/ts/configurationControllers'
 import MenuConfiguration from '~/ts/menuConfiguration'
 
