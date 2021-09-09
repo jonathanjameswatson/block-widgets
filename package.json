@@ -48,6 +48,7 @@
     "fs-extra": "^10.0.0",
     "nuxt-vite": "^0.2.4",
     "postcss": "^8.3.6",
+    "postcss-calc": "^8.0.0",
     "postcss-nested": "^5.0.6",
     "postcss-simple-vars": "^6.0.3",
     "prettier": "^2.3.2",

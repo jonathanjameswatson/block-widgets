@@ -77,6 +77,8 @@ export default {
       plugins: {
         'postcss-simple-vars': {},
         'postcss-nested': {},
+        cssnano: { preset: ['default', { calc: false }] },
+        'postcss-calc': {},
       },
     },
   },
