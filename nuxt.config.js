@@ -36,6 +36,7 @@ export default {
       'unplugin-auto-import/nuxt',
       {
         imports: ['@nuxtjs/composition-api'],
+        dts: './auto-imports.generated.d.ts',
       },
     ],
     // https://go.nuxtjs.dev/eslint
