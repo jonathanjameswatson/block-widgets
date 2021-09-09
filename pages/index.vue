@@ -12,7 +12,7 @@
   >
     <h1 class="extravagant-title mb-12 w-full break-all flex-initial">
       <a :href="queryPage" target="_blank" rel="noreferrer noopener">
-        {{ `https://jjw-widgets.netlify.app/${queryPage}` }}
+        {{ url }}
       </a>
     </h1>
 
@@ -112,6 +112,7 @@ const widget = ref(widgets[0])
 const resizing = ref(false)
 const configuration = getConfiguration()
 const preview = ref<Preview>('Normal')
+const titleBase = ref('')
 
 const queryPage = computed(() => {
   const parameterObject = configuration.value.toParameterObject() as {
@@ -138,6 +139,12 @@ watch(
     }
   }
 )
+
+onMounted(() => {
+  titleBase.value = window.location.host
+})
+
+const url = computed(() => `https://${titleBase.value}/${queryPage.value}`)
 </script>
 
 <style scoped lang="postcss">
