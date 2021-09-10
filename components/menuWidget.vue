@@ -42,6 +42,7 @@
         </p>
       </div>
     </div>
+    <example-warning v-if="example" />
   </div>
 </template>
 
@@ -89,37 +90,71 @@ const configuration = getConfiguration<MenuConfiguration>()
 
 const weekday = ref('')
 const meal = ref('')
-const menu = ref<MenuItem[]>([])
+const rawMenu = ref<string[]>([])
 const failed = ref(false)
 
-const { $axios } = useContext()
-onMounted(async () => {
-  const {
-    weekday: weekdayNumber,
-    meal: newMeal,
-    menu: rawMenu,
-  } = (await $axios.$get('/buttery/menu/').catch((_err) => {
-    failed.value = true
+const example = computed(() => configuration.value.butteryBotUrl === '')
+const menu = computed<MenuItem[]>(() =>
+  rawMenu.value.map((name: string) => {
+    const emoji = configuration.value.emojis
+      ? twemoji.parse(getEmoji(name))
+      : ''
     return {
-      weekday: Weekday.Sunday,
-      meal: 'Lunch',
-      menu: [],
-    }
-  })) as ApiResponse
-
-  if (failed.value === true) {
-    return
-  }
-
-  weekday.value = Weekday[weekdayNumber].toLowerCase()
-  meal.value = newMeal.toLowerCase()
-  menu.value = rawMenu.map((menuItemName: string) => {
-    return {
-      name: menuItemName.toLowerCase(),
-      emoji: twemoji.parse(getEmoji(menuItemName)),
+      name,
+      emoji,
     }
   })
-})
+)
+
+const { $axios } = useContext()
+const setData = async () => {
+  if (!example.value) {
+    const {
+      weekday: weekdayNumber,
+      meal: newMeal,
+      menu: newRawMenu,
+    } = (await $axios
+      .$get(`${configuration.value.butteryBotUrl}/menu/`)
+      .catch((_err) => {
+        failed.value = true
+        return {
+          weekday: Weekday.Sunday,
+          meal: 'Lunch',
+          menu: [],
+        }
+      })) as ApiResponse
+
+    if (failed.value === true) {
+      return
+    }
+
+    weekday.value = Weekday[weekdayNumber].toLowerCase()
+    meal.value = newMeal.toLowerCase()
+    rawMenu.value = newRawMenu
+  } else {
+    weekday.value = 'Monday'
+    meal.value = 'Lunch'
+    rawMenu.value = [
+      'Soup of the Day',
+      'Vegan - Aubergine Bolagnaise With Spaghetti',
+      'Chicken, Leek & Sweetcorn Topcrust Pie',
+      'New Potatoes',
+      'Broccoli',
+      'Apple and Blackberry Crumble',
+    ]
+  }
+}
+
+onMounted(setData)
+watch(
+  () => configuration.value.butteryBotUrl,
+  async () => {
+    weekday.value = ''
+    meal.value = ''
+    rawMenu.value = []
+    await setData()
+  }
+)
 
 const title = computed(() =>
   failed.value

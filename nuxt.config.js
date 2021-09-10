@@ -71,9 +71,9 @@ export default {
 
   proxy: {
     '/buttery': {
-      target: 'https://????????????????????????????',
+      target: process.env.BUTTERY_BOT_URL,
       pathRewrite: {
-        '^/buttery/': '',
+        [`^/${process.env.BUTTERY_BOT_PROXY}/`]: '',
       },
     },
   },

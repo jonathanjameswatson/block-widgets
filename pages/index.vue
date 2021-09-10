@@ -82,7 +82,7 @@
             <div class="widget-preview-container w-full h-full">
               <div
                 v-if="preview === 'Normal'"
-                class="widget-preview w-full h-full overflow-auto"
+                class="widget-preview w-full h-full overflow-auto relative"
               >
                 <widget-wrapper modify-css="widget-preview">
                   <component :is="widget.component" />
