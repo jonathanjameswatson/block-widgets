@@ -1,5 +1,6 @@
 <template>
   <input
+    v-bind="$attrs"
     class="
       text-white
       placeholder-gray-200 placeholder-opacity-60
@@ -11,10 +12,10 @@
       mr-2
       leading-relaxed
       focus:outline-none
+      selection-class
     "
     :class="classes"
     :disabled="disabled"
-    v-bind="$attrs"
     @input="updateValue"
   />
 </template>
@@ -71,3 +72,10 @@ const classes = computed(() => {
   return classes
 })
 </script>
+
+<style scoped lang="postcss">
+.selection-class::selection {
+  background: #f3f4f6;
+  @apply text-blue-700;
+}
+</style>
