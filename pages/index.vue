@@ -63,21 +63,23 @@
             @resizestop="() => (resizing = false)"
           >
             <div v-if="resizing" class="w-full h-full z-10 absolute" />
-            <div
-              v-if="preview === 'Normal'"
-              class="widget-preview w-full h-full overflow-auto"
-            >
-              <widget-wrapper modify-css="widget-preview">
-                <component :is="widget.component" />
-              </widget-wrapper>
+            <div class="widget-preview-container w-full h-full">
+              <div
+                v-if="preview === 'Normal'"
+                class="widget-preview w-full h-full overflow-auto"
+              >
+                <widget-wrapper modify-css="widget-preview">
+                  <component :is="widget.component" />
+                </widget-wrapper>
+              </div>
+              <iframe
+                v-else
+                :src="queryPage"
+                frameborder="0"
+                sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
+                class="w-full h-full"
+              />
             </div>
-            <iframe
-              v-else
-              :src="queryPage"
-              frameborder="0"
-              sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
-              class="w-full h-full"
-            ></iframe>
           </vue-draggable-resizable>
         </div>
       </div>
@@ -196,7 +198,7 @@ $overlap: 0.5rem;
 .custom-resizable {
   transform: translate(0px) !important;
 
-  & .widget-preview {
+  & .widget-preview-container {
     outline: 4px dashed rgb(29, 78, 216);
     outline-offset: 0px;
     border-radius: $radius;
@@ -268,5 +270,10 @@ $overlap: 0.5rem;
     height: calc(100% - 2 * $overlap - $radius);
     cursor: e-resize;
   }
+}
+
+html,
+body {
+  @apply bg-gray-100 !important;
 }
 </style>
