@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="10pt" height="10pt"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="drawing.svg" inkscape:version="1.0 (4035a4fb49, 2020-05-01)" id="SvgjsSvg1006" version="1.1" viewBox="0 0 3.5277778 3.5277778" height="10pt" width="10pt">
+  <defs id="SvgjsDefs1005"></defs>
+  <sodipodi:namedview inkscape:window-maximized="0" inkscape:window-y="0" inkscape:window-x="192" inkscape:window-height="1030" inkscape:window-width="1424" units="pt" showgrid="true" inkscape:document-rotation="0" inkscape:current-layer="layer1" inkscape:document-units="mm" inkscape:cy="6.5299341" inkscape:cx="8.1106046" inkscape:zoom="44.8" inkscape:pageshadow="2" inkscape:pageopacity="0.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="SvgjsSodipodi:namedview1004">
+    <inkscape:grid spacingy="0.35277779" spacingx="0.35277779" units="pt" id="SvgjsInkscape:grid1003" type="xygrid"></inkscape:grid>
+  </sodipodi:namedview>
+  <metadata id="SvgjsMetadata1002">
+    <rdf:rdf>
+      <cc:work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
+        <dc:title></dc:title>
+      </cc:work>
+    </rdf:rdf>
+  </metadata>
+  <g id="SvgjsG1001" inkscape:groupmode="layer" inkscape:label="Layer 1">
+    <circle r="1.4111111" cy="1.763889" cx="1.763889" id="SvgjsCircle1000" style="opacity:0.999;fill:none;stroke-width:0.54680556;stroke:#0000fb;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.09361111,1.09361111;stroke-dashoffset:0"></circle>
+  </g>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: contrast(0.3846153846153846) brightness(4.5); } }
+</style></svg>
