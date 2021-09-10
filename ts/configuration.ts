@@ -15,6 +15,7 @@ export interface UnionParameter<T extends Configuration>
   extends ParameterBase<T, string> {
   type: 'union'
   options: string[]
+  minWidth: string
 }
 
 export interface StringParameter<T extends Configuration>
@@ -29,6 +30,7 @@ export interface BooleanParameter<T extends Configuration>
   falseLabel: string
   trueLabel: string
   defaultBoolean: boolean
+  minWidth: string
 }
 
 export type Parameter<T extends Configuration> =
@@ -124,13 +126,18 @@ const themes = ['System', 'Light', 'Dark']
 const styles = ['Default', 'Serif', 'Mono']
 const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 
-export const unionParameter = (name: string, options: string[]) => {
+export const unionParameter = (
+  name: string,
+  options: string[],
+  minWidth: string = '0px'
+) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
       type: 'union',
       propertyKey,
       name,
       options,
+      minWidth,
       predicate: (input: string) => options.includes(input),
     } as UnionParameter<T>
   }
@@ -152,7 +159,8 @@ export const booleanParameter = (
   name: string,
   falseLabel: string,
   trueLabel: string,
-  defaultBoolean: boolean
+  defaultBoolean: boolean,
+  minWidth: string = '0px'
 ) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
@@ -162,22 +170,23 @@ export const booleanParameter = (
       falseLabel,
       trueLabel,
       defaultBoolean,
+      minWidth,
       predicate: (_input: boolean) => true,
     } as BooleanParameter<T>
   }
 }
 
 export default class Configuration {
-  @parameter(unionParameter('Theme', themes))
+  @parameter(unionParameter('Theme', themes, '9ch'))
   public theme: typeof themes[number] = 'System'
 
-  @parameter(unionParameter('Style', styles))
+  @parameter(unionParameter('Style', styles, '10ch'))
   public style: typeof styles[number] = 'Default'
 
-  @parameter(booleanParameter('Text size', 'Normal', 'Small', false))
+  @parameter(booleanParameter('Text size', 'Normal', 'Small', false, '10ch'))
   public textSize: boolean = false
 
-  @parameter(unionParameter('Capitalisation', capitalisations))
+  @parameter(unionParameter('Capitalisation', capitalisations, '15ch'))
   public capitalisation: typeof capitalisations[number] = 'Normal'
 
   @parameter(stringParameter('Custom CSS', '/* p { color: red; } */'))

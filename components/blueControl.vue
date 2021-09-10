@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-blue-700 font-bold mb-2">{{ props.label }}</p>
+    <p class="text-blue-700 font-bold mb-3 text-lg">{{ props.label }}</p>
     <p class="mb-4">
       <slot />
     </p>

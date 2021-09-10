@@ -13,6 +13,7 @@
       focus:outline-none
     "
     :class="classes"
+    :disabled="disabled"
     v-bind="$attrs"
     @input="updateValue"
   />

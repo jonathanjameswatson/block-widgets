@@ -9,6 +9,7 @@
         <blue-select
           :options="getOptions(parameter)"
           :value="configuration[parameter.propertyKey]"
+          :min-width="parameter.minWidth"
           @input="parameterHandlers[i]"
         />
       </template>
@@ -24,6 +25,7 @@
           :options="[parameter.defaultBoolean, !parameter.defaultBoolean]"
           :option-names="getBooleanOptionNames(parameter)"
           :value="configuration[parameter.propertyKey]"
+          :min-width="parameter.minWidth"
           @input="parameterHandlers[i]"
         />
       </template>

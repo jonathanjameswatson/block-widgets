@@ -1,6 +1,7 @@
 <template>
   <button
     class="text-white py-2 px-4 font-bold mb-2 mr-2 leading-relaxed"
+    :disabled="disabled"
     :class="classes"
     @click="click"
   >

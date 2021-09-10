@@ -27,18 +27,27 @@
           v-model="widget"
           :options="widgets"
           :option-names="widgets.map((widget) => widget.name)"
+          min-width="21ch"
         />
       </blue-control>
 
       <blue-control label="Preview">
-        <blue-select v-model="preview" :options="['Normal', 'iFrame']" />
+        <blue-select
+          v-model="preview"
+          :options="['Normal', 'iFrame']"
+          min-width="11ch"
+        />
       </blue-control>
 
       <configurator />
 
       <blue-control label="Link">
         <span class="flex">
-          <blue-input class="flex-shrink" :value="url" disabled />
+          <blue-input
+            class="flex-shrink opacity-100 cursor-text"
+            :value="url"
+            disabled
+          />
           <blue-button class="mr-0" :disabled="!canCopy" @click="copy">
             {{ copyText }}
           </blue-button>
@@ -63,6 +72,13 @@
             @resizestop="() => (resizing = false)"
           >
             <div v-if="resizing" class="w-full h-full z-10 absolute" />
+            <div
+              class="inline border-blue absolute -top-10 w-0 whitespace-nowrap"
+            >
+              <p class="text-blue-700 font-bold text-lg">
+                Drag outline to resize preview
+              </p>
+            </div>
             <div class="widget-preview-container w-full h-full">
               <div
                 v-if="preview === 'Normal'"
