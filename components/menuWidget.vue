@@ -48,6 +48,8 @@
 
 <script lang="ts">
 import twemoji from 'twemoji'
+import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
+import { Ref } from '@nuxtjs/composition-api'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
 import { getConfiguration } from '~/ts/configurationControllers'
@@ -83,6 +85,11 @@ interface MenuItem {
   name: string
   emoji: string
 }
+
+const rule = new RecurrenceRule()
+rule.hour = [1, 15]
+rule.minute = 5
+rule.tz = 'Etc/GMT'
 </script>
 
 <script setup lang="ts">
@@ -92,6 +99,7 @@ const weekday = ref('')
 const meal = ref('')
 const rawMenu = ref<string[]>([])
 const failed = ref(false)
+const schedule: Ref<Job | null> = ref(null)
 
 const example = computed(() => configuration.value.butteryBotUrl === '')
 const menu = computed<MenuItem[]>(() =>
@@ -145,7 +153,17 @@ const setData = async () => {
   }
 }
 
-onMounted(setData)
+onMounted(() => {
+  schedule.value = scheduleJob(rule, setData)
+  setData()
+})
+
+onBeforeUnmount(() => {
+  if (schedule.value !== null) {
+    schedule.value.cancel()
+  }
+})
+
 watch(
   () => configuration.value.butteryBotUrl,
   async () => {
