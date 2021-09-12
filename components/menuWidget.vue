@@ -144,7 +144,7 @@ const setData = async () => {
     meal.value = 'Lunch'
     rawMenu.value = [
       'Soup of the Day',
-      'Vegan - Aubergine Bolagnaise With Spaghetti',
+      'Vegan - Aubergine Bolognaise With Spaghetti',
       'Chicken, Leek & Sweetcorn Topcrust Pie',
       'New Potatoes',
       'Broccoli',
