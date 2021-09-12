@@ -24,8 +24,14 @@
               color: white;
               margin-right: 4px;
             "
-            v-html="menuItem.emoji"
-          ></div>
+          >
+            <img
+              class="emoji"
+              draggable="false"
+              :alt="menuItem.emoji"
+              :src="menuItem.emojiUrl"
+            />
+          </div>
         </div>
         <p
           class="
@@ -65,6 +71,27 @@ const getEmoji = (string: string) => {
   return wordToFoodEmoji[keyword]
 }
 
+const getEmojiUrl = (emoji: string) => {
+  let url = ''
+  twemoji.parse(emoji, {
+    callback(icon: string, options: object) {
+      url = ''.concat(
+        // @ts-ignore
+        options.base,
+        // @ts-ignore
+        options.size,
+        '/',
+        icon,
+        // @ts-ignore
+        options.ext
+      )
+
+      return url
+    },
+  })
+  return url
+}
+
 enum Weekday {
   Sunday,
   Monday,
@@ -84,6 +111,7 @@ interface ApiResponse {
 interface MenuItem {
   name: string
   emoji: string
+  emojiUrl: string
 }
 
 const rule = new RecurrenceRule()
@@ -104,12 +132,12 @@ const schedule: Ref<Job | null> = ref(null)
 const example = computed(() => configuration.value.butteryBotUrl === '')
 const menu = computed<MenuItem[]>(() =>
   rawMenu.value.map((name: string) => {
-    const emoji = configuration.value.emojis
-      ? twemoji.parse(getEmoji(name))
-      : ''
+    const emoji = configuration.value.emojis ? getEmoji(name) : ''
+    const emojiUrl = getEmojiUrl(emoji)
     return {
       name,
       emoji,
+      emojiUrl,
     }
   })
 )
