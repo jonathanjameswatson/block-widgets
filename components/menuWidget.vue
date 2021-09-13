@@ -92,22 +92,6 @@ const getEmojiUrl = (emoji: string) => {
   return url
 }
 
-enum Weekday {
-  Sunday,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-}
-
-interface ApiResponse {
-  weekday: Weekday
-  meal: 'Lunch' | 'Dinner' | 'Night' | 'Formal'
-  menu: string[]
-}
-
 interface MenuItem {
   name: string
   emoji: string
@@ -121,6 +105,24 @@ rule.tz = 'Etc/GMT'
 </script>
 
 <script setup lang="ts">
+enum Weekday {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
+
+type Meal = 'Lunch' | 'Dinner' | 'Night' | 'Formal'
+
+interface ApiResponse {
+  weekday: Weekday
+  meal: Meal
+  menu: string[]
+}
+
 const configuration = getConfiguration<MenuConfiguration>()
 
 const weekday = ref('')
@@ -145,22 +147,26 @@ const menu = computed<MenuItem[]>(() =>
 const { $axios } = useContext()
 const setData = async () => {
   if (!example.value) {
-    const {
-      weekday: weekdayNumber,
-      meal: newMeal,
-      menu: newRawMenu,
-    } = (await $axios
-      .$get(`${configuration.value.butteryBotUrl}/menu/`)
-      .catch((_err) => {
-        failed.value = true
-        return {
-          weekday: Weekday.Sunday,
-          meal: 'Lunch',
-          menu: [],
-        }
-      })) as ApiResponse
+    let weekdayNumber: Weekday
+    let newMeal: Meal
+    let newRawMenu: string[]
 
-    if (failed.value === true) {
+    try {
+      ;({
+        weekday: weekdayNumber,
+        meal: newMeal,
+        menu: newRawMenu,
+      } = (await $axios.$get(
+        `${configuration.value.butteryBotUrl}/menu/`
+      )) as ApiResponse)
+
+      if (weekdayNumber === undefined) {
+        throw new Error('Invalid payload given')
+      }
+
+      failed.value = false
+    } catch {
+      failed.value = true
       return
     }
 
