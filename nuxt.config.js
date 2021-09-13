@@ -64,13 +64,13 @@ export default {
   axios: {
     baseURL:
       process.env.NETLIFY === 'true'
-        ? 'https://jjw-widgets.netlify.app:443'
+        ? 'https://widgets.jonathanjameswatson.com:443'
         : 'http://localhost:8888',
     proxy: true,
   },
 
   proxy: {
-    '/buttery': {
+    [`/${process.env.BUTTERY_BOT_PROXY}`]: {
       target: process.env.BUTTERY_BOT_URL,
       pathRewrite: {
         [`^/${process.env.BUTTERY_BOT_PROXY}/`]: '',
