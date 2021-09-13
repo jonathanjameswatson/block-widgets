@@ -8,6 +8,7 @@ export interface ParameterBase<T extends Configuration, U> {
   type: string
   propertyKey: keyof T
   name: string
+  disabled: boolean
   predicate: (input: U) => boolean
 }
 
@@ -138,12 +139,14 @@ const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 export const unionParameter = (
   name: string,
   options: string[],
-  minWidth: string = '0px'
+  minWidth: string = '0px',
+  disabled: boolean = false
 ) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
       type: 'union',
       propertyKey,
+      disabled,
       name,
       options,
       minWidth,
@@ -152,11 +155,16 @@ export const unionParameter = (
   }
 }
 
-export const stringParameter = (name: string, placeholder: string) => {
+export const stringParameter = (
+  name: string,
+  placeholder: string,
+  disabled: boolean = false
+) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
       type: 'string',
       propertyKey,
+      disabled,
       name,
       placeholder,
       predicate: (input: string) => input !== '',
@@ -169,12 +177,14 @@ export const booleanParameter = (
   falseLabel: string,
   trueLabel: string,
   defaultBoolean: boolean,
-  minWidth: string = '0px'
+  minWidth: string = '0px',
+  disabled: boolean = false
 ) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
       type: 'boolean',
       propertyKey,
+      disabled,
       name,
       falseLabel,
       trueLabel,
@@ -189,12 +199,14 @@ export const numberParameter = (
   name: string,
   minimum: number | null = null,
   maximum: number | null = null,
-  step: number | null = null
+  step: number | null = null,
+  disabled: boolean = false
 ) => {
   return <T extends Configuration>(propertyKey: keyof T) => {
     return {
       type: 'number',
       propertyKey,
+      disabled,
       name,
       ...(minimum === null ? {} : { minimum }),
       ...(maximum === null ? {} : { maximum }),

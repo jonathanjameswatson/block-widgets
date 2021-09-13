@@ -10,6 +10,7 @@
           :options="getOptions(parameter)"
           :value="configuration[parameter.propertyKey]"
           :min-width="parameter.minWidth"
+          :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
         />
       </template>
@@ -17,6 +18,7 @@
         <blue-input
           :value="configuration[parameter.propertyKey]"
           :placeholder="parameter.placeholder"
+          :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
         />
       </template>
@@ -26,6 +28,7 @@
           :option-names="getBooleanOptionNames(parameter)"
           :value="configuration[parameter.propertyKey]"
           :min-width="parameter.minWidth"
+          :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
         />
       </template>
@@ -35,6 +38,7 @@
           :maximum="parameter.maximum"
           :step="parameter.step"
           :value="configuration[parameter.propertyKey]"
+          :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
         />
       </template>

@@ -12,6 +12,7 @@
       mr-2
       leading-relaxed
       focus:outline-none
+      appearance-textfield
       selection-class
     "
     :value="value"
@@ -79,5 +80,11 @@ const classes = computed(() => {
 .selection-class::selection {
   background: #f3f4f6;
   @apply text-blue-700;
+}
+
+.appearance-textfield {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 </style>
