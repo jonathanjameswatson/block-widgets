@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { setConfiguration } from '~/ts/configurationControllers'
-import Configuration from '~/ts/configuration'
+import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
-setConfiguration(Configuration)
+setConfiguration(ThreeHourForecastConfiguration)
 </script>

@@ -14,6 +14,7 @@
       focus:outline-none
       selection-class
     "
+    :value="value"
     :class="classes"
     :disabled="disabled"
     @input="updateValue"
@@ -28,6 +29,7 @@ export default {
 
 <script setup lang="ts">
 interface Props {
+  value: string | number
   disabled?: boolean
   active?: boolean
   rounding?: string

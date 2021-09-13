@@ -33,10 +33,19 @@ export interface BooleanParameter<T extends Configuration>
   minWidth: string
 }
 
+export interface NumberParameter<T extends Configuration>
+  extends ParameterBase<T, number> {
+  type: 'number'
+  minimum?: number
+  maximum?: number
+  step?: number
+}
+
 export type Parameter<T extends Configuration> =
   | UnionParameter<T>
   | StringParameter<T>
   | BooleanParameter<T>
+  | NumberParameter<T>
 
 const collectMetadataArray = <T extends Configuration>(
   metadataKey: any,
@@ -47,7 +56,7 @@ const collectMetadataArray = <T extends Configuration>(
   while (currentPrototype !== Object.prototype) {
     const currentArray =
       Reflect.getOwnMetadata(metadataKey, currentPrototype) || []
-    array.unshift(...currentArray)
+    array.push(...currentArray)
     currentPrototype = Object.getPrototypeOf(currentPrototype)
   }
   return array as T[keyof T][]
@@ -173,6 +182,24 @@ export const booleanParameter = (
       minWidth,
       predicate: (_input: boolean) => true,
     } as BooleanParameter<T>
+  }
+}
+
+export const numberParameter = (
+  name: string,
+  minimum: number | null = null,
+  maximum: number | null = null,
+  step: number | null = null
+) => {
+  return <T extends Configuration>(propertyKey: keyof T) => {
+    return {
+      type: 'number',
+      propertyKey,
+      name,
+      ...(minimum === null ? {} : { minimum }),
+      ...(maximum === null ? {} : { maximum }),
+      ...(step === null ? {} : { step }),
+    } as NumberParameter<T>
   }
 }
 

@@ -109,6 +109,7 @@ import Menu from '~/components/menuWidget.vue'
 
 import Configuration from '~/ts/configuration'
 import MenuConfiguration from '~/ts/menuConfiguration'
+import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 import stringifyQuery from '~/ts/stringifyQuery'
 import { getConfiguration } from '~/ts/configurationControllers'
 
@@ -129,16 +130,16 @@ export default {
 <script setup lang="ts">
 const widgets: Widget[] = [
   {
+    name: 'Three hour forecast',
+    url: 'threehourforecast',
+    component: ThreeHourForecast,
+    configuration: ThreeHourForecastConfiguration,
+  },
+  {
     name: 'Buttery menu',
     url: 'menu',
     component: Menu,
     configuration: MenuConfiguration,
-  },
-  {
-    name: 'Three hour forecast',
-    url: 'threehourforecast',
-    component: ThreeHourForecast,
-    configuration: Configuration,
   },
 ]
 

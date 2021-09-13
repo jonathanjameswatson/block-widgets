@@ -29,6 +29,15 @@
           @input="parameterHandlers[i]"
         />
       </template>
+      <template v-else-if="parameter.type === 'number'">
+        <blue-number-input
+          :minimum="parameter.minimum"
+          :maximum="parameter.maximum"
+          :step="parameter.step"
+          :value="configuration[parameter.propertyKey]"
+          @input="parameterHandlers[i]"
+        />
+      </template>
     </blue-control>
   </div>
 </template>
@@ -80,6 +89,9 @@ const inputMethods = {
   },
   boolean(propertyKey: keyof Configuration) {
     return (value: object) => updateValue(propertyKey, value)
+  },
+  number(propertyKey: keyof Configuration) {
+    return (number: number) => updateValue(propertyKey, number)
   },
 }
 
