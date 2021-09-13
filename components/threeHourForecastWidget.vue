@@ -10,6 +10,7 @@
         :weather-information="weatherInformation"
       />
     </div>
+    <example-warning>Widget under construction</example-warning>
   </div>
 </template>
 

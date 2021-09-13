@@ -3,6 +3,7 @@
     class="
       text-white
       bg-blue-500
+      opacity-75
       font-bold
       text-lg
       rounded
@@ -13,6 +14,6 @@
       inline-block
     "
   >
-    Example widget
+    <slot>Example widget</slot>
   </div>
 </template>
