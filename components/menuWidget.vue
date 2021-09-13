@@ -1,13 +1,13 @@
 <template>
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
-      <div class="text-md mb-3 font-semibold">
+      <div class="mb-3 font-semibold">
         <widget-text :text="title" />
       </div>
       <div
         v-for="(menuItem, i) in menu"
         :key="i"
-        class="text-sm leading-notion-outer min-h-notion flex items-center"
+        class="leading-notion-outer min-h-notion flex items-center"
       >
         <div
           v-if="configuration.emojis"

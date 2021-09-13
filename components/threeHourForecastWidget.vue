@@ -1,7 +1,7 @@
 <template>
   <div class="p-6 w-full h-full">
     <div class="-mb-6">
-      <div class="text-md mb-3 font-semibold">
+      <div class="mb-3 font-semibold">
         <widget-text :text="title" />
       </div>
       <weather-item
