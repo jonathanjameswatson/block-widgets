@@ -8,7 +8,7 @@
       text-lg
       rounded
       p-2
-      absolute
+      fixed
       bottom-4
       right-4
       inline-block

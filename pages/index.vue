@@ -82,11 +82,15 @@
             <div class="widget-preview-container w-full h-full">
               <div
                 v-if="preview === 'Normal'"
-                class="widget-preview w-full h-full overflow-auto relative"
+                class="w-full h-full transform overflow-hidden"
               >
-                <widget-wrapper modify-css="widget-preview">
-                  <component :is="widget.component" />
-                </widget-wrapper>
+                <div
+                  class="widget-preview w-full h-full overflow-auto relative"
+                >
+                  <widget-wrapper modify-css="widget-preview">
+                    <component :is="widget.component" />
+                  </widget-wrapper>
+                </div>
               </div>
               <iframe
                 v-else
