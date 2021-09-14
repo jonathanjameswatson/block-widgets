@@ -1,28 +1,43 @@
 <template>
-  <div class="p-6 w-full h-full">
-    <div class="-mb-6">
-      <div class="mb-3 font-semibold">
-        <widget-text :text="title" />
-      </div>
-      <weather-item
-        v-for="(weatherInformation, i) in forecast"
-        :key="i"
-        :weather-information="weatherInformation"
-      />
+  <div class="w-full h-full">
+    <div class="flex flex-col">
+      <widget-title :text="title" />
+      <widget-block v-for="(weatherInformation, i) in forecast" :key="i">
+        <emoji-container v-if="configuration.icons">
+          <weather-icon
+            :icon="weatherInformation.icon"
+            :name="weatherInformation.name"
+          />
+        </emoji-container>
+        <p class="block leading-notion-inner">
+          <widget-text
+            :text="weatherInformation.text"
+            class="border-b border-notion-border dark:border-notion-border-dark"
+          />
+        </p>
+      </widget-block>
     </div>
     <example-warning>Widget under construction</example-warning>
   </div>
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
+import { getConfiguration } from '~/ts/configurationControllers'
+import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
 const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
+dayjs.extend(advancedFormat)
 </script>
 
 <script setup lang="ts">
+const configuration = getConfiguration<ThreeHourForecastConfiguration>()
+
 const rawData = ref<definitions['Properties']>({
   requestPointDistance: 0,
   modelRunDate: '?',
@@ -46,13 +61,30 @@ const title = computed(() => {
 const forecast = computed(() => {
   const { timeSeries } = rawData.value
 
-  return timeSeries.slice(0, 3).map((x) => {
-    const significantWeatherCode = x.significantWeatherCode as number
-    const { icon } = getWeatherInformation(significantWeatherCode)
-    return {
-      icon,
-    }
-  })
+  return timeSeries
+    .slice(0, configuration.value.items)
+    .map(
+      ({
+        significantWeatherCode,
+        time,
+        feelsLikeTemp,
+        probOfPrecipitation,
+      }) => {
+        const { icon, name } = getWeatherInformation(significantWeatherCode)
+        const date = dayjs(time).format('Do: Ha')
+
+        const text = `${date} - ${name}, ${Math.round(
+          feelsLikeTemp
+        )}°C, ${probOfPrecipitation}%`
+
+        return {
+          time,
+          text,
+          name,
+          icon,
+        }
+      }
+    )
 })
 
 onMounted(() => {

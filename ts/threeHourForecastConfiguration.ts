@@ -3,6 +3,7 @@ import Configuration, {
   parameter,
   stringParameter,
   numberParameter,
+  booleanParameter,
 } from './configuration'
 
 export default class ThreeHourForecastConfiguration extends Configuration {
@@ -29,4 +30,10 @@ export default class ThreeHourForecastConfiguration extends Configuration {
 
   @parameter(numberParameter('Longitude', -180, 180, null, true))
   public longitude: number = 0
+
+  @parameter(numberParameter('Number of items', 0, 50, 1))
+  public items: number = 3
+
+  @parameter(booleanParameter('Icons', 'Off', 'On', true, '6ch'))
+  public icons: boolean = true
 }

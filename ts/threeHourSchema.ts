@@ -54,8 +54,27 @@ export default interface definitions {
   TimeSeries: {
     /** Time of the forecast in UTC */
     time: string
-    /** A map of forecast parameters and associated values */
-    [key: string]: string | number
+    maxScreenAirTemp: number
+    minScreenAirTemp: number
+    max10mWindGust: number
+    significantWeatherCode: number
+    totalPrecipAmount: number
+    totalSnowAmount: number
+    windSpeed10m: number
+    windDirectionFrom10m: number
+    windGustSpeed10m: number
+    visibility: number
+    mslp: number
+    screenRelativeHumidity: number
+    feelsLikeTemp: number
+    uvIndex: number
+    probOfPrecipitation: number
+    probOfSnow: number
+    probOfHeavySnow: number
+    probOfRain: number
+    probOfHeavyRain: number
+    probOfHail: number
+    probOfSferics: number
   }
   Unit: {
     /** The name of the unit */

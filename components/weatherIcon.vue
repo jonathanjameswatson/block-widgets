@@ -1,20 +1,15 @@
 <template>
-  <div>
-    <i class="wi text-4xl" :class="[`wi-${weatherInformation.icon}`]"></i>
-  </div>
+  <i class="wi" :class="classes" :alt="props.name" />
 </template>
 
-<script lang="ts">
-import WeatherInformation from '~/ts/weatherInformation'
+<script setup lang="ts">
+const props =
+  defineProps<{
+    icon: string
+    name: string
+  }>()
 
-export default defineComponent({
-  props: {
-    weatherInformation: {
-      type: Object as () => WeatherInformation,
-      required: true,
-    },
-  },
-})
+const classes = computed(() => [`wi-${props.icon}`])
 </script>
 
 <style scoped>
@@ -39,5 +34,6 @@ export default defineComponent({
 
 .wi {
   font-family: 'weathericons2' !important;
+  font-size: 17px;
 }
 </style>
