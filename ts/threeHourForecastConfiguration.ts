@@ -4,7 +4,11 @@ import Configuration, {
   stringParameter,
   numberParameter,
   booleanParameter,
+  unionParameter,
 } from './configuration'
+
+const temperatureUnits = ['°C', '°F', 'K']
+const temperatureTypes = ['Feels like', 'Minimum', 'Maximum', 'Average']
 
 export default class ThreeHourForecastConfiguration extends Configuration {
   @parameter(
@@ -36,4 +40,13 @@ export default class ThreeHourForecastConfiguration extends Configuration {
 
   @parameter(booleanParameter('Icons', 'Off', 'On', true, '6ch'))
   public icons: boolean = true
+
+  @parameter(stringParameter('Time format', 'Do: Ha'))
+  public timeFormat: string = 'Do: Ha'
+
+  @parameter(unionParameter('Unit of temperature', temperatureUnits, '6ch'))
+  public temperatureUnit: typeof temperatureUnits[number] = '°C'
+
+  @parameter(unionParameter('Type of temperature', temperatureTypes, '13ch'))
+  public temperatureType: typeof temperatureTypes[number] = 'Feels like'
 }

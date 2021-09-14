@@ -33,6 +33,25 @@ import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
 const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
 dayjs.extend(advancedFormat)
+
+const celsiusGetters: {
+  [type: string]: (temperatures: {
+    feelsLike: number
+    minimum: number
+    maximum: number
+  }) => number
+} = {
+  'Feels like': ({ feelsLike }) => feelsLike,
+  Minimum: ({ minimum }) => minimum,
+  Maximum: ({ maximum }) => maximum,
+  Average: ({ minimum, maximum }) => (minimum + maximum) / 2,
+}
+
+const celsiusConverters: { [unit: string]: (celsius: number) => number } = {
+  '°C': (celsius) => celsius,
+  '°F': (celsius) => celsius * (9 / 5) + 32,
+  K: (celsius) => celsius + 273.15,
+}
 </script>
 
 <script setup lang="ts">
@@ -68,14 +87,27 @@ const forecast = computed(() => {
         significantWeatherCode,
         time,
         feelsLikeTemp,
+        minScreenAirTemp,
+        maxScreenAirTemp,
         probOfPrecipitation,
       }) => {
         const { icon, name } = getWeatherInformation(significantWeatherCode)
-        const date = dayjs(time).format('Do: Ha')
+        const timeFormat =
+          configuration.value.timeFormat !== ''
+            ? configuration.value.timeFormat
+            : 'Do: Ha'
+        const date = dayjs(time).format(timeFormat)
+        const celsius = celsiusGetters[configuration.value.temperatureType]({
+          feelsLike: feelsLikeTemp,
+          minimum: minScreenAirTemp,
+          maximum: maxScreenAirTemp,
+        })
+        const temperature =
+          celsiusConverters[configuration.value.temperatureUnit](celsius)
 
-        const text = `${date} - ${name}, ${Math.round(
-          feelsLikeTemp
-        )}°C, ${probOfPrecipitation}%`
+        const text = `${date} - ${name}, ${Math.round(temperature)}${
+          configuration.value.temperatureUnit
+        }, ${probOfPrecipitation}%`
 
         return {
           time,
