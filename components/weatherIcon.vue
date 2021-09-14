@@ -34,6 +34,6 @@ const classes = computed(() => [`wi-${props.icon}`])
 
 .wi {
   font-family: 'weathericons2' !important;
-  font-size: 17px;
+  font-size: 15px;
 }
 </style>
