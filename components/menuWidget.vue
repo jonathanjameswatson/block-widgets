@@ -1,51 +1,70 @@
 <template>
-  <div class="p-6 w-full h-full">
-    <div class="-mb-6">
-      <div class="mb-3 font-semibold">
-        <widget-text :text="title" />
+  <div class="w-full h-full">
+    <div class="flex flex-col">
+      <div class="mt-2px mb-px w-full max-w-full">
+        <div
+          class="
+            w-full
+            flex
+            font-semibold
+            text-notion-title
+            leading-notion-inner
+          "
+        >
+          <div
+            class="
+              my-3px
+              mx-2px
+              break-words
+              whitespace-pre-wrap
+              w-full
+              max-w-full
+            "
+          >
+            <widget-text :text="title" />
+          </div>
+        </div>
       </div>
       <div
         v-for="(menuItem, i) in menu"
         :key="i"
-        class="leading-notion-outer min-h-notion flex items-center"
+        class="my-px w-full max-w-full"
       >
-        <div
-          v-if="configuration.emojis"
-          class="flex flex-none items-center"
-          style="height: 22px; width: 22px"
-        >
-          <div
-            style="
-              height: 15.4px;
-              width: 15.4px;
-              font-size: 15.4px;
-              line-height: 1.1;
-              margin-left: 0px;
-              color: white;
-              margin-right: 4px;
-            "
-          >
-            <img
-              class="emoji"
-              draggable="false"
-              :alt="menuItem.emoji"
-              :src="menuItem.emojiUrl"
-            />
+        <focusable>
+          <div class="flex items-center">
+            <div class="flex-1 min-w-px py-3px pl-2px">
+              <div class="flex items-center">
+                <div v-if="configuration.emojis" class="emoji">
+                  <div class="w-full h-full flex items-center justify-center">
+                    <div
+                      class="flex items-center justify-center"
+                      style="height: 22px; width: 22px"
+                    >
+                      <div class="emoji-inner">
+                        <img
+                          class="w-full h-full"
+                          draggable="false"
+                          :alt="menuItem.emoji"
+                          :src="menuItem.emojiUrl"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="
+                    block
+                    leading-notion-inner
+                    border-b border-notion-border
+                    dark:border-notion-border-dark
+                  "
+                >
+                  <widget-text :text="menuItem.name" />
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <p
-          class="
-            block
-            leading-notion-inner
-            border-b border-opacity-10
-            dark:border-opacity-10
-            border-notion-text
-            dark:border-notion-text-dark
-            my-notion-padding
-          "
-        >
-          <widget-text :text="menuItem.name" />
-        </p>
+        </focusable>
       </div>
     </div>
     <example-warning v-if="example" />
@@ -214,3 +233,20 @@ const title = computed(() =>
     : `${weekday.value} ${meal.value}`
 )
 </script>
+
+<style scoped lang="postcss">
+.emoji {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+
+  & .emoji-inner {
+    width: 15.4px;
+    height: 15.4px;
+    font-size: 15.4px;
+    line-height: 1.1;
+    margin-left: 0px;
+  }
+}
+</style>

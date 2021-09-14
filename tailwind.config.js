@@ -11,18 +11,22 @@ module.exports = {
     },
     extend: {
       colors: {
-        orange: '#FA8B3D',
-        red: '#F04B43',
         'notion-bg': 'white',
         'notion-text': 'rgb(55, 53, 47)',
+        'notion-border': 'rgba(55, 53, 47, 0.16)',
+        'notion-bg-hover': 'rgba(55, 53, 47, 0.08)',
         'notion-bg-dark': 'rgb(47, 52, 55)',
         'notion-text-dark': 'rgb(235, 235, 235)',
+        'notion-border-dark': 'rgba(255, 255, 255, 0.14)',
+        'notion-bg-hover-dark': 'rgb(71, 76, 80)',
       },
       lineHeight: {
         'notion-inner': 1.3,
         'notion-outer': 1.6,
       },
       spacing: {
+        '2px': '2px',
+        '3px': '3px',
         'notion-padding': '5px',
         notion: '30px',
       },
@@ -32,6 +36,7 @@ module.exports = {
       fontSize: {
         'notion-normal': '17px',
         'notion-small': '15px',
+        'notion-title': '1.25em',
       },
     },
   },
