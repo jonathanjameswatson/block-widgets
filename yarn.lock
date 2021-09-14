@@ -11260,10 +11260,10 @@ vscode-pug-languageservice@^0.27.14:
     pug-parser "^6.0.0"
     vscode-languageserver "^8.0.0-next.2"
 
-vscode-typescript-languageservice@^0.27.18:
-  version "0.27.18"
-  resolved "https://registry.yarnpkg.com/vscode-typescript-languageservice/-/vscode-typescript-languageservice-0.27.18.tgz#a4a1b63a41706ae7ece1300f3402a4732ba7c588"
-  integrity sha512-JyrxQk4FNKDvL6hkpqLQhyZovGhMvXM076TV3vHEYACOhTumnowpFZeNMkCsp8tkP83lrFzy1B3fAnDDa9HfrQ==
+vscode-typescript-languageservice@^0.27.20:
+  version "0.27.20"
+  resolved "https://registry.yarnpkg.com/vscode-typescript-languageservice/-/vscode-typescript-languageservice-0.27.20.tgz#491838da6394e57d54bc254e1fb77cf7b3e0818f"
+  integrity sha512-PPxf7KYfvLq3gDyq+L76cUSXJMwmbVJtLiCKHIGU3d1mzV1hpLcneallE7O1F2v/fBrl3ajuko+a0wb/id6z5g==
   dependencies:
     "@volar/shared" "^0.27.14"
     semver "^7.3.5"
@@ -11282,9 +11282,9 @@ vscode-uri@^3.0.2:
   integrity sha512-jkjy6pjU1fxUvI51P+gCsxg1u2n8LSt0W6KrCNQceaziKzff74GoWmjVG46KieVzybO1sttPQmYfrwSHey7GUA==
 
 vscode-vue-languageservice@^0.27.0:
-  version "0.27.18"
-  resolved "https://registry.yarnpkg.com/vscode-vue-languageservice/-/vscode-vue-languageservice-0.27.18.tgz#96b45611b1d9a34b6006df10a6669e929268ec02"
-  integrity sha512-yvuqPGbZgGCdY1b3MWEKJR6ptDnIFHOcgsO3bJKhCIUMhR5ZJ2FUwTpwrz5T9iEasOPgfN+e1gfbkZ+BYUAXbg==
+  version "0.27.20"
+  resolved "https://registry.yarnpkg.com/vscode-vue-languageservice/-/vscode-vue-languageservice-0.27.20.tgz#3f57ef93e87af571a3293e9effb1d3ba12e82fc8"
+  integrity sha512-Q4ZvrGrgNt4XSMaNKRogbGrLjnkZ2putaKYVpKClP6p1mMVnQHsr/4Fm2yWMOizBjEvOpMB7USkfY6NEAIs+lg==
   dependencies:
     "@volar/code-gen" "^0.27.14"
     "@volar/html2pug" "^0.27.13"
@@ -11303,7 +11303,7 @@ vscode-vue-languageservice@^0.27.0:
     vscode-languageserver "^8.0.0-next.2"
     vscode-languageserver-textdocument "^1.0.1"
     vscode-pug-languageservice "^0.27.14"
-    vscode-typescript-languageservice "^0.27.18"
+    vscode-typescript-languageservice "^0.27.20"
 
 vue-client-only@^2.0.0:
   version "2.1.0"
