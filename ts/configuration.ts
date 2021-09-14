@@ -10,6 +10,7 @@ export interface ParameterBase<T extends Configuration, U> {
   name: string
   disabled: boolean
   predicate: (input: U) => boolean
+  stringToType: (input: string) => U
 }
 
 export interface UnionParameter<T extends Configuration>
@@ -151,6 +152,7 @@ export const unionParameter = (
       options,
       minWidth,
       predicate: (input: string) => options.includes(input),
+      stringToType: (input: string) => input,
     } as UnionParameter<T>
   }
 }
@@ -168,6 +170,7 @@ export const stringParameter = (
       name,
       placeholder,
       predicate: (input: string) => input !== '',
+      stringToType: (input: string) => input,
     } as StringParameter<T>
   }
 }
@@ -191,6 +194,7 @@ export const booleanParameter = (
       defaultBoolean,
       minWidth,
       predicate: (_input: boolean) => true,
+      stringToType: (input: string) => input === 'true',
     } as BooleanParameter<T>
   }
 }
@@ -211,6 +215,22 @@ export const numberParameter = (
       ...(minimum === null ? {} : { minimum }),
       ...(maximum === null ? {} : { maximum }),
       ...(step === null ? {} : { step }),
+      predicate(input: number) {
+        if (isNaN(input)) {
+          return false
+        }
+        if (minimum !== null && input < minimum) {
+          return false
+        }
+        if (maximum !== null && input > maximum) {
+          return false
+        }
+        if (step !== null && (input / step) % 1 !== 0) {
+          return false
+        }
+        return true
+      },
+      stringToType: (input: string) => Number(input),
     } as NumberParameter<T>
   }
 }
@@ -247,11 +267,13 @@ export default class Configuration {
       | symbol
     )[]
     Object.entries(query).forEach(([key, value]) => {
+      const parameter = getParameter(this, key as keyof this)
+      const typedValue = parameter.stringToType(value)
       if (
         editableProperties.includes(key) &&
-        getParameter(this, key as keyof this).predicate(value as never)
+        parameter.predicate(typedValue as never)
       ) {
-        this[key as keyof this] = value
+        this[key as keyof this] = typedValue as any
       }
     })
   }
