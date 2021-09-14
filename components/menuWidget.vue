@@ -2,46 +2,22 @@
   <div class="w-full h-full">
     <div class="flex flex-col">
       <widget-title :text="title" />
-      <div
-        v-for="(menuItem, i) in menu"
-        :key="i"
-        class="my-px w-full max-w-full"
-      >
-        <focusable>
-          <div class="flex items-center">
-            <div class="flex-1 min-w-px py-3px pl-2px">
-              <div class="flex items-center">
-                <div v-if="configuration.emojis" class="emoji">
-                  <div class="w-full h-full flex items-center justify-center">
-                    <div
-                      class="flex items-center justify-center"
-                      style="height: 22px; width: 22px"
-                    >
-                      <div class="emoji-inner">
-                        <img
-                          class="w-full h-full"
-                          draggable="false"
-                          :alt="menuItem.emoji"
-                          :src="menuItem.emojiUrl"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <p class="block leading-notion-inner">
-                  <widget-text
-                    :text="menuItem.name"
-                    class="
-                      border-b border-notion-border
-                      dark:border-notion-border-dark
-                    "
-                  />
-                </p>
-              </div>
-            </div>
-          </div>
-        </focusable>
-      </div>
+      <widget-block v-for="(menuItem, i) in menu" :key="i">
+        <emoji-container v-if="configuration.emojis">
+          <img
+            class="w-full h-full"
+            draggable="false"
+            :alt="menuItem.emoji"
+            :src="menuItem.emojiUrl"
+          />
+        </emoji-container>
+        <p class="block leading-notion-inner">
+          <widget-text
+            :text="menuItem.name"
+            class="border-b border-notion-border dark:border-notion-border-dark"
+          />
+        </p>
+      </widget-block>
     </div>
     <example-warning v-if="example" />
   </div>
@@ -209,20 +185,3 @@ const title = computed(() =>
     : `${weekday.value} ${meal.value}`
 )
 </script>
-
-<style scoped lang="postcss">
-.emoji {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  margin-right: 4px;
-
-  & .emoji-inner {
-    width: 15.4px;
-    height: 15.4px;
-    font-size: 15.4px;
-    line-height: 1.1;
-    margin-left: 0px;
-  }
-}
-</style>
