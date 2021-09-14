@@ -1,21 +1,7 @@
 <template>
   <div class="w-full h-full">
     <div class="flex flex-col">
-      <div class="mt-2px mb-px w-full max-w-full">
-        <div
-          class="
-            w-full
-            flex
-            font-semibold
-            text-notion-title
-            leading-notion-inner
-          "
-        >
-          <div class="my-3px mx-2px break-words w-full max-w-full">
-            <widget-text :text="title" />
-          </div>
-        </div>
-      </div>
+      <widget-title :text="title" />
       <div
         v-for="(menuItem, i) in menu"
         :key="i"
@@ -42,15 +28,14 @@
                     </div>
                   </div>
                 </div>
-                <p
-                  class="
-                    block
-                    leading-notion-inner
-                    border-b border-notion-border
-                    dark:border-notion-border-dark
-                  "
-                >
-                  <widget-text :text="menuItem.name" />
+                <p class="block leading-notion-inner">
+                  <widget-text
+                    :text="menuItem.name"
+                    class="
+                      border-b border-notion-border
+                      dark:border-notion-border-dark
+                    "
+                  />
                 </p>
               </div>
             </div>
