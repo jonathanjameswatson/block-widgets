@@ -11,16 +11,7 @@
             leading-notion-inner
           "
         >
-          <div
-            class="
-              my-3px
-              mx-2px
-              break-words
-              whitespace-pre-wrap
-              w-full
-              max-w-full
-            "
-          >
+          <div class="my-3px mx-2px break-words w-full max-w-full">
             <widget-text :text="title" />
           </div>
         </div>
