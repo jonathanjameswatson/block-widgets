@@ -14,7 +14,7 @@
       <h1 class="text-blue-700 text-4xl font-bold mb-9">
         <a
           class="hover:text-blue-900"
-          href="https://github.com/jonathanjameswatson/widgets"
+          href="https://github.com/jonathanjameswatson/jjw-widgets"
           target="_blank"
           rel="noopener noreferrer"
         >
