@@ -1,14 +1,11 @@
 import 'reflect-metadata'
-import Configuration, {
-  parameter,
-  stringParameter,
-  booleanParameter,
-} from './configuration'
+import Configuration, { addParameter } from './configuration'
+import { stringParameter, booleanParameter } from '~/ts/parameters'
 
 export default class MenuConfiguration extends Configuration {
-  @parameter(stringParameter('Buttery bot URL', '/proxy'))
+  @addParameter(stringParameter('Buttery bot URL', '/proxy'))
   public butteryBotUrl: string = ''
 
-  @parameter(booleanParameter('Emojis', 'Off', 'On', true, '6ch'))
+  @addParameter(booleanParameter('Emojis', 'Off', 'On', true, '6ch'))
   public emojis: boolean = true
 }

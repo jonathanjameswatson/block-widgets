@@ -7,8 +7,8 @@
     >
       <template v-if="parameter.type === 'union'">
         <blue-select
-          :options="getOptions(parameter)"
-          :value="configuration[parameter.propertyKey]"
+          :options="parameter.options"
+          :value="getValue(parameter)"
           :min-width="parameter.minWidth"
           :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
@@ -16,7 +16,7 @@
       </template>
       <template v-else-if="parameter.type === 'string'">
         <blue-input
-          :value="configuration[parameter.propertyKey]"
+          :value="getValue(parameter)"
           :placeholder="parameter.placeholder"
           :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
@@ -26,7 +26,7 @@
         <blue-select
           :options="[parameter.defaultBoolean, !parameter.defaultBoolean]"
           :option-names="getBooleanOptionNames(parameter)"
-          :value="configuration[parameter.propertyKey]"
+          :value="getValue(parameter)"
           :min-width="parameter.minWidth"
           :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
@@ -37,7 +37,7 @@
           :minimum="parameter.minimum"
           :maximum="parameter.maximum"
           :step="parameter.step"
-          :value="configuration[parameter.propertyKey]"
+          :value="getValue(parameter)"
           :disabled="parameter.disabled"
           @input="parameterHandlers[i]"
         />
@@ -50,35 +50,31 @@
 import Configuration, {
   getParameterNames,
   getParameter,
-  UnionParameter,
-  BooleanParameter,
 } from '~/ts/configuration'
+import { Parameter, BooleanParameter } from '~/ts/parameters'
 import useConfiguration from '~/composables/useConfiguration'
 
 const configuration = useConfiguration()
 
 const parameterNames = computed(() => getParameterNames(configuration.value))
-
 const parameters = computed(() =>
   parameterNames.value.map((parameterName) =>
     getParameter(configuration.value, parameterName)
   )
 )
 
-const updateValue = (propertyKey: keyof Configuration, value: any) => {
-  configuration.value[propertyKey] = value as never
+const getValue = (parameter: Parameter) => {
+  return configuration.value[parameter.propertyKey as keyof Configuration]
 }
 
-const getOptions = <T extends Configuration>(parameter: UnionParameter<T>) => {
-  return parameter.options
-}
-
-const getBooleanOptionNames = <T extends Configuration>(
-  parameter: BooleanParameter<T>
-) =>
+const getBooleanOptionNames = (parameter: BooleanParameter) =>
   (parameter.defaultBoolean
     ? (x: string[]) => x
     : (x: string[]) => x.reverse())([parameter.trueLabel, parameter.falseLabel])
+
+const updateValue = (propertyKey: keyof Configuration, value: any) => {
+  configuration.value[propertyKey] = value as never
+}
 
 const inputMethods = {
   union(propertyKey: keyof Configuration) {
@@ -101,7 +97,7 @@ const inputMethods = {
 
 const parameterHandlers = computed(() =>
   parameters.value.map((parameter) =>
-    inputMethods[parameter.type](parameter.propertyKey)
+    inputMethods[parameter.type](parameter.propertyKey as keyof Configuration)
   )
 )
 </script>
