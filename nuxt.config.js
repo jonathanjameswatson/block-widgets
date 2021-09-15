@@ -73,18 +73,26 @@ export default {
   },
 
   proxy: {
-    [`/${process.env.BUTTERY_BOT_PROXY}`]: {
-      target: process.env.BUTTERY_BOT_URL,
-      pathRewrite: {
-        [`^/${process.env.BUTTERY_BOT_PROXY}`]: '',
-      },
-    },
-    [`/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: {
-      target: process.env.MET_OFFICE_THREE_HOUR_FORECAST_URL,
-      pathRewrite: {
-        [`^/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: '',
-      },
-    },
+    ...(process.env.BUTTERY_BOT_PROXY === undefined
+      ? {}
+      : {
+          [`/${process.env.BUTTERY_BOT_PROXY}`]: {
+            target: process.env.BUTTERY_BOT_URL,
+            pathRewrite: {
+              [`^/${process.env.BUTTERY_BOT_PROXY}`]: '',
+            },
+          },
+        }),
+    ...(process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY === undefined
+      ? {}
+      : {
+          [`/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: {
+            target: process.env.MET_OFFICE_THREE_HOUR_FORECAST_URL,
+            pathRewrite: {
+              [`^/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: '',
+            },
+          },
+        }),
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
