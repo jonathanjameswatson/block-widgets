@@ -12,7 +12,7 @@
   force = true
 
 [[redirects]]
-  from = "/MET_OFFICE_THREE_HOUR_FORECAST_PROXY/*"
-  to = "MET_OFFICE_THREE_HOUR_FORECAST_PROXY/:splat"
+  from = "/MET_OFFICE_THREE_HOUR_FORECAST_PROXY"
+  to = "MET_OFFICE_THREE_HOUR_FORECAST_PROXY"
   status = 200
   force = true
