@@ -17,7 +17,7 @@
         </p>
       </widget-block>
     </div>
-    <example-warning>Widget under construction</example-warning>
+    <example-warning v-if="example" />
   </div>
 </template>
 
@@ -52,20 +52,25 @@ const celsiusConverters: { [unit: string]: (celsius: number) => number } = {
   '°F': (celsius) => celsius * (9 / 5) + 32,
   K: (celsius) => celsius + 273.15,
 }
+
+const defaultRawData = {
+  requestPointDistance: 0,
+  modelRunDate: '?',
+  timeSeries: [],
+}
 </script>
 
 <script setup lang="ts">
 const configuration = getConfiguration<ThreeHourForecastConfiguration>()
 
-const rawData = ref<definitions['Properties']>({
-  requestPointDistance: 0,
-  modelRunDate: '?',
-  timeSeries: [],
-})
-// const longitude = ref(52.2018)
-// const latitude = ref(0.1144)
+const rawData = ref<definitions['Properties']>(defaultRawData)
+const failed = ref(false)
 
 const title = computed(() => {
+  if (failed.value) {
+    return 'Could not access Met Office'
+  }
+
   const { location } = rawData.value
 
   if (location === undefined) {
@@ -119,11 +124,64 @@ const forecast = computed(() => {
     )
 })
 
-onMounted(() => {
-  const { features } = exampleThreeHours
-  const [feature] = features
-  const { properties: newData } = feature
+const example = computed(() => configuration.value.endpoint === '')
 
-  rawData.value = newData
+const { $axios } = useContext()
+const setData = async () => {
+  if (!example.value) {
+    let response: definitions['SpotForecastFeatureCollection']
+
+    try {
+      response = (await $axios.$get(configuration.value.endpoint, {
+        headers: {
+          'X-IBM-Client-Id': configuration.value.clientId,
+          'X-IBM-Client-Secret': configuration.value.clientSecret,
+        },
+        params: {
+          excludeParameterMetadata: true,
+          includeLocationName: true,
+          latitude: configuration.value.latitude,
+          longitude: configuration.value.longitude,
+        },
+      })) as definitions['SpotForecastFeatureCollection']
+
+      if (response.features === undefined) {
+        throw new Error('Invalid payload given')
+      }
+
+      failed.value = false
+    } catch {
+      failed.value = true
+      return
+    }
+
+    const { features } = response
+    const [feature] = features
+    const { properties: newData } = feature
+
+    rawData.value = newData
+  } else {
+    const { features } = exampleThreeHours
+    const [feature] = features
+    const { properties: newData } = feature
+
+    rawData.value = newData
+  }
+}
+
+watch(
+  [
+    () => configuration.value.endpoint,
+    () => configuration.value.clientId,
+    () => configuration.value.clientSecret,
+  ],
+  async () => {
+    rawData.value = defaultRawData
+    await setData()
+  }
+)
+
+onMounted(() => {
+  setData()
 })
 </script>

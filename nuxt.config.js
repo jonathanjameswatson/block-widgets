@@ -65,7 +65,9 @@ export default {
     baseURL:
       process.env.NETLIFY === 'true'
         ? 'https://widgets.jonathanjameswatson.com:443'
-        : 'http://localhost:8888',
+        : process.env.NETLIFY_DEV === 'true'
+        ? 'http://localhost:8888'
+        : 'http://localhost:3000',
     proxy: true,
   },
 
@@ -73,7 +75,13 @@ export default {
     [`/${process.env.BUTTERY_BOT_PROXY}`]: {
       target: process.env.BUTTERY_BOT_URL,
       pathRewrite: {
-        [`^/${process.env.BUTTERY_BOT_PROXY}/`]: '',
+        [`^/${process.env.BUTTERY_BOT_PROXY}`]: '',
+      },
+    },
+    [`/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: {
+      target: process.env.MET_OFFICE_THREE_HOUR_FORECAST_URL,
+      pathRewrite: {
+        [`^/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: '',
       },
     },
   },
