@@ -24,9 +24,9 @@
 
       <blue-control label="Widget">
         <blue-select
-          v-model="widget"
-          :options="widgets"
-          :option-names="widgets.map((widget) => widget.name)"
+          v-model="widgetUrl"
+          :options="widgetUrls"
+          :option-names="widgetNames"
           min-width="21ch"
         />
       </blue-control>
@@ -108,23 +108,12 @@
 </template>
 
 <script lang="ts">
-import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
-import Menu from '~/components/widgets/menu.vue'
-
-import Configuration from '~/ts/configuration'
-import MenuConfiguration from '~/ts/menuConfiguration'
-import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
+import widgets, { WidgetUrl } from '~/ts/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
 import useConfiguration from '~/composables/useConfiguration'
 
-interface Widget {
-  name: string
-  url: string
-  component: Vue.Component
-  configuration: typeof Configuration
-}
-
-type Preview = 'Normal' | 'iFrame'
+const defaultUrl = 'threehourforecast'
+const DefaultConstructor = widgets[defaultUrl].configuration
 
 export default {
   layout: 'index',
@@ -132,46 +121,47 @@ export default {
 </script>
 
 <script setup lang="ts">
-const widgets: Widget[] = [
-  {
-    name: 'Three hour forecast',
-    url: 'threehourforecast',
-    component: ThreeHourForecast,
-    configuration: ThreeHourForecastConfiguration,
-  },
-  {
-    name: 'Buttery menu',
-    url: 'menu',
-    component: Menu,
-    configuration: MenuConfiguration,
-  },
-]
+// Widget
 
-const widget = ref(widgets[0])
-const resizing = ref(false)
-const configuration = useConfiguration()
-const preview = ref<Preview>('Normal')
-const protocol = ref('')
-const titleBase = ref('')
-const canCopy = ref(false)
-const copyText = ref('Copy')
-const copyTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const widgetUrls = Object.keys(widgets)
+const widgetNames = Object.values(widgets).map((widget) => widget.name)
+const widgetUrl = ref<WidgetUrl>(defaultUrl)
+const widget = computed(() => widgets[widgetUrl.value])
+
+// URL
 
 const queryPage = computed(() => {
   const parameterObject = configuration.value.toParameterObject() as {
     [key: string]: string
   }
   const queryString = stringifyQuery(parameterObject)
-  return `${widget.value.url}${queryString}`
+  return `${widgetUrl.value}${queryString}`
 })
 
-const StartConfiguration = widgets[0].configuration
-configuration.value = new StartConfiguration()
-
-watch(widget, () => {
-  const WidgetConfiguration = widget.value.configuration
-  configuration.value = new WidgetConfiguration()
+const protocol = ref('')
+const titleBase = ref('')
+onMounted(() => {
+  protocol.value = window.location.protocol
+  titleBase.value = window.location.host
 })
+
+const url = computed(
+  () => `${protocol.value}//${titleBase.value}/${queryPage.value}`
+)
+
+// Configuration
+
+const configuration = useConfiguration()
+configuration.value = new DefaultConstructor()
+watch(
+  () => widget.value.configuration,
+  () => {
+    const NewConstructor = widget.value.configuration
+    configuration.value = new NewConstructor()
+  }
+)
+
+// Colour theme
 
 const { $colorMode } = useContext()
 watch(
@@ -183,18 +173,17 @@ watch(
   }
 )
 
-onMounted(() => {
-  protocol.value = window.location.protocol
-  titleBase.value = window.location.host
+// URL Copying
 
+const canCopy = ref(false)
+const copyText = ref('Copy')
+const copyTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+
+onMounted(() => {
   if (navigator.clipboard) {
     canCopy.value = true
   }
 })
-
-const url = computed(
-  () => `${protocol.value}//${titleBase.value}/${queryPage.value}`
-)
 
 const copy = async () => {
   try {
@@ -213,6 +202,14 @@ const copy = async () => {
     }, 2500)
   }
 }
+
+// Preview
+
+const preview = ref<'Normal' | 'iFrame'>('Normal')
+
+// Resizing
+
+const resizing = ref(false)
 </script>
 
 <style lang="postcss">
