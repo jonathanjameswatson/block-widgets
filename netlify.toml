@@ -13,6 +13,6 @@
 
 [[redirects]]
   from = "/MET_OFFICE_THREE_HOUR_FORECAST_PROXY"
-  to = "MET_OFFICE_THREE_HOUR_FORECAST_PROXY"
+  to = "MET_OFFICE_THREE_HOUR_FORECAST_URL"
   status = 200
   force = true
