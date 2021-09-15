@@ -107,7 +107,9 @@ const forecast = computed(() => {
         maxScreenAirTemp,
         probOfPrecipitation,
       }) => {
-        const { icon, name } = getWeatherInformation(significantWeatherCode)
+        const { icon, display, name } = getWeatherInformation(
+          significantWeatherCode
+        )
         const timeFormat =
           configuration.value.timeFormat !== ''
             ? configuration.value.timeFormat
@@ -121,7 +123,7 @@ const forecast = computed(() => {
         const temperature =
           celsiusConverters[configuration.value.temperatureUnit](celsius)
 
-        const text = `${date} - ${name}, ${Math.round(temperature)}${
+        const text = `${date} - ${display}, ${Math.round(temperature)}${
           configuration.value.temperatureUnit
         }, ${probOfPrecipitation}%`
 
