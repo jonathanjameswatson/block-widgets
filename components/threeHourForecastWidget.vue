@@ -24,6 +24,8 @@
 <script lang="ts">
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
+import utc from 'dayjs/plugin/utc'
+import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
 
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
 import exampleThreeHours from '~/ts/exampleThreeHours'
@@ -31,8 +33,10 @@ import definitions from '~/ts/threeHourSchema'
 import { getConfiguration } from '~/ts/configurationControllers'
 import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
-const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
 dayjs.extend(advancedFormat)
+dayjs.extend(utc)
+
+const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
 
 const celsiusGetters: {
   [type: string]: (temperatures: {
@@ -58,6 +62,11 @@ const defaultRawData = {
   modelRunDate: '?',
   timeSeries: [],
 }
+
+const rule = new RecurrenceRule()
+rule.hour = [0, 3, 6, 8, 12, 15, 18, 21]
+rule.minute = 5
+rule.tz = 'Etc/UTC'
 </script>
 
 <script setup lang="ts">
@@ -65,6 +74,8 @@ const configuration = getConfiguration<ThreeHourForecastConfiguration>()
 
 const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)
+const startTime = ref<number | null>(null)
+const schedule = ref<Job | null>(null)
 
 const title = computed(() => {
   if (failed.value) {
@@ -149,6 +160,8 @@ const setData = async () => {
         throw new Error('Invalid payload given')
       }
 
+      startTime.value = dayjs().utc().hour()
+
       failed.value = false
     } catch {
       failed.value = true
@@ -169,6 +182,36 @@ const setData = async () => {
   }
 }
 
+const update = async () => {
+  if (example.value) {
+    return
+  }
+
+  if (startTime.value !== null && dayjs().utc().hour() === startTime.value) {
+    return
+  }
+
+  startTime.value = null
+
+  if (rawData.value.timeSeries.length > configuration.value.items) {
+    rawData.value.timeSeries.shift()
+    return
+  }
+
+  await setData()
+}
+
+onMounted(async () => {
+  schedule.value = scheduleJob(rule, update)
+  await setData()
+})
+
+onBeforeUnmount(() => {
+  if (schedule.value !== null) {
+    schedule.value.cancel()
+  }
+})
+
 watch(
   [
     () => configuration.value.endpoint,
@@ -177,11 +220,8 @@ watch(
   ],
   async () => {
     rawData.value = defaultRawData
+    startTime.value = null
     await setData()
   }
 )
-
-onMounted(() => {
-  setData()
-})
 </script>
