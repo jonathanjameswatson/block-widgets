@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 
-const configuration = getConfiguration()
+const configuration = useConfiguration()
 
 const truncate = computed(() =>
   configuration.value.textWrapping ? null : 'truncate-child'

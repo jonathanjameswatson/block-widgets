@@ -26,7 +26,7 @@ import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
 
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
 import definitions from '~/ts/threeHourSchema'
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
 dayjs.extend(advancedFormat)
@@ -66,7 +66,7 @@ rule.tz = 'Etc/UTC'
 </script>
 
 <script setup lang="ts">
-const configuration = getConfiguration<ThreeHourForecastConfiguration>()
+const configuration = useConfiguration<ThreeHourForecastConfiguration>()
 
 const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)

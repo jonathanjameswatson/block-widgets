@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { parse, walk, generate, fromPlainObject, CssNode } from 'css-tree'
 
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 
 const props = withDefaults(
   defineProps<{
@@ -19,7 +19,7 @@ const props = withDefaults(
   }
 )
 
-const configuration = getConfiguration()
+const configuration = useConfiguration()
 
 const customCssContainer = ref<HTMLDivElement | null>(null)
 

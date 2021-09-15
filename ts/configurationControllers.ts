@@ -1,15 +1,13 @@
-import { inject, useRoute, useContext, Ref } from '@nuxtjs/composition-api'
+import { useRoute, useContext } from '@nuxtjs/composition-api'
+
+import useConfiguration from '~/composables/useConfiguration'
 
 import Configuration from '~/ts/configuration'
-
-export const getConfiguration = <T extends Configuration = Configuration>() => {
-  return inject('configuration') as Ref<T>
-}
 
 export const setConfiguration = <T extends Configuration>(Constructor: {
   new (): T
 }) => {
-  const configuration = getConfiguration<T>()
+  const configuration = useConfiguration<T>()
   const route = useRoute()
   const newConfiguration = new Constructor()
   newConfiguration.setFromParameterObject(route.value.query)

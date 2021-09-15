@@ -115,7 +115,7 @@ import Configuration from '~/ts/configuration'
 import MenuConfiguration from '~/ts/menuConfiguration'
 import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 import stringifyQuery from '~/ts/stringifyQuery'
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 
 interface Widget {
   name: string
@@ -149,7 +149,7 @@ const widgets: Widget[] = [
 
 const widget = ref(widgets[0])
 const resizing = ref(false)
-const configuration = getConfiguration()
+const configuration = useConfiguration()
 const preview = ref<Preview>('Normal')
 const protocol = ref('')
 const titleBase = ref('')

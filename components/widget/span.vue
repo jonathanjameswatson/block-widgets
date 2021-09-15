@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 
 const wordRegExp = /[^ ]+/g
 const capitalisers: { [option: string]: (x: string) => string } = {
@@ -21,7 +21,7 @@ const capitalisers: { [option: string]: (x: string) => string } = {
 </script>
 
 <script setup lang="ts">
-const configuration = getConfiguration()
+const configuration = useConfiguration()
 
 const props = withDefaults(
   defineProps<{

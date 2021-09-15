@@ -25,7 +25,7 @@ import twemoji from 'twemoji'
 import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 import MenuConfiguration from '~/ts/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
@@ -90,7 +90,7 @@ interface ApiResponse {
   menu: string[]
 }
 
-const configuration = getConfiguration<MenuConfiguration>()
+const configuration = useConfiguration<MenuConfiguration>()
 
 const weekday = ref('')
 const meal = ref('')

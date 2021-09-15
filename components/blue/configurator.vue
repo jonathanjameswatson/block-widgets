@@ -53,9 +53,9 @@ import Configuration, {
   UnionParameter,
   BooleanParameter,
 } from '~/ts/configuration'
-import { getConfiguration } from '~/ts/configurationControllers'
+import useConfiguration from '~/composables/useConfiguration'
 
-const configuration = getConfiguration()
+const configuration = useConfiguration()
 
 const parameterNames = computed(() => getParameterNames(configuration.value))
 
