@@ -100,7 +100,7 @@ const forecast = computed(() => {
         const timeFormat =
           configuration.value.timeFormat !== ''
             ? configuration.value.timeFormat
-            : 'Do: Ha'
+            : 'Do: ha'
         const date = dayjs(time).format(timeFormat)
         const celsius = celsiusGetters[configuration.value.temperatureType]({
           feelsLike: feelsLikeTemp,

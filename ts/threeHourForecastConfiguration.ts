@@ -43,7 +43,7 @@ export default class ThreeHourForecastConfiguration extends Configuration {
   public icons: boolean = true
 
   @parameter(stringParameter('Time format', 'Do: Ha'))
-  public timeFormat: string = 'Do: Ha'
+  public timeFormat: string = 'Do: ha'
 
   @parameter(unionParameter('Unit of temperature', temperatureUnits, '6ch'))
   public temperatureUnit: typeof temperatureUnits[number] = '°C'
