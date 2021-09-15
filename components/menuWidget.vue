@@ -157,9 +157,17 @@ const setData = async () => {
   }
 }
 
-onMounted(() => {
-  schedule.value = scheduleJob(rule, setData)
-  setData()
+const update = async () => {
+  if (example.value) {
+    return
+  }
+
+  await setData()
+}
+
+onMounted(async () => {
+  schedule.value = scheduleJob(rule, update)
+  await setData()
 })
 
 onBeforeUnmount(() => {
