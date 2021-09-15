@@ -151,6 +151,7 @@ const widget = ref(widgets[0])
 const resizing = ref(false)
 const configuration = getConfiguration()
 const preview = ref<Preview>('Normal')
+const protocol = ref('')
 const titleBase = ref('')
 const canCopy = ref(false)
 const copyText = ref('Copy')
@@ -183,6 +184,7 @@ watch(
 )
 
 onMounted(() => {
+  protocol.value = window.location.protocol
   titleBase.value = window.location.host
 
   if (navigator.clipboard) {
@@ -190,7 +192,9 @@ onMounted(() => {
   }
 })
 
-const url = computed(() => `https://${titleBase.value}/${queryPage.value}`)
+const url = computed(
+  () => `${protocol.value}//${titleBase.value}/${queryPage.value}`
+)
 
 const copy = async () => {
   try {
