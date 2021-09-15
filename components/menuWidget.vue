@@ -11,12 +11,9 @@
             :src="menuItem.emojiUrl"
           />
         </emoji-container>
-        <p class="block leading-notion-inner">
-          <widget-text
-            :text="menuItem.name"
-            class="border-b border-notion-border dark:border-notion-border-dark"
-          />
-        </p>
+        <widget-text>
+          <widget-span :text="menuItem.name" underline />
+        </widget-text>
       </widget-block>
     </div>
     <example-warning v-if="example" />

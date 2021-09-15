@@ -3,3 +3,9 @@ font-serif
 font-mono
 text-notion-normal
 text-notion-small
+p-4
+pt-3
+truncate
+border-b
+border-notion-border
+dark:border-notion-border-dark

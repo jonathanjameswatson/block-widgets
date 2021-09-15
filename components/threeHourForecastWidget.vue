@@ -9,12 +9,9 @@
             :name="weatherInformation.name"
           />
         </emoji-container>
-        <p class="block leading-notion-inner">
-          <widget-text
-            :text="weatherInformation.text"
-            class="border-b border-notion-border dark:border-notion-border-dark"
-          />
-        </p>
+        <widget-text>
+          <widget-span :text="weatherInformation.text" underline />
+        </widget-text>
       </widget-block>
     </div>
     <example-warning v-if="example" />

@@ -80,6 +80,12 @@ const classes = computed(() => {
     configuration.value.textSize ? 'small' : 'normal'
   }`
 
-  return [fontFamily, fontSize]
+  const classes = [fontFamily, fontSize]
+
+  if (configuration.value.padding) {
+    classes.push('p-4', 'pt-3')
+  }
+
+  return classes
 })
 </script>

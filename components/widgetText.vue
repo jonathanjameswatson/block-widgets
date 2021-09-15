@@ -1,34 +1,22 @@
 <template>
-  <span>
-    {{ capitalisedText }}
-  </span>
+  <div class="block leading-notion-inner min-w-0" :class="truncate">
+    <slot />
+  </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { getConfiguration } from '~/ts/configurationControllers'
 
-const wordRegExp = /[^ ]+/g
-const capitalisers: { [option: string]: (x: string) => string } = {
-  Normal: (x: string) => x,
-  'Lower case': (x: string) => x.toLowerCase(),
-  'Upper case': (x: string) => x.toUpperCase(),
-  'Title case': (x: string) =>
-    x.replaceAll(
-      wordRegExp,
-      (y: string) => y.charAt(0).toUpperCase() + y.slice(1)
-    ),
-}
-</script>
-
-<script setup lang="ts">
 const configuration = getConfiguration()
 
-const props =
-  defineProps<{
-    text: string
-  }>()
-
-const capitalisedText = computed(() =>
-  capitalisers[configuration.value.capitalisation](props.text)
+const truncate = computed(() =>
+  configuration.value.textWrapping ? null : 'truncate-child'
 )
 </script>
+
+<style lang="postcss">
+.truncate-child span {
+  display: block;
+  @apply truncate;
+}
+</style>

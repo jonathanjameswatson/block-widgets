@@ -245,6 +245,12 @@ export default class Configuration {
   @parameter(booleanParameter('Text size', 'Normal', 'Small', false, '10ch'))
   public textSize: boolean = false
 
+  @parameter(booleanParameter('Padding', 'Off', 'On', true, '6ch'))
+  public padding: boolean = true
+
+  @parameter(booleanParameter('Text wrapping', 'Off', 'On', true, '6ch'))
+  public textWrapping: boolean = true
+
   @parameter(unionParameter('Capitalisation', capitalisations, '15ch'))
   public capitalisation: typeof capitalisations[number] = 'Normal'
 
