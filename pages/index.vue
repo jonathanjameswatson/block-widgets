@@ -39,7 +39,7 @@
         />
       </blue-control>
 
-      <configurator />
+      <blue-configurator />
 
       <blue-control label="Link">
         <span class="flex">
@@ -108,8 +108,8 @@
 </template>
 
 <script lang="ts">
-import ThreeHourForecast from '~/components/threeHourForecastWidget.vue'
-import Menu from '~/components/menuWidget.vue'
+import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
+import Menu from '~/components/widgets/menu.vue'
 
 import Configuration from '~/ts/configuration'
 import MenuConfiguration from '~/ts/menuConfiguration'

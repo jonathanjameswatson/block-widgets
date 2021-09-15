@@ -3,18 +3,18 @@
     <div class="flex flex-col">
       <widget-title :text="title" />
       <widget-block v-for="(weatherInformation, i) in forecast" :key="i">
-        <emoji-container v-if="configuration.icons">
-          <weather-icon
+        <widget-emoji-container v-if="configuration.icons">
+          <widget-weather-icon
             :icon="weatherInformation.icon"
             :name="weatherInformation.name"
           />
-        </emoji-container>
+        </widget-emoji-container>
         <widget-text>
           <widget-span :text="weatherInformation.text" underline />
         </widget-text>
       </widget-block>
     </div>
-    <example-warning v-if="example" />
+    <widget-warning v-if="example" />
   </div>
 </template>
 

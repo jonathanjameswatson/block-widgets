@@ -3,20 +3,20 @@
     <div class="flex flex-col">
       <widget-title :text="title" />
       <widget-block v-for="(menuItem, i) in menu" :key="i">
-        <emoji-container v-if="configuration.emojis">
+        <widget-emoji-container v-if="configuration.emojis">
           <img
             class="w-full h-full"
             draggable="false"
             :alt="menuItem.emoji"
             :src="menuItem.emojiUrl"
           />
-        </emoji-container>
+        </widget-emoji-container>
         <widget-text>
           <widget-span :text="menuItem.name" underline />
         </widget-text>
       </widget-block>
     </div>
-    <example-warning v-if="example" />
+    <widget-warning v-if="example" />
   </div>
 </template>
 

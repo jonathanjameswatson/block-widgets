@@ -1,5 +1,5 @@
 <template>
-  <menu-widget />
+  <widgets-menu />
 </template>
 
 <script setup lang="ts">

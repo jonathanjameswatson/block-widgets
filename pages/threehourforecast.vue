@@ -1,5 +1,5 @@
 <template>
-  <three-hour-forecast-widget />
+  <widgets-three-hour-forecast />
 </template>
 
 <script setup lang="ts">
