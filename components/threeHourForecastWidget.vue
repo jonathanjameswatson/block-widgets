@@ -25,7 +25,6 @@ import utc from 'dayjs/plugin/utc'
 import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
 
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
-import exampleThreeHours from '~/ts/exampleThreeHours'
 import definitions from '~/ts/threeHourSchema'
 import { getConfiguration } from '~/ts/configurationControllers'
 import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
@@ -73,6 +72,8 @@ const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)
 const startTime = ref<number | null>(null)
 const schedule = ref<Job | null>(null)
+const exampleThreeHours =
+  ref<definitions['SpotForecastFeatureCollection'] | null>(null)
 
 const title = computed(() => {
   if (failed.value) {
@@ -173,7 +174,13 @@ const setData = async () => {
 
     rawData.value = newData
   } else {
-    const { features } = exampleThreeHours
+    if (exampleThreeHours.value === null) {
+      const imported = (await import('~/ts/exampleThreeHours')) as unknown as {
+        default: definitions['SpotForecastFeatureCollection']
+      }
+      exampleThreeHours.value = imported.default
+    }
+    const { features } = exampleThreeHours.value
     const [feature] = features
     const { properties: newData } = feature
 
