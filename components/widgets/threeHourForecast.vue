@@ -10,7 +10,7 @@
           />
         </widget-emoji-container>
         <widget-text>
-          <widget-span :text="weatherInformation.text" underline />
+          <widget-inline :text="weatherInformation.text" underline />
         </widget-text>
       </widget-block>
     </div>

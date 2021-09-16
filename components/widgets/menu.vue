@@ -12,7 +12,7 @@
           />
         </widget-emoji-container>
         <widget-text>
-          <widget-span :text="menuItem.name" underline />
+          <widget-inline :text="menuItem.name" underline />
         </widget-text>
       </widget-block>
     </div>
