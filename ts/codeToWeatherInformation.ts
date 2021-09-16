@@ -1,4 +1,8 @@
-import WeatherInformation from '~/ts/weatherInformation'
+export interface WeatherInformation {
+  name: string
+  display: string
+  icon: string
+}
 
 const codeToWeatherInformation: Record<number | 'null', WeatherInformation> = {
   null: {
