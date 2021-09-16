@@ -26,6 +26,7 @@ declare global {
   const watch: typeof import('@nuxtjs/composition-api')['watch']
   const watchEffect: typeof import('@nuxtjs/composition-api')['watchEffect']
   const defineComponent: typeof import('@nuxtjs/composition-api')['defineComponent']
+  const defineAsyncComponent: typeof import('@nuxtjs/composition-api')['defineAsyncComponent']
   const getCurrentInstance: typeof import('@nuxtjs/composition-api')['getCurrentInstance']
   const h: typeof import('@nuxtjs/composition-api')['h']
   const inject: typeof import('@nuxtjs/composition-api')['inject']
