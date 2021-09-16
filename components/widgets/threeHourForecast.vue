@@ -22,11 +22,13 @@
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from 'dayjs/plugin/utc'
-import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
+
+import useConfiguration from '~/composables/useConfiguration'
+import useSchedule from '~/composables/useSchedule'
 
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
 import definitions from '~/ts/threeHourSchema'
-import useConfiguration from '~/composables/useConfiguration'
+
 import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
 
 dayjs.extend(advancedFormat)
@@ -58,11 +60,6 @@ const defaultRawData = {
   modelRunDate: '?',
   timeSeries: [],
 }
-
-const rule = new RecurrenceRule()
-rule.hour = [0, 3, 6, 8, 12, 15, 18, 21]
-rule.minute = 5
-rule.tz = 'Etc/UTC'
 </script>
 
 <script setup lang="ts">
@@ -71,7 +68,6 @@ const configuration = useConfiguration<ThreeHourForecastConfiguration>()
 const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)
 const startTime = ref<number | null>(null)
-const schedule = ref<Job | null>(null)
 const exampleThreeHours =
   ref<definitions['SpotForecastFeatureCollection'] | null>(null)
 
@@ -208,15 +204,10 @@ const update = async () => {
 }
 
 onMounted(async () => {
-  schedule.value = scheduleJob(rule, update)
   await setData()
 })
 
-onBeforeUnmount(() => {
-  if (schedule.value !== null) {
-    schedule.value.cancel()
-  }
-})
+useSchedule('5 */3 * * *', update)
 
 watch(
   [

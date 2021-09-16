@@ -22,10 +22,11 @@
 
 <script lang="ts">
 import twemoji from 'twemoji'
-import { RecurrenceRule, scheduleJob, Job } from 'node-schedule'
+
+import useConfiguration from '~/composables/useConfiguration'
+import useSchedule from '~/composables/useSchedule'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
-import useConfiguration from '~/composables/useConfiguration'
 import MenuConfiguration from '~/ts/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
@@ -64,11 +65,6 @@ interface MenuItem {
   emoji: string
   emojiUrl: string
 }
-
-const rule = new RecurrenceRule()
-rule.hour = [1, 15]
-rule.minute = 5
-rule.tz = 'Etc/GMT'
 </script>
 
 <script setup lang="ts">
@@ -96,7 +92,6 @@ const weekday = ref('')
 const meal = ref('')
 const rawMenu = ref<string[]>([])
 const failed = ref(false)
-const schedule = ref<Job | null>(null)
 
 const example = computed(() => configuration.value.butteryBotUrl === '')
 const menu = computed<MenuItem[]>(() =>
@@ -163,15 +158,10 @@ const update = async () => {
 }
 
 onMounted(async () => {
-  schedule.value = scheduleJob(rule, update)
   await setData()
 })
 
-onBeforeUnmount(() => {
-  if (schedule.value !== null) {
-    schedule.value.cancel()
-  }
-})
+useSchedule('5 1,15 * * *', update)
 
 watch(
   () => configuration.value.butteryBotUrl,
