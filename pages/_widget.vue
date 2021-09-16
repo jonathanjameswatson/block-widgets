@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import widgets, { WidgetUrl } from '~/ts/widgets'
+import WIDGET_URLS from '~/ts/widgetUrls'
+import widgets from '~/ts/widgets'
 import useConfiguration from '~/composables/useConfiguration'
 
 const widgetComponent = ref<null | Vue.Component>(null)
@@ -18,7 +19,7 @@ const widgetName = route.value.params.widget
 
 if (widgetName in widgets) {
   const { configuration: Constructor, component: newComponent } =
-    widgets[widgetName as WidgetUrl]
+    widgets[widgetName as typeof WIDGET_URLS[number]]
   const newConfiguration = new Constructor()
   newConfiguration.setFromParameterObject(route.value.query)
   const configuration = useConfiguration()

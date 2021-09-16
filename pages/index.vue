@@ -108,7 +108,8 @@
 </template>
 
 <script lang="ts">
-import widgets, { WidgetUrl } from '~/ts/widgets'
+import WIDGET_URLS from '~/ts/widgetUrls'
+import widgets from '~/ts/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
 import useConfiguration from '~/composables/useConfiguration'
 
@@ -123,9 +124,9 @@ export default {
 <script setup lang="ts">
 // Widget
 
-const widgetUrls = Object.keys(widgets)
-const widgetNames = Object.values(widgets).map((widget) => widget.name)
-const widgetUrl = ref<WidgetUrl>(defaultUrl)
+const widgetUrls = WIDGET_URLS
+const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)
+const widgetUrl = ref<typeof WIDGET_URLS[number]>(defaultUrl)
 const widget = computed(() => widgets[widgetUrl.value])
 
 // URL

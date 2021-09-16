@@ -1,3 +1,4 @@
+import WIDGET_URLS from '~/ts/widgetUrls'
 import Configuration from '~/ts/configuration'
 
 import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
@@ -12,9 +13,7 @@ export interface Widget {
   configuration: typeof Configuration
 }
 
-export type WidgetUrl = 'threehourforecast' | 'menu'
-
-const widgets: { [url in WidgetUrl]: Widget } = {
+const widgets: { [url in typeof WIDGET_URLS[number]]: Widget } = {
   threehourforecast: {
     name: 'Three hour forecast',
     component: ThreeHourForecast,
