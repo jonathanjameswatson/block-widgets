@@ -32,7 +32,7 @@ const setStyle = async (css: string) => {
 
   const modifyCss = props.modifyCss
 
-  if (modifyCss !== null) {
+  if (modifyCss !== null && css !== '') {
     const { parse, walk, generate, fromPlainObject } = await import('css-tree')
     const ast = parse(css)
     walk(ast, {
