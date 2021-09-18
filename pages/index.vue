@@ -108,10 +108,12 @@
 </template>
 
 <script lang="ts">
+import useConfiguration from '~/composables/useConfiguration'
+
 import WIDGET_URLS from '~/ts/widgetUrls'
 import widgets from '~/ts/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
-import useConfiguration from '~/composables/useConfiguration'
+import { narrowingIncludes } from '~/ts/typeHelpers'
 
 const defaultUrl = 'threehourforecast'
 const DefaultConstructor = widgets[defaultUrl].configuration
@@ -126,7 +128,23 @@ export default {
 
 const widgetUrls = WIDGET_URLS
 const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)
-const widgetUrl = ref<typeof WIDGET_URLS[number]>(defaultUrl)
+
+const route = useRoute()
+const router = useRouter()
+const widgetUrl = computed<typeof WIDGET_URLS[number]>({
+  get() {
+    const { hash } = route.value
+    const hashEnd = hash.slice(1)
+    if (narrowingIncludes(WIDGET_URLS, hashEnd)) {
+      return hashEnd
+    } else {
+      return defaultUrl
+    }
+  },
+  set(value) {
+    router.push({ hash: value })
+  },
+})
 const widget = computed(() => widgets[widgetUrl.value])
 
 // URL
