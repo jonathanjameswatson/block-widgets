@@ -60,8 +60,10 @@ const parameter =
     return {
       type,
       propertyKey,
-      disabled,
       name,
+      disabled,
+      predicate,
+      stringToType,
       ...extras,
     } as U
   }
