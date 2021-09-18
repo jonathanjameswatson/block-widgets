@@ -106,12 +106,6 @@ export default {
         'postcss-calc': {},
       },
     },
-    extend(config) {
-      config.externals = {
-        moment: 'moment',
-        'moment-timezone': 'moment_timezone',
-      }
-    },
   },
 
   // Color mode configuration
