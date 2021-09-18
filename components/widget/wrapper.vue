@@ -6,6 +6,8 @@
 </template>
 
 <script setup lang="ts">
+import { CssNode } from 'css-tree'
+
 import useConfiguration from '~/composables/useConfiguration'
 
 const props = withDefaults(
@@ -31,9 +33,7 @@ const setStyle = async (css: string) => {
   const modifyCss = props.modifyCss
 
   if (modifyCss !== null) {
-    const { parse, walk, generate, fromPlainObject, CssNode } = await import(
-      'css-tree'
-    )
+    const { parse, walk, generate, fromPlainObject } = await import('css-tree')
     const ast = parse(css)
     walk(ast, {
       enter(node: CssNode) {

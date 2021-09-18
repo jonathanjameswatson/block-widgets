@@ -84,6 +84,7 @@ export default class Configuration {
   public toParameterObject() {
     let original: this
     try {
+      // @ts-ignore
       original = new this.constructor()
     } catch {
       throw new TypeError(
@@ -101,11 +102,11 @@ export default class Configuration {
   public setFromParameterObject(query: Object) {
     const editableProperties = getParameterNames<this>(this)
     Object.entries(query).forEach(([key, value]) => {
-      if (narrowingIncludes<string, keyof this>(editableProperties, key)) {
+      if (narrowingIncludes<keyof this>(editableProperties, key)) {
         const parameter = getParameter(this, key)
         const typedValue = parameter.stringToType(value)
         if (parameter.predicate(typedValue as never)) {
-          this[key] = typedValue
+          this[key] = typedValue as any
         }
       }
     })
