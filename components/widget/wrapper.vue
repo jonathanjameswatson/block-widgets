@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { parse, walk, generate, fromPlainObject, CssNode } from 'css-tree'
-
 import useConfiguration from '~/composables/useConfiguration'
 
 const props = withDefaults(
@@ -23,7 +21,7 @@ const configuration = useConfiguration()
 
 const customCssContainer = ref<HTMLDivElement | null>(null)
 
-const setStyle = (css: string) => {
+const setStyle = async (css: string) => {
   if (customCssContainer.value === null) {
     return
   }
@@ -33,6 +31,9 @@ const setStyle = (css: string) => {
   const modifyCss = props.modifyCss
 
   if (modifyCss !== null) {
+    const { parse, walk, generate, fromPlainObject, CssNode } = await import(
+      'css-tree'
+    )
     const ast = parse(css)
     walk(ast, {
       enter(node: CssNode) {
@@ -69,10 +70,10 @@ const setStyle = (css: string) => {
 
 watch(
   () => configuration.value.css,
-  (css: string) => setStyle(css)
+  async (css: string) => await setStyle(css)
 )
 
-onMounted(() => setStyle(configuration.value.css))
+onMounted(async () => await setStyle(configuration.value.css))
 
 const classes = computed(() => {
   const fontFamily = `font-${configuration.value.style.toLowerCase()}`
