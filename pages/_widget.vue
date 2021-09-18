@@ -8,9 +8,10 @@
 </template>
 
 <script setup lang="ts">
+import useConfiguration from '~/composables/useConfiguration'
+
 import WIDGET_URLS from '~/ts/widgetUrls'
 import widgets from '~/ts/widgets'
-import useConfiguration from '~/composables/useConfiguration'
 
 const widgetComponent = ref<null | Vue.Component>(null)
 

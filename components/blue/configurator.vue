@@ -47,12 +47,13 @@
 </template>
 
 <script setup lang="ts">
+import useConfiguration from '~/composables/useConfiguration'
+
 import Configuration, {
   getParameterNames,
   getParameter,
 } from '~/ts/configuration'
 import { Parameter, BooleanParameter } from '~/ts/parameters'
-import useConfiguration from '~/composables/useConfiguration'
 
 const configuration = useConfiguration()
 
