@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 
+import { narrowingIncludes } from '~/ts/typeHelpers'
 import {
   Parameter,
   unionParameter,
@@ -81,8 +82,15 @@ export default class Configuration {
   public css: string = ''
 
   public toParameterObject() {
-    // @ts-ignore
-    const original = new this.constructor()
+    let original: this
+    try {
+      original = new this.constructor()
+    } catch {
+      throw new TypeError(
+        'All configuration objects must have a constructor with no arguments.'
+      )
+    }
+
     return Object.fromEntries(
       getParameterNames<this>(this)
         .filter((key) => this[key] !== original[key])
@@ -91,18 +99,14 @@ export default class Configuration {
   }
 
   public setFromParameterObject(query: Object) {
-    const editableProperties = getParameterNames<this>(this) as (
-      | string
-      | symbol
-    )[]
+    const editableProperties = getParameterNames<this>(this)
     Object.entries(query).forEach(([key, value]) => {
-      const parameter = getParameter(this, key as keyof this)
-      const typedValue = parameter.stringToType(value)
-      if (
-        editableProperties.includes(key) &&
-        parameter.predicate(typedValue as never)
-      ) {
-        this[key as keyof this] = typedValue as any
+      if (narrowingIncludes<string, keyof this>(editableProperties, key)) {
+        const parameter = getParameter(this, key)
+        const typedValue = parameter.stringToType(value)
+        if (parameter.predicate(typedValue as never)) {
+          this[key] = typedValue
+        }
       }
     })
   }

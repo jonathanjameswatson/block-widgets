@@ -116,7 +116,6 @@ import stringifyQuery from '~/ts/stringifyQuery'
 import { narrowingIncludes } from '~/ts/typeHelpers'
 
 const defaultUrl = 'threehourforecast'
-const DefaultConstructor = widgets[defaultUrl].configuration
 
 export default {
   layout: 'index',
@@ -124,13 +123,16 @@ export default {
 </script>
 
 <script setup lang="ts">
+// Router and route
+
+const router = useRouter()
+const route = useRoute()
+
 // Widget
 
 const widgetUrls = WIDGET_URLS
 const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)
 
-const route = useRoute()
-const router = useRouter()
 const widgetUrl = computed<typeof WIDGET_URLS[number]>({
   get() {
     const { hash } = route.value
@@ -142,10 +144,37 @@ const widgetUrl = computed<typeof WIDGET_URLS[number]>({
     }
   },
   set(value) {
-    router.push({ hash: value })
+    router.replace({ hash: value })
   },
 })
 const widget = computed(() => widgets[widgetUrl.value])
+
+// Configuration
+
+const NewConstructor = widget.value.configuration
+const newConfiguration = new NewConstructor()
+newConfiguration.setFromParameterObject(route.value.query)
+const configuration = useConfiguration()
+configuration.value = newConfiguration
+
+watch(
+  () => widget.value.configuration,
+  () => {
+    const NewConstructor = widget.value.configuration
+    configuration.value = new NewConstructor()
+  }
+)
+
+watch(
+  configuration,
+  () => {
+    router.replace({
+      hash: route.value.hash,
+      query: configuration.value.toParameterObject(),
+    })
+  },
+  { deep: true }
+)
 
 // URL
 
@@ -166,18 +195,6 @@ onMounted(() => {
 
 const url = computed(
   () => `${protocol.value}//${titleBase.value}/${queryPage.value}`
-)
-
-// Configuration
-
-const configuration = useConfiguration()
-configuration.value = new DefaultConstructor()
-watch(
-  () => widget.value.configuration,
-  () => {
-    const NewConstructor = widget.value.configuration
-    configuration.value = new NewConstructor()
-  }
 )
 
 // Colour theme
