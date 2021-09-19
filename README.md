@@ -1,6 +1,6 @@
 # jjw-widgets
 
-## About
+![Example widgets](examples.png)
 
 This project includes a few customisable widgets that I use in Notion. These widgets try to replicate Notion's style as much as possible.
 
