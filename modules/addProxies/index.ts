@@ -11,7 +11,7 @@ interface NetlifyRedirectBase {
   force?: boolean
 }
 
-type NetlifyRedirect = JsonMap & RedirectBase
+type NetlifyRedirect = JsonMap & NetlifyRedirectBase
 
 interface NetlifyProxy extends NetlifyRedirect {
   status: 200
@@ -19,7 +19,7 @@ interface NetlifyProxy extends NetlifyRedirect {
 }
 
 interface NetlifyConfigBase {
-  redirects?: Redirect[]
+  redirects?: NetlifyRedirect[]
 }
 
 type NetlifyConfig = JsonMap & NetlifyConfigBase
@@ -41,8 +41,8 @@ const generateNetlifyProxies = (
   url: string
 ): [NetlifyRedirect, NetlifyRedirect] => {
   return [
-    createProxy(`/${proxy}`, url),
-    createProxy(`/${proxy}/*`, `${url}/:splat`),
+    createNetlifyProxy(`/${proxy}`, url),
+    createNetlifyProxy(`/${proxy}/*`, `${url}/:splat`),
   ]
 }
 
