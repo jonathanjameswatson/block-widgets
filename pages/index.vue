@@ -146,7 +146,10 @@ const widgetUrl = computed<typeof WIDGET_URLS[number]>({
     }
   },
   set(value) {
-    router.replace({ hash: value })
+    const hash = `#${value}`
+    if (route.value.hash !== hash) {
+      router.replace({ hash })
+    }
   },
 })
 const widget = computed(() => widgets[widgetUrl.value])
@@ -170,10 +173,15 @@ watch(
 watch(
   configuration,
   () => {
-    router.replace({
-      hash: route.value.hash,
-      query: configuration.value.toParameterObject(),
-    })
+    const query = configuration.value.toParameterObject()
+    if (
+      Object.keys(route.value.query).length !== 0 ||
+      Object.keys(query).length !== 0
+    )
+      router.replace({
+        hash: route.value.hash,
+        query,
+      })
   },
   { deep: true }
 )
