@@ -3,22 +3,4 @@
 
 [build]
   publish = "dist"
-  command = """\
-    sed -i \"s|BUTTERY_BOT_PROXY|${BUTTERY_BOT_PROXY}|g\" netlify.toml && \
-    sed -i \"s|BUTTERY_BOT_URL|${BUTTERY_BOT_URL}|g\" netlify.toml && \
-    sed -i \"s|MET_OFFICE_THREE_HOUR_FORECAST_PROXY|${MET_OFFICE_THREE_HOUR_FORECAST_PROXY}|g\" netlify.toml && \
-    sed -i \"s|MET_OFFICE_THREE_HOUR_FORECAST_URL|${MET_OFFICE_THREE_HOUR_FORECAST_URL}|g\" netlify.toml && \
-    yarn generate\
-    """
-
-[[redirects]]
-  from = "/BUTTERY_BOT_PROXY/*"
-  to = "BUTTERY_BOT_URL/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/MET_OFFICE_THREE_HOUR_FORECAST_PROXY"
-  to = "MET_OFFICE_THREE_HOUR_FORECAST_URL"
-  status = 200
-  force = true
+  command = "yarn generate"

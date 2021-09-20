@@ -53,6 +53,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
+    '~/modules/addProxies',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -73,28 +74,8 @@ export default {
     proxy: true,
   },
 
-  proxy: {
-    ...(process.env.BUTTERY_BOT_PROXY === undefined
-      ? {}
-      : {
-          [`/${process.env.BUTTERY_BOT_PROXY}`]: {
-            target: process.env.BUTTERY_BOT_URL,
-            pathRewrite: {
-              [`^/${process.env.BUTTERY_BOT_PROXY}`]: '',
-            },
-          },
-        }),
-    ...(process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY === undefined
-      ? {}
-      : {
-          [`/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: {
-            target: process.env.MET_OFFICE_THREE_HOUR_FORECAST_URL,
-            pathRewrite: {
-              [`^/${process.env.MET_OFFICE_THREE_HOUR_FORECAST_PROXY}`]: '',
-            },
-          },
-        }),
-  },
+  // Proxies for @nuxtjs/proxy, set by addProxies module
+  proxy: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
