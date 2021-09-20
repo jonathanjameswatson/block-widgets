@@ -1,16 +1,16 @@
 import 'reflect-metadata'
 
-import { narrowingIncludes } from '~/ts/typeHelpers'
+import { narrowingIncludes } from './typeHelpers'
 import {
   Parameter,
   unionParameter,
   stringParameter,
   booleanParameter,
-} from '~/ts/parameters'
+} from './parameters'
 import {
   collectMetadataArray,
   collectMetadataPropertyValue,
-} from '~/ts/reflectionHelpers'
+} from './reflectionHelpers'
 
 const parameterNamesSymbol = Symbol('parameter')
 const parameterSymbol = Symbol('parameter')

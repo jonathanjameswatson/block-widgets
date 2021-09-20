@@ -9,15 +9,16 @@
 
 <script setup lang="ts">
 import useConfiguration from '~/composables/useConfiguration'
+import useWidgets from '~/composables/useWidgets'
 
 import WIDGET_URLS from '~/ts/widgetUrls'
-import widgets from '~/ts/widgets'
 
 const widgetComponent = ref<null | Vue.Component>(null)
 
 const route = useRoute()
 const widgetName = route.value.params.widget
 
+const widgets = useWidgets()
 if (widgetName in widgets) {
   const { configuration: Constructor, component: newComponent } =
     widgets[widgetName as typeof WIDGET_URLS[number]]

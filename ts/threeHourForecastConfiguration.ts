@@ -1,11 +1,12 @@
 import 'reflect-metadata'
-import Configuration, { addParameter } from '~/ts/configuration'
+
+import Configuration, { addParameter } from './configuration'
 import {
   unionParameter,
   stringParameter,
   booleanParameter,
   numberParameter,
-} from '~/ts/parameters'
+} from './parameters'
 
 const temperatureUnits = ['°C', '°F', 'K']
 const temperatureTypes = ['Feels like', 'Minimum', 'Maximum', 'Average']
