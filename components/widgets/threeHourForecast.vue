@@ -171,7 +171,9 @@ const setData = async () => {
     rawData.value = newData
   } else {
     if (exampleThreeHours.value === null) {
-      const imported = (await import('~/ts/exampleThreeHours')) as unknown as {
+      const imported = (await import(
+        '~/ts/exampleThreeHours.generated'
+      )) as unknown as {
         default: definitions['SpotForecastFeatureCollection']
       }
       exampleThreeHours.value = imported.default
