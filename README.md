@@ -1,15 +1,15 @@
-# jjw-widgets
+# BlockWidgets
+
+> Simple widgets to mimic Notion's text blocks
 
 ![Example widgets](examples.png)
-
-This project includes a few customisable widgets that I use in Notion. These widgets try to replicate Notion's style as much as possible.
 
 ## Widgets
 
 -  Met Office three hour forecast
 -  Buttery bot
 
-## Features
+## Customisable features
 
 - Theme customisation (system/light/dark)
 - Style customisation (default/serif/mono)
@@ -17,13 +17,13 @@ This project includes a few customisable widgets that I use in Notion. These wid
 - Optional padding
 - Optional text wrapping
 - Capitalisation customisation (normal/lower case/upper case/title case)
-- Custom CSS
+- CSS customisation
 
 ## Website
 
 https://widgets.jonathanjameswatson.com/
 
-## Deployment
+## Development
 
 ### Setup
 
@@ -41,13 +41,27 @@ $ yarn dev
 # generate project
 $ yarn generate
 
-# serve the dist/ directory for testing
+# serve the dist/ directory for testing (without proxies)
 $ yarn start
 ```
 
-### Netlify
+### Proxies
 
-This project is set up for Netlify to make use of its proxies. However, it is not required.
+Proxies are defined in [./ts/getProxies.ts] and are automatically used by the development server and Netlify. If you are hosting this project on another provider, you may need to add these manually.
+
+### How to create a new widget
+
+1. If you want your widget to be customisable beyond the default configuration, create a new class that extends `Configuration` (found in [./ts/vueDependent/configurations/configuration.ts]). Your new class must have a constructor that takes no arguments.
+2. Create a new component for your widget. You should base this component on existing components in [./components/widgets]. Use `useConfiguration<T>()` from [./composables/useConfiguration.ts] to import the configuration you need, setting `T` to the configuration class from the previous step (or omit `<T>` if you didn't create one).
+3. Add your desired URL for the widget to the `WIDGET_URLS` array in [./ts/widgetUrls.ts]. This array must not have any duplicate values.
+4. Add an entry to the `widgets` object in [./ts/vueDependent/widgets.ts] with its key being the widget URL from the previous step. Import the widget component from step two and the configuration from step one if you made one. The value of the entry should be an object with `name` as the widget's display name, `component` as the widget component and `configuration` as the widget's configuration class from step one (or `Configuration` if you didn't create one).
+
+### How to create a new type of parameter
+
+1. Consider the type of the value that this parameter will store. Let this be `T`.
+2. Create or find a component to control the parameter. This component must have a `value` prop that can take values of type `T` and a `disabled` prop that takes a `boolean`. This component must also emit an `input` event with any value.
+3. Create a new file exporting an interface that extends `Parameter<T>` from [./ts/vueDependent/parameters/parameter]. Set `type` to be a unique string not used by any other parameters (found in [./ts/vueDependent/parameters]). Add any custom properties relevant to your new parameter not found in `Parameter<T>`.
+4. Add a function to this file that returns a function that creates an object that implements this new interface. This function should be the default export of the file. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step 3 and an argument that determines whether or not the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [./ts/vueDependent/parameters/parameter]. `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `stringToType` (a function that converts a string argument to type `T`), `component` (the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step 3) and `disabled`.
 
 ### Environment variables
 
@@ -58,6 +72,6 @@ This project is set up for Netlify to make use of its proxies. However, it is no
 | `BUTTERY_BOT_PROXY`                    | The path used to access the buttery bot. Do not set to disable.                        | `buttery`                                                                                            |
 | `BUTTERY_BOT_URL`                      | The URL of the buttery bot.                                                            | `https://???.com`                                                                                    |
 
-## License
+### License
 
 [MIT license](https://choosealicense.com/licenses/mit/)
