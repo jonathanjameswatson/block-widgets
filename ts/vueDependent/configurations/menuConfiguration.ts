@@ -1,7 +1,9 @@
 import 'reflect-metadata'
 
+import booleanParameter from '../parameters/booleanParameter'
+import stringParameter from '../parameters/stringParameter'
+
 import Configuration, { addParameter } from './configuration'
-import { stringParameter, booleanParameter } from './parameters'
 
 export default class MenuConfiguration extends Configuration {
   @addParameter(stringParameter('Buttery bot URL', '/proxy'))

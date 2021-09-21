@@ -1,11 +1,11 @@
 import WIDGET_URLS from '~/ts/widgetUrls'
-import Configuration from '~/ts/configuration'
+import Configuration from '~/ts/vueDependent/configurations/configuration'
 
 import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
-import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
+import ThreeHourForecastConfiguration from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
 
 import Menu from '~/components/widgets/menu.vue'
-import MenuConfiguration from '~/ts/menuConfiguration'
+import MenuConfiguration from '~/ts/vueDependent/configurations/menuConfiguration'
 
 export interface Widget {
   name: string

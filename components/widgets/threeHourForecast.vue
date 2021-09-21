@@ -29,7 +29,7 @@ import useSchedule from '~/composables/useSchedule'
 import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
 import definitions from '~/ts/threeHourSchema'
 
-import ThreeHourForecastConfiguration from '~/ts/threeHourForecastConfiguration'
+import ThreeHourForecastConfiguration from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(utc)

@@ -5,7 +5,7 @@ import {
   provide,
 } from '@nuxtjs/composition-api'
 
-import Configuration from '~/ts/configuration'
+import Configuration from '~/ts/vueDependent/configurations/configuration'
 
 export default defineNuxtPlugin((_) => {
   onGlobalSetup(() => {

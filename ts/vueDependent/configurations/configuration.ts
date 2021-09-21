@@ -1,16 +1,15 @@
 import 'reflect-metadata'
 
-import { narrowingIncludes } from './typeHelpers'
-import {
-  Parameter,
-  unionParameter,
-  stringParameter,
-  booleanParameter,
-} from './parameters'
+import { Parameter } from '../parameters/parameter'
+import unionParameter from '../parameters/unionParameter'
+import booleanParameter from '../parameters/booleanParameter'
+import stringParameter from '../parameters/stringParameter'
+
+import { narrowingIncludes } from '~/ts/typeHelpers'
 import {
   collectMetadataArray,
   collectMetadataPropertyValue,
-} from './reflectionHelpers'
+} from '~/ts/reflectionHelpers'
 
 const parameterNamesSymbol = Symbol('parameter')
 const parameterSymbol = Symbol('parameter')
@@ -27,9 +26,7 @@ export const getParameter = <T extends Configuration>(
 }
 
 export const addParameter = (
-  parameterCreator: <T extends Object>(
-    propertyKey: string | symbol
-  ) => Parameter
+  parameterCreator: (propertyKey: string | symbol) => Parameter
 ) => {
   return <T extends Object>(target: T, propertyKey: keyof T) => {
     if (typeof propertyKey === 'number') {

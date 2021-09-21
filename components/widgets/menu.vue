@@ -27,7 +27,7 @@ import useConfiguration from '~/composables/useConfiguration'
 import useSchedule from '~/composables/useSchedule'
 
 import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
-import MenuConfiguration from '~/ts/menuConfiguration'
+import MenuConfiguration from '~/ts/vueDependent/configurations/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
 const getEmoji = (string: string) => {
