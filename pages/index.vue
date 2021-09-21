@@ -113,7 +113,7 @@ import useConfiguration from '~/composables/useConfiguration'
 import WIDGET_URLS from '~/ts/widgetUrls'
 import widgets from '~/ts/vueDependent/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
-import { narrowingIncludes } from '~/ts/typeHelpers'
+import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 
 const defaultUrl = 'threehourforecast'
 

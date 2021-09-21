@@ -5,11 +5,11 @@ import unionParameter from '../parameters/unionParameter'
 import booleanParameter from '../parameters/booleanParameter'
 import stringParameter from '../parameters/stringParameter'
 
-import { narrowingIncludes } from '~/ts/typeHelpers'
+import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 import {
   collectMetadataArray,
   collectMetadataPropertyValue,
-} from '~/ts/reflectionHelpers'
+} from '~/ts/helpers/reflectionHelpers'
 
 const parameterNamesSymbol = Symbol('parameter')
 const parameterSymbol = Symbol('parameter')
