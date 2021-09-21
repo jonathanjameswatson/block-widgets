@@ -11,14 +11,14 @@
         overflow-y-auto
       "
     >
-      <h1 class="text-blue-700 text-4xl font-bold mb-9">
+      <h1 class="text-blue-700 text-4xl font-bold mb-8">
         <a
           class="hover:text-blue-900"
-          href="https://github.com/jonathanjameswatson/jjw-widgets"
+          href="https://github.com/jonathanjameswatson/block-widgets"
           target="_blank"
           rel="noopener noreferrer"
         >
-          jjw-widgets
+          <span>BlockWidgets</span>
         </a>
       </h1>
 
