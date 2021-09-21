@@ -109,9 +109,9 @@
 
 <script lang="ts">
 import useConfiguration from '~/composables/useConfiguration'
-import useWidgets from '~/composables/useWidgets'
 
 import WIDGET_URLS from '~/ts/widgetUrls'
+import widgets from '~/ts/vueDependent/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
 import { narrowingIncludes } from '~/ts/typeHelpers'
 
@@ -129,8 +129,6 @@ const router = useRouter()
 const route = useRoute()
 
 // Widget
-
-const widgets = useWidgets()
 
 const widgetUrls = WIDGET_URLS
 const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)

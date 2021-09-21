@@ -26,4 +26,4 @@ const widgets: { [url in typeof WIDGET_URLS[number]]: Widget } = {
   },
 }
 
-export default () => widgets
+export default widgets
