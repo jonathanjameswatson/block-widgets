@@ -84,7 +84,7 @@ const classes = computed(() => {
   const classes = [fontFamily, fontSize]
 
   if (configuration.value.padding) {
-    classes.push('p-4', 'pt-3')
+    classes.push('p-4', 'pt-0')
   }
 
   return classes
