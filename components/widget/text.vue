@@ -1,5 +1,5 @@
 <template>
-  <div class="block leading-notion min-w-0" :class="truncate">
+  <div class="block leading-notion min-w-0 block-child" :class="truncate">
     <slot />
   </div>
 </template>
@@ -15,8 +15,11 @@ const truncate = computed(() =>
 </script>
 
 <style lang="postcss">
+.block-child span {
+  @apply block;
+}
+
 .truncate-child span {
-  display: block;
   @apply truncate;
 }
 </style>
