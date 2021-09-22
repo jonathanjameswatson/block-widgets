@@ -1,5 +1,5 @@
 <template>
-  <div class="block leading-notion-inner min-w-0" :class="truncate">
+  <div class="block leading-notion min-w-0" :class="truncate">
     <slot />
   </div>
 </template>
