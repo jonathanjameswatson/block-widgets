@@ -75,7 +75,7 @@ export default class Configuration {
   @addParameter(unionParameter('Capitalisation', capitalisations, '15ch'))
   public capitalisation: typeof capitalisations[number] = 'Normal'
 
-  @addParameter(stringParameter('Custom CSS', '/* p { color: red; } */'))
+  @addParameter(stringParameter('Custom CSS', '/* span { color: red; } */'))
   public css: string = ''
 
   public toParameterObject() {
