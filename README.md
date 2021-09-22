@@ -63,6 +63,13 @@ Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and are automatically
 3. Create a new file exporting an interface that extends `Parameter<T>` from [parameter.ts](./ts/vueDependent/parameters/parameter.ts). Set `type` to be a unique string not used by any other parameters (found in [parameters](./ts/vueDependent/parameters)). Add any custom properties relevant to your new parameter not found in `Parameter<T>`.
 4. Add a function to this file that returns a function that creates an object that implements this new interface. This function should be the default export of the file. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step 3 and an argument that determines whether or not the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [parameter.ts](./ts/vueDependent/parameters/parameter.ts). `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `stringToType` (a function that converts a string argument to type `T`), `component` (the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step 3) and `disabled`.
 
+### How to create a new proxy
+
+1. Assign a string of lowercase letters to environment variable `[INSERT NAME HERE]_PROXY`
+2. Assign the desired URL to environment variable `[INSERT NAME HERE]_URL`
+3. Add a new entry to the `proxies` object in [getProxies.ts](./ts/getProxies.ts) with key `[INSERT_NAME_HERE]_PROXY` and value `"[INSERT NAME HERE]_URL"`
+4. Add the new environment variables to the below table
+
 ### Environment variables
 
 | Environment variable                   | Purpose                                                                                | Example                                                                                              |
