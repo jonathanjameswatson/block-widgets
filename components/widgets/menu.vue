@@ -132,7 +132,7 @@ const setData = async () => {
       return
     }
 
-    weekday.value = Weekday[weekdayNumber].toLowerCase()
+    weekday.value = Weekday[weekdayNumber]
     meal.value = newMeal.toLowerCase()
     rawMenu.value = newRawMenu
   } else {
