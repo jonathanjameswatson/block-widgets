@@ -36,7 +36,7 @@ module.exports = {
       spacing: {
         '2px': '2px',
         '3px': '3px',
-        'notion-title': '1em',
+        'notion-title': 'calc(1em - 4px)',
       },
       fontSize: {
         'notion-normal': '17px',
