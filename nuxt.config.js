@@ -93,4 +93,9 @@ export default {
   colorMode: {
     classSuffix: '',
   },
+
+  // Nuxt generate configuration
+  generate: {
+    fallback: true,
+  },
 }
