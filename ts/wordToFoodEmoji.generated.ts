@@ -47,6 +47,7 @@ const wordToEmoji: { [key: string]: string } = {
   steak: '🥩',
   pudding: '🍮',
   chilli: '🌶️',
+  chili: '🌶️',
   beef: '🥩',
   carrot: '🥕',
   sponge: '🍰',

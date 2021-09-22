@@ -3,7 +3,7 @@ import fse from 'fs-extra'
 import prettier from 'prettier'
 
 const rawEmojiRulesRegExp = /rawEmojiRules = (?<!\\)`\n([\s\S]+?)\n(?<!\\)`/m
-const rawEmojiRuleRegExp = /(.+?) -> (.+?)$/gm
+const rawEmojiRuleRegExp = /(.+?) ->\uFE0F? (.+?)$/gm
 
 const goStringToTsString = (goFile: string) => {
   const rawEmojiRulesMatch = goFile.match(rawEmojiRulesRegExp)
