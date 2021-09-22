@@ -258,7 +258,7 @@ const resizing = ref(false)
 
 <style lang="postcss">
 $radius: 0.25rem;
-$border: 1rem;
+$border: 1.5rem;
 $overlap: 0.5rem;
 
 .custom-resizable {
