@@ -116,10 +116,6 @@ import stringifyQuery from '~/ts/stringifyQuery'
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 
 const defaultUrl = 'threehourforecast'
-
-export default {
-  layout: 'index',
-}
 </script>
 
 <script setup lang="ts">

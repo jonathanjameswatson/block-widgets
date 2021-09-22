@@ -1,9 +1,31 @@
 <template>
   <div>
-    <div v-if="widgetComponent !== null">
+    <widget-wrapper v-if="widgetComponent !== null">
       <component :is="widgetComponent" />
+    </widget-wrapper>
+    <div
+      v-else
+      class="
+        w-full
+        min-h-screen
+        p-8
+        bg-gray-100
+        flex flex-col
+        justify-center
+        text-center
+      "
+    >
+      <div>
+        <h1 class="text-blue-700 text-4xl font-bold mb-8">
+          Widget not found...
+        </h1>
+        <nuxt-link to="/">
+          <blue-button class="flex-grow-0 mr-0">
+            Click here to return
+          </blue-button>
+        </nuxt-link>
+      </div>
     </div>
-    <div v-else>Component not found</div>
   </div>
 </template>
 
