@@ -38,7 +38,7 @@ const capitalisedText = computed(() =>
 )
 
 const classes = computed(() =>
-  props.underline
+  props.underline && configuration.value.underline
     ? 'border-b border-notion-border dark:border-notion-border-dark'
     : null
 )

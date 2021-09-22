@@ -72,6 +72,9 @@ export default class Configuration {
   @addParameter(booleanParameter('Text wrapping', 'Off', 'On', true, '6ch'))
   public textWrapping: boolean = true
 
+  @addParameter(booleanParameter('Underlining', 'Off', 'On', true, '6ch'))
+  public underline: boolean = true
+
   @addParameter(unionParameter('Capitalisation', capitalisations, '15ch'))
   public capitalisation: typeof capitalisations[number] = 'Normal'
 
