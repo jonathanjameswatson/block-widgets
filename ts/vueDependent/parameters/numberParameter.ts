@@ -1,6 +1,6 @@
 import { Parameter, parameter } from './parameter'
 
-import NumberInput from '~/components/blue/input.vue'
+import NumberInput from '~/components/blue/numberInput.vue'
 
 export interface NumberParameter extends Parameter<number> {
   type: 'number'
