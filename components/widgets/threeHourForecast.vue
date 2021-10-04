@@ -10,7 +10,9 @@
           />
         </widget-emoji-container>
         <widget-text>
-          <widget-inline :text="weatherInformation.text" underline />
+          <a :href="metOfficeUrl" target="_blank" rel="noopener noreferrer">
+            <widget-inline :text="weatherInformation.text" underline />
+          </a>
         </widget-text>
       </widget-block>
     </div>
@@ -22,6 +24,7 @@
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from 'dayjs/plugin/utc'
+import Geohash from 'latlon-geohash'
 
 import useConfiguration from '~/composables/useConfiguration'
 import useSchedule from '~/composables/useSchedule'
@@ -64,6 +67,13 @@ const defaultRawData = {
 
 <script setup lang="ts">
 const configuration = useConfiguration<ThreeHourForecastConfiguration>()
+
+const geohash = computed(() =>
+  Geohash.encode(configuration.value.latitude, configuration.value.longitude, 6)
+)
+const metOfficeUrl = computed(
+  () => `https://www.metoffice.gov.uk/weather/forecast/${geohash.value}`
+)
 
 const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)
