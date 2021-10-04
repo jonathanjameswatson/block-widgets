@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 import unionParameter from '../parameters/unionParameter'
 import booleanParameter from '../parameters/booleanParameter'
 import stringParameter from '../parameters/stringParameter'
