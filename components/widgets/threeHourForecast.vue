@@ -2,19 +2,19 @@
   <div class="w-full h-full">
     <div class="flex flex-col">
       <widget-title :text="title" />
-      <widget-block v-for="(weatherInformation, i) in forecast" :key="i">
-        <widget-emoji-container v-if="configuration.icons">
-          <widget-weather-icon
-            :icon="weatherInformation.icon"
-            :name="weatherInformation.name"
-          />
-        </widget-emoji-container>
-        <widget-text>
-          <a :href="metOfficeUrl" target="_blank" rel="noopener noreferrer">
+      <a :href="metOfficeUrl" target="_blank" rel="noopener noreferrer">
+        <widget-block v-for="(weatherInformation, i) in forecast" :key="i">
+          <widget-emoji-container v-if="configuration.icons">
+            <widget-weather-icon
+              :icon="weatherInformation.icon"
+              :name="weatherInformation.name"
+            />
+          </widget-emoji-container>
+          <widget-text>
             <widget-inline :text="weatherInformation.text" underline />
-          </a>
-        </widget-text>
-      </widget-block>
+          </widget-text>
+        </widget-block>
+      </a>
     </div>
     <widget-warning v-if="example" />
   </div>

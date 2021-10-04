@@ -2,25 +2,25 @@
   <div class="w-full h-full">
     <div class="flex flex-col">
       <widget-title :text="title" />
-      <widget-block v-for="(menuItem, i) in menu" :key="i">
-        <widget-emoji-container v-if="configuration.emojis">
-          <img
-            class="w-full h-full"
-            draggable="false"
-            :alt="menuItem.emoji"
-            :src="menuItem.emojiUrl"
-          />
-        </widget-emoji-container>
-        <widget-text>
-          <a
-            href="https://www.queens.cam.ac.uk/life-at-queens/catering/cafeteria/cafeteria-menu"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      <a
+        href="https://www.queens.cam.ac.uk/life-at-queens/catering/cafeteria/cafeteria-menu"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <widget-block v-for="(menuItem, i) in menu" :key="i">
+          <widget-emoji-container v-if="configuration.emojis">
+            <img
+              class="w-full h-full"
+              draggable="false"
+              :alt="menuItem.emoji"
+              :src="menuItem.emojiUrl"
+            />
+          </widget-emoji-container>
+          <widget-text>
             <widget-inline :text="menuItem.name" underline />
-          </a>
-        </widget-text>
-      </widget-block>
+          </widget-text>
+        </widget-block>
+      </a>
     </div>
     <widget-warning v-if="example" />
   </div>
