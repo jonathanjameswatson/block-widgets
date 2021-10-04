@@ -14,12 +14,12 @@ const truncate = computed(() =>
 )
 </script>
 
-<style lang="postcss">
-.block-child span {
+<style scoped lang="postcss">
+.block-child::v-deep span {
   @apply block;
 }
 
-.truncate-child span {
+.truncate-child::v-deep span {
   @apply truncate;
 }
 </style>

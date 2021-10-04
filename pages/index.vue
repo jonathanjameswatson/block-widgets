@@ -252,7 +252,7 @@ const preview = ref<'Normal' | 'iFrame'>('Normal')
 const resizing = ref(false)
 </script>
 
-<style lang="postcss">
+<style scoped lang="postcss">
 $radius: 0.25rem;
 $border: 1.5rem;
 $overlap: 0.5rem;
@@ -266,71 +266,73 @@ $overlap: 0.5rem;
     border-radius: $radius;
     overflow: hidden;
   }
-}
 
-.custom-handle {
-  position: absolute;
-  height: $border;
-  width: $border;
+  &::v-deep {
+    .custom-handle {
+      position: absolute;
+      height: $border;
+      width: $border;
 
-  &-tl {
-    width: calc($border + $radius / 2);
-    height: calc($border + $radius / 2);
-    top: calc(-$border + $overlap);
-    left: calc(-$border + $overlap);
-    cursor: nw-resize;
-  }
+      &-tl {
+        width: calc($border + $radius / 2);
+        height: calc($border + $radius / 2);
+        top: calc(-$border + $overlap);
+        left: calc(-$border + $overlap);
+        cursor: nw-resize;
+      }
 
-  &-tr {
-    width: calc($border + $radius / 2);
-    height: calc($border + $radius / 2);
-    top: calc(-$border + $overlap);
-    right: calc(-$border + $overlap);
-    cursor: ne-resize;
-  }
+      &-tr {
+        width: calc($border + $radius / 2);
+        height: calc($border + $radius / 2);
+        top: calc(-$border + $overlap);
+        right: calc(-$border + $overlap);
+        cursor: ne-resize;
+      }
 
-  &-bl {
-    width: calc($border + $radius / 2);
-    height: calc($border + $radius / 2);
-    bottom: calc(-$border + $overlap);
-    left: calc(-$border + $overlap);
-    cursor: sw-resize;
-  }
+      &-bl {
+        width: calc($border + $radius / 2);
+        height: calc($border + $radius / 2);
+        bottom: calc(-$border + $overlap);
+        left: calc(-$border + $overlap);
+        cursor: sw-resize;
+      }
 
-  &-br {
-    width: calc($border + $radius / 2);
-    height: calc($border + $radius / 2);
-    bottom: calc(-$border + $overlap);
-    right: calc(-$border + $overlap);
-    cursor: se-resize;
-  }
+      &-br {
+        width: calc($border + $radius / 2);
+        height: calc($border + $radius / 2);
+        bottom: calc(-$border + $overlap);
+        right: calc(-$border + $overlap);
+        cursor: se-resize;
+      }
 
-  &-tm {
-    top: calc(-$border + $overlap);
-    left: calc($overlap + $radius / 2);
-    width: calc(100% - 2 * $overlap - $radius);
-    cursor: n-resize;
-  }
+      &-tm {
+        top: calc(-$border + $overlap);
+        left: calc($overlap + $radius / 2);
+        width: calc(100% - 2 * $overlap - $radius);
+        cursor: n-resize;
+      }
 
-  &-bm {
-    bottom: calc(-$border + $overlap);
-    left: calc($overlap + $radius / 2);
-    width: calc(100% - 2 * $overlap - $radius);
-    cursor: s-resize;
-  }
+      &-bm {
+        bottom: calc(-$border + $overlap);
+        left: calc($overlap + $radius / 2);
+        width: calc(100% - 2 * $overlap - $radius);
+        cursor: s-resize;
+      }
 
-  &-ml {
-    left: calc(-$border + $overlap);
-    top: calc($overlap + $radius / 2);
-    height: calc(100% - 2 * $overlap - $radius);
-    cursor: w-resize;
-  }
+      &-ml {
+        left: calc(-$border + $overlap);
+        top: calc($overlap + $radius / 2);
+        height: calc(100% - 2 * $overlap - $radius);
+        cursor: w-resize;
+      }
 
-  &-mr {
-    right: calc(-$border + $overlap);
-    top: calc($overlap + $radius / 2);
-    height: calc(100% - 2 * $overlap - $radius);
-    cursor: e-resize;
+      &-mr {
+        right: calc(-$border + $overlap);
+        top: calc($overlap + $radius / 2);
+        height: calc(100% - 2 * $overlap - $radius);
+        cursor: e-resize;
+      }
+    }
   }
 }
 
