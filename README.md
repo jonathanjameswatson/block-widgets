@@ -6,8 +6,9 @@
 
 ## Widgets
 
--  Met Office three hour forecast
--  Buttery bot
+- Progress bars
+- Met Office three hour forecast
+- Buttery bot
 
 ## Customisable features
 
