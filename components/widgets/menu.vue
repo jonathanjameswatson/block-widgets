@@ -12,7 +12,13 @@
           />
         </widget-emoji-container>
         <widget-text>
-          <widget-inline :text="menuItem.name" underline />
+          <a
+            href="https://www.queens.cam.ac.uk/life-at-queens/catering/cafeteria/cafeteria-menu"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <widget-inline :text="menuItem.name" underline />
+          </a>
         </widget-text>
       </widget-block>
     </div>
