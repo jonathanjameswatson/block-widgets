@@ -115,7 +115,7 @@ import widgets from '~/ts/vueDependent/widgets'
 import stringifyQuery from '~/ts/stringifyQuery'
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 
-const defaultUrl = 'threehourforecast'
+const defaultUrl = WIDGET_URLS[0]
 </script>
 
 <script setup lang="ts">

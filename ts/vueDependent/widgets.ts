@@ -1,6 +1,9 @@
 import WIDGET_URLS from '~/ts/widgetUrls'
 import Configuration from '~/ts/vueDependent/configurations/configuration'
 
+import ProgressBars from '~/components/widgets/progressBars.vue'
+import ProgressBarsConfiguration from '~/ts/vueDependent/configurations/progressBarsConfiguration'
+
 import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
 import ThreeHourForecastConfiguration from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
 
@@ -14,6 +17,11 @@ export interface Widget {
 }
 
 const widgets: { [url in typeof WIDGET_URLS[number]]: Widget } = {
+  progressbars: {
+    name: 'Progress bars',
+    component: ProgressBars,
+    configuration: ProgressBarsConfiguration,
+  },
   threehourforecast: {
     name: 'Three hour forecast',
     component: ThreeHourForecast,
