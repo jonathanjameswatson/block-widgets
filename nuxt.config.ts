@@ -37,10 +37,10 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '~/modules/addProxies',
-    '~/modules/reorderPostCssPlugins', // Temporary fix
   ],
 
-  // Axios module configuration
+  // Axios module configuration (no longer used)
+  /*
   axios: {
     baseURL:
       process.env.NETLIFY === 'true'
@@ -49,14 +49,7 @@ export default defineNuxtConfig({
         ? 'http://localhost:8888'
         : 'http://localhost:3000',
   },
-
-  // Temporary fix
-  postcss: {
-    plugins: {
-      'tailwindcss/nesting': {},
-      'postcss-nesting': false,
-    },
-  },
+  */
 
   // Color mode configuration
   colorMode: {
