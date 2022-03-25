@@ -1,9 +1,9 @@
-import booleanParameter from '../parameters/booleanParameter'
-import stringParameter from '../parameters/stringParameter'
+import { booleanParameter } from '../parameters/booleanParameter'
+import { stringParameter } from '../parameters/stringParameter'
 
-import Configuration, { addParameter } from './configuration'
+import { Configuration, addParameter } from './configuration'
 
-export default class MenuConfiguration extends Configuration {
+export class MenuConfiguration extends Configuration {
   @addParameter(stringParameter('Buttery bot URL', '/proxy'))
   public butteryBotUrl: string = ''
 

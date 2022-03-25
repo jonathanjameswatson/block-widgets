@@ -3,11 +3,10 @@
 </template>
 
 <script setup lang="ts">
-const props =
-  defineProps<{
-    icon: string
-    name: string
-  }>()
+const props = defineProps<{
+  icon: string
+  name: string
+}>()
 
 const classes = computed(() => [`wi-${props.icon}`])
 </script>

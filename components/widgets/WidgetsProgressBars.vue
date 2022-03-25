@@ -1,28 +1,25 @@
 <template>
   <div class="w-full h-full">
     <div class="flex flex-col">
-      <widget-title :text="configuration.title" />
-      <widget-block v-for="textBlock in textBlocks" :key="textBlock.period">
-        <widget-text>
-          <widget-inline :text="textBlock.timeString" underline />
-        </widget-text>
-      </widget-block>
+      <WidgetTitle :text="configuration.title" />
+      <WidgetBlock v-for="textBlock in textBlocks" :key="textBlock.period">
+        <WidgetText>
+          <WidgetInline :text="textBlock.timeString" underline />
+        </WidgetText>
+      </WidgetBlock>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { Dayjs, extend as dayjsExtend } from 'dayjs'
 import duration, { Duration } from 'dayjs/plugin/duration'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
 
-import useConfiguration from '~/composables/useConfiguration'
-import useSchedule from '~/composables/useSchedule'
+import { ProgressBarsConfiguration } from '~/ts/vueDependent/configurations/progressBarsConfiguration'
 
-import ProgressBarsConfiguration from '~/ts/vueDependent/configurations/progressBarsConfiguration'
-
-dayjs.extend(duration)
-dayjs.extend(isLeapYear)
+dayjsExtend(duration)
+dayjsExtend(isLeapYear)
 
 const MONTH_LENGTHS = [
   31,

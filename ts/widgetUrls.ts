@@ -1,3 +1,5 @@
-const WIDGET_URLS = ['progressbars', 'threehourforecast', 'menu'] as const
-
-export default WIDGET_URLS
+export const WIDGET_URLS = [
+  'progressbars',
+  'threehourforecast',
+  'menu',
+] as const

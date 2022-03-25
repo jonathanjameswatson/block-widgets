@@ -1,6 +1,6 @@
 import { Parameter, parameter } from './parameter'
 
-import Select from '~/components/blue/select.vue'
+import BlueSelect from '~/components/blue/BlueSelect.vue'
 
 export interface UnionParameter extends Parameter<string> {
   type: 'union'
@@ -8,7 +8,7 @@ export interface UnionParameter extends Parameter<string> {
   minWidth: string
 }
 
-export default (
+export const unionParameter = (
   name: string,
   options: string[],
   minWidth: string = '0px',
@@ -19,7 +19,8 @@ export default (
     'union',
     (input) => options.includes(input),
     (input) => input,
-    Select,
+    (input) => input,
+    BlueSelect,
     (input) => input as string,
     {
       options,

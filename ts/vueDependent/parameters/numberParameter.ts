@@ -1,6 +1,6 @@
 import { Parameter, parameter } from './parameter'
 
-import NumberInput from '~/components/blue/numberInput.vue'
+import BlueNumberInput from '~/components/blue/BlueNumberInput.vue'
 
 export interface NumberParameter extends Parameter<number> {
   type: 'number'
@@ -9,11 +9,11 @@ export interface NumberParameter extends Parameter<number> {
   step?: number
 }
 
-export default (
+export const numberParameter = (
   name: string,
-  minimum: number | null = null,
-  maximum: number | null = null,
-  step: number | null = null,
+  minimum: number | undefined = undefined,
+  maximum: number | undefined = undefined,
+  step: number | undefined = undefined,
   disabled: boolean = false
 ) =>
   parameter<number, NumberParameter>(
@@ -22,12 +22,13 @@ export default (
     (input) =>
       !(
         isNaN(input) ||
-        (minimum !== null && input < minimum) ||
-        (maximum !== null && input > maximum) ||
-        (step !== null && (input / step) % 1 !== 0)
+        (minimum !== undefined && input < minimum) ||
+        (maximum !== undefined && input > maximum) ||
+        (step !== undefined && (input / step) % 1 !== 0)
       ),
+    (input) => input.toString(),
     (input) => Number(input),
-    NumberInput,
+    BlueNumberInput,
     (input) => input as number,
     {
       minimum,
@@ -35,9 +36,9 @@ export default (
       step,
     },
     {
-      ...(minimum === null ? {} : { minimum }),
-      ...(maximum === null ? {} : { maximum }),
-      ...(step === null ? {} : { step }),
+      ...(minimum === undefined ? {} : { minimum }),
+      ...(maximum === undefined ? {} : { maximum }),
+      ...(step === undefined ? {} : { step }),
     },
     disabled
   )

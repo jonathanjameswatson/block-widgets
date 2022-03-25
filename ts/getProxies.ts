@@ -3,7 +3,7 @@ const proxies: { [proxy: string]: string } = {
   MET_OFFICE_THREE_HOUR_FORECAST_PROXY: 'MET_OFFICE_THREE_HOUR_FORECAST_URL',
 }
 
-export default (env: {
+export const getProxies = (env: {
   [key: string]: string | undefined
 }): { [proxy: string]: string } =>
   Object.fromEntries(

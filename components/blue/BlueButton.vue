@@ -9,12 +9,6 @@
   </button>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  inheritAttrs: false,
-})
-</script>
-
 <script setup lang="ts">
 interface Props {
   disabled?: boolean
@@ -28,10 +22,9 @@ const props = withDefaults(defineProps<Props>(), {
   rounding: 'rounded',
 })
 
-const emit =
-  defineEmits<{
-    (e: 'click', event: MouseEvent): void
-  }>()
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
 
 const click = (event: MouseEvent) => {
   if (!props.disabled) {

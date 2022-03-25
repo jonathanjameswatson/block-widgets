@@ -5,8 +5,6 @@
 </template>
 
 <script lang="ts">
-import useConfiguration from '~/composables/useConfiguration'
-
 const wordRegExp = /[^ ]+/g
 const capitalisers: { [option: string]: (x: string) => string } = {
   Normal: (x: string) => x,
@@ -23,15 +21,10 @@ const capitalisers: { [option: string]: (x: string) => string } = {
 <script setup lang="ts">
 const configuration = useConfiguration()
 
-const props = withDefaults(
-  defineProps<{
-    text: string
-    underline?: boolean
-  }>(),
-  {
-    underline: false,
-  }
-)
+const props = defineProps<{
+  text: string
+  underline?: boolean
+}>()
 
 const capitalisedText = computed(() =>
   capitalisers[configuration.value.capitalisation](props.text)
@@ -39,7 +32,7 @@ const capitalisedText = computed(() =>
 
 const classes = computed(() =>
   props.underline && configuration.value.underline
-    ? 'border-b border-notion-border dark:border-notion-border-dark'
-    : null
+    ? 'border-b border-notion-border dark:border-notion-border-dark dark:old:border-notion-border-dark'
+    : undefined
 )
 </script>

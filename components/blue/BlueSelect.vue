@@ -1,21 +1,21 @@
 <template>
   <div class="grid gap-x-2 gap-y-0 w-full" :style="style">
-    <blue-button
+    <BlueButton
       v-for="(option, i) in props.options"
       :key="i"
       class="mr-0"
-      :active="option === props.value"
+      :active="option === props.modelValue"
       @click="() => updateValue(option)"
     >
       {{ optionNames[i] !== undefined ? props.optionNames[i] : option }}
-    </blue-button>
+    </BlueButton>
   </div>
 </template>
 
 <script setup lang="ts">
 interface Props<T> {
-  value: T
-  options: T[]
+  modelValue: T
+  options: readonly T[]
   optionNames?: string[]
   minWidth?: string
 }
@@ -25,13 +25,12 @@ const props = withDefaults(defineProps<Props<any>>(), {
   minWidth: '0px',
 })
 
-const emit =
-  defineEmits<{
-    (e: 'input', value: any): void
-  }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: any): void
+}>()
 
 const updateValue = (value: any) => {
-  emit('input', value)
+  emit('update:modelValue', value)
 }
 
 const style = computed(

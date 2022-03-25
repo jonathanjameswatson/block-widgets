@@ -1,9 +1,9 @@
 import 'reflect-metadata'
 
 import { Parameter } from '../parameters/parameter'
-import unionParameter from '../parameters/unionParameter'
-import booleanParameter from '../parameters/booleanParameter'
-import stringParameter from '../parameters/stringParameter'
+import { unionParameter } from '../parameters/unionParameter'
+import { booleanParameter } from '../parameters/booleanParameter'
+import { stringParameter } from '../parameters/stringParameter'
 
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 import {
@@ -56,9 +56,12 @@ const themes = ['System', 'Light', 'Dark']
 const styles = ['Default', 'Serif', 'Mono']
 const capitalisations = ['Normal', 'Lower case', 'Upper case', 'Title case']
 
-export default class Configuration {
+export class Configuration {
   @addParameter(unionParameter('Theme', themes, '9ch'))
   public theme: typeof themes[number] = 'System'
+
+  @addParameter(booleanParameter('Dark style', 'New', 'Old', false, '6ch'))
+  public oldDarkStyle: boolean = false
 
   @addParameter(unionParameter('Style', styles, '10ch'))
   public style: typeof styles[number] = 'Default'
@@ -84,7 +87,6 @@ export default class Configuration {
   public toParameterObject() {
     let original: this
     try {
-      // @ts-ignore
       original = new this.constructor()
     } catch {
       throw new TypeError(
@@ -92,11 +94,20 @@ export default class Configuration {
       )
     }
 
-    return Object.fromEntries(
-      getParameterNames<this>(this)
-        .filter((key) => this[key] !== original[key])
-        .map((key) => [key, this[key]])
-    ) as { [key: string | symbol]: any }
+    const editableProperties = getParameterNames<this>(this)
+
+    return getParameterNames<this>(this).reduce((result, key) => {
+      if (
+        this[key] !== original[key] &&
+        typeof key === 'string' &&
+        narrowingIncludes<keyof this>(editableProperties, key)
+      ) {
+        const parameter = getParameter(this, key)
+        const serialisedValue = parameter.serialise(this[key])
+        result[key] = serialisedValue
+      }
+      return result
+    }, {} as { [key: string]: string })
   }
 
   public setFromParameterObject(query: Object) {
@@ -104,11 +115,13 @@ export default class Configuration {
     Object.entries(query).forEach(([key, value]) => {
       if (narrowingIncludes<keyof this>(editableProperties, key)) {
         const parameter = getParameter(this, key)
-        const typedValue = parameter.stringToType(value)
+        const typedValue = parameter.deserialise(value)
         if (parameter.predicate(typedValue as never)) {
           this[key] = typedValue as any
         }
       }
     })
   }
+
+  ['constructor']: new () => this
 }

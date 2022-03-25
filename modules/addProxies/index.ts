@@ -1,8 +1,13 @@
-import { Module } from '@nuxt/types'
-import fse from 'fs-extra'
-import toml, { JsonMap } from '@iarna/toml'
+import { defineNuxtModule } from '@nuxt/kit'
 
-import getProxies from '../../ts/getProxies'
+import { readFile, writeFile } from 'fs-extra'
+import {
+  JsonMap,
+  parse as tomlParse,
+  stringify as tomlStringify,
+} from '@iarna/toml'
+
+import { getProxies } from '../../ts/getProxies'
 
 interface NetlifyRedirectBase {
   from: string
@@ -46,44 +51,47 @@ const generateNetlifyProxies = (
   ]
 }
 
-const module: Module<{}> = async function (_moduleOptions) {
-  const proxies = getProxies(process.env)
+export default defineNuxtModule({
+  async setup(_options, _nuxt) {
+    const proxies = getProxies(process.env)
 
-  // Netlify
+    // Netlify
 
-  if (
-    process.env.NETLIFY === 'true' &&
-    process.env.npm_lifecycle_event === 'generate'
-  ) {
-    const configString = await fse.readFile('./netlify.toml', 'utf8')
-    const config = (await toml.parse.async(configString)) as NetlifyConfig
+    if (
+      process.env.NETLIFY === 'true' &&
+      process.env.npm_lifecycle_event === 'generate'
+    ) {
+      const configString = await readFile('./netlify.toml', 'utf8')
+      const config = (await tomlParse.async(configString)) as NetlifyConfig
 
-    config.redirects =
-      config.redirects === undefined
-        ? ([] as NetlifyRedirect[])
-        : config.redirects.filter((redirect) => !isNetlifyProxy(redirect))
+      config.redirects =
+        config.redirects === undefined
+          ? ([] as NetlifyRedirect[])
+          : config.redirects.filter((redirect) => !isNetlifyProxy(redirect))
 
-    const newNetlifyProxies = Object.entries(proxies).flatMap(([proxy, url]) =>
-      generateNetlifyProxies(proxy, url)
-    )
-    config.redirects.push(...newNetlifyProxies)
+      const newNetlifyProxies = Object.entries(proxies).flatMap(
+        ([proxy, url]) => generateNetlifyProxies(proxy, url)
+      )
+      config.redirects.push(...newNetlifyProxies)
 
-    const newConfigString = toml.stringify(config)
-    await fse.writeFile('./netlify.toml', newConfigString)
-  }
-
-  // @nuxtjs/proxy
-
-  this.options.proxy =
-    this.options.proxy === undefined ? {} : this.options.proxy
-  Object.entries(proxies).forEach(([proxy, url]) => {
-    this.options.proxy[`/${proxy}`] = {
-      target: url,
-      pathRewrite: {
-        [`^/${proxy}`]: '',
-      },
+      const newConfigString = tomlStringify(config)
+      await writeFile('./netlify.toml', newConfigString)
     }
-  })
-}
-
-export default module
+  },
+  hooks: {
+    'vite:extend'({ config }) {
+      const proxies = getProxies(process.env)
+      config.server.proxy =
+        config.server.proxy === undefined ? {} : config.server.proxy
+      Object.entries(proxies).forEach(([proxy, url]) => {
+        config.server.proxy[`/${proxy}`] = {
+          target: url,
+          changeOrigin: true,
+          rewrite(path: string) {
+            return path.replace(new RegExp(`^\/${proxy}`), '')
+          },
+        }
+      })
+    },
+  },
+})

@@ -1,4 +1,4 @@
-export default interface definitions {
+export interface definitions {
   /** A feature object with mandatory geometry and properties fields */
   Feature: {
     /** The GeoJSON type identifier */

@@ -1,10 +1,13 @@
+import type { Component } from 'vue'
+
 export interface Parameter<T = any> {
   type: string
   propertyKey: string | symbol
   name: string
   predicate: (input: T) => boolean
-  stringToType: (input: string) => T
-  component: Vue.Component
+  serialise: (input: T) => string
+  deserialise: (input: string) => T
+  component: Component
   convertInput: (input: any) => T
   props: { [prop: string]: any }
   disabled: boolean
@@ -15,22 +18,12 @@ export const parameter =
     name: string,
     type: string,
     predicate: (input: T) => boolean,
-    stringToType: (input: string) => T,
-    component: Vue.Component,
+    serialise: (input: T) => string,
+    deserialise: (input: string) => T,
+    component: Component,
     convertInput: (input: any) => T,
     props: { [prop: string]: any },
-    extras: Omit<
-      U,
-      | 'name'
-      | 'type'
-      | 'propertyKey'
-      | 'predicate'
-      | 'stringToType'
-      | 'component'
-      | 'convertInput'
-      | 'props'
-      | 'disabled'
-    >,
+    extras: Omit<U, keyof Parameter>,
     disabled: boolean = false
   ) =>
   (propertyKey: string | symbol): U => {
@@ -39,7 +32,8 @@ export const parameter =
       type,
       propertyKey,
       predicate,
-      stringToType,
+      serialise,
+      deserialise,
       component,
       convertInput,
       props,

@@ -2,5 +2,5 @@
   command = "yarn dev"
 
 [build]
-  publish = "dist"
-  command = "yarn generate"
+  publish = ".output"
+  command = "yarn build"

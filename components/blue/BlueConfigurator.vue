@@ -1,25 +1,22 @@
 <template>
-  <div>
-    <blue-control
-      v-for="(parameter, i) in parameters"
-      :key="parameter.propertyKey"
-      :label="parameter.name"
-    >
-      <component
-        :is="parameter.component"
-        v-bind="parameter.props"
-        :value="getValue(parameter)"
-        :disabled="parameter.disabled"
-        @input="parameterHandlers[i]"
-      />
-    </blue-control>
-  </div>
+  <BlueControl
+    v-for="(parameter, i) in parameters"
+    :key="parameter.propertyKey"
+    :label="parameter.name"
+  >
+    <component
+      :is="parameter.component"
+      v-bind="parameter.props"
+      :model-value="getValue(parameter)"
+      :disabled="parameter.disabled"
+      @update:model-value="parameterHandlers[i]"
+    />
+  </BlueControl>
 </template>
 
 <script setup lang="ts">
-import useConfiguration from '~/composables/useConfiguration'
-
-import Configuration, {
+import {
+  Configuration,
   getParameterNames,
   getParameter,
 } from '~/ts/vueDependent/configurations/configuration'

@@ -8,31 +8,24 @@
 <script setup lang="ts">
 import { CssNode } from 'css-tree'
 
-import useConfiguration from '~/composables/useConfiguration'
-
-const props = withDefaults(
-  defineProps<{
-    modifyCss: string | null
-  }>(),
-  {
-    modifyCss: () => null,
-  }
-)
+const props = defineProps<{
+  modifyCss?: string
+}>()
 
 const configuration = useConfiguration()
 
-const customCssContainer = ref<HTMLDivElement | null>(null)
+const customCssContainer = ref<HTMLDivElement | undefined>()
 
 const setStyle = async (css: string) => {
-  if (customCssContainer.value === null) {
+  if (customCssContainer.value === undefined) {
     return
   }
 
   let newCss = css
 
-  const modifyCss = props.modifyCss
+  const { modifyCss } = props
 
-  if (modifyCss !== null && css !== '') {
+  if (modifyCss !== undefined && css !== '') {
     const { parse, walk, generate, fromPlainObject } = await import('css-tree')
     const ast = parse(css)
     walk(ast, {

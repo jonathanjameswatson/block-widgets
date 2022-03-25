@@ -1,64 +1,55 @@
 <template>
   <div class="lg:flex w-full min-h-screen lg:h-screen bg-gray-100">
     <div
-      class="
-        lg:w-1/4
-        lg:h-screen
-        lg:inline-block
-        bg-gray-200
-        p-8
-        pb-2
-        overflow-y-auto
-      "
+      class="lg:w-1/4 lg:h-screen lg:inline-block bg-gray-200 p-8 pb-2 overflow-y-auto"
     >
-      <h1 class="text-blue-700 text-4xl font-bold mb-8">
-        <a
+      <h1 class="text-blue-700 hover:text-blue-900 text-4xl font-bold mb-8">
+        <NuxtLink
           class="hover:text-blue-900"
-          href="https://github.com/jonathanjameswatson/block-widgets"
+          to="https://github.com/jonathanjameswatson/block-widgets"
           target="_blank"
-          rel="noopener noreferrer"
         >
           <span>BlockWidgets</span>
-        </a>
+        </NuxtLink>
       </h1>
 
-      <blue-control label="Widget">
-        <blue-select
+      <BlueControl label="Widget">
+        <BlueSelect
           v-model="widgetUrl"
           :options="widgetUrls"
           :option-names="widgetNames"
           min-width="21ch"
         />
-      </blue-control>
+      </BlueControl>
 
-      <blue-control label="Preview">
-        <blue-select
+      <BlueControl label="Preview">
+        <BlueSelect
           v-model="preview"
           :options="['Normal', 'iFrame']"
           min-width="11ch"
         />
-      </blue-control>
+      </BlueControl>
 
-      <blue-configurator />
+      <BlueConfigurator />
 
-      <blue-control label="Link">
+      <BlueControl label="Link">
         <span class="flex">
-          <blue-input
+          <BlueInput
             class="flex-shrink opacity-100 cursor-text"
-            :value="url"
+            :model-value="url"
             disabled
           />
-          <blue-button class="mr-0" :disabled="!canCopy" @click="copy">
+          <BlueButton class="mr-0" :disabled="!canCopy" @click="copy">
             {{ copyText }}
-          </blue-button>
+          </BlueButton>
         </span>
-      </blue-control>
+      </BlueControl>
     </div>
 
     <div class="lg:inline-block lg:w-3/4 p-8 h-screen overflow-auto">
       <div class="w-full h-full flex justify-center">
         <div class="flex flex-col items-center self-center">
-          <vue-draggable-resizable
+          <VueDraggableResizable
             :w="343"
             :h="500"
             :min-width="20"
@@ -66,8 +57,6 @@
             :active="true"
             :prevent-deactivation="true"
             :draggable="false"
-            class-name="custom-resizable"
-            class-name-handle="custom-handle"
             @resizing="() => (resizing = true)"
             @resizestop="() => (resizing = false)"
           >
@@ -87,9 +76,9 @@
                 <div
                   class="widget-preview w-full h-full overflow-auto relative"
                 >
-                  <widget-wrapper modify-css="widget-preview">
+                  <WidgetWrapper modify-css="widget-preview">
                     <component :is="widget.component" />
-                  </widget-wrapper>
+                  </WidgetWrapper>
                 </div>
               </div>
               <iframe
@@ -100,7 +89,7 @@
                 class="w-full h-full"
               />
             </div>
-          </vue-draggable-resizable>
+          </VueDraggableResizable>
         </div>
       </div>
     </div>
@@ -108,11 +97,10 @@
 </template>
 
 <script lang="ts">
-import useConfiguration from '~/composables/useConfiguration'
+import { stringifyQuery } from 'vue-router'
 
-import WIDGET_URLS from '~/ts/widgetUrls'
-import widgets from '~/ts/vueDependent/widgets'
-import stringifyQuery from '~/ts/stringifyQuery'
+import { WIDGET_URLS } from '~/ts/widgetUrls'
+import { widgets } from '~/ts/vueDependent/widgets'
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 
 const defaultUrl = WIDGET_URLS[0]
@@ -131,7 +119,7 @@ const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)
 
 const widgetUrl = computed<typeof WIDGET_URLS[number]>({
   get() {
-    const { hash } = route.value
+    const { hash } = route
     const hashEnd = hash.slice(1)
     if (narrowingIncludes(WIDGET_URLS, hashEnd)) {
       return hashEnd
@@ -141,7 +129,7 @@ const widgetUrl = computed<typeof WIDGET_URLS[number]>({
   },
   set(value) {
     const hash = `#${value}`
-    if (route.value.hash !== hash) {
+    if (route.hash !== hash) {
       router.replace({ hash })
     }
   },
@@ -152,7 +140,7 @@ const widget = computed(() => widgets[widgetUrl.value])
 
 const NewConstructor = widget.value.configuration
 const newConfiguration = new NewConstructor()
-newConfiguration.setFromParameterObject(route.value.query)
+newConfiguration.setFromParameterObject(route.query)
 const configuration = useConfiguration()
 configuration.value = newConfiguration
 
@@ -169,11 +157,11 @@ watch(
   () => {
     const query = configuration.value.toParameterObject()
     if (
-      Object.keys(route.value.query).length !== 0 ||
+      Object.keys(route.query).length !== 0 ||
       Object.keys(query).length !== 0
     )
       router.replace({
-        hash: route.value.hash,
+        hash: route.hash,
         query,
       })
   },
@@ -183,11 +171,13 @@ watch(
 // URL
 
 const queryPage = computed(() => {
-  const parameterObject = configuration.value.toParameterObject() as {
-    [key: string]: string
-  }
+  const parameterObject = configuration.value.toParameterObject()
   const queryString = stringifyQuery(parameterObject)
-  return `${widgetUrl.value}${queryString}`
+  if (queryString.length > 0) {
+    return `${widgetUrl.value}?${queryString}`
+  } else {
+    return widgetUrl.value
+  }
 })
 
 const protocol = ref('')
@@ -203,12 +193,12 @@ const url = computed(
 
 // Colour theme
 
-const { $colorMode } = useContext()
+const colorMode = useColorMode()
 watch(
   () => configuration.value.theme,
   (newTheme: string, oldTheme: string) => {
     if (newTheme !== oldTheme) {
-      $colorMode.preference = newTheme.toLowerCase()
+      colorMode.preference = newTheme.toLowerCase()
     }
   }
 )
@@ -217,7 +207,7 @@ watch(
 
 const canCopy = ref(false)
 const copyText = ref('Copy')
-const copyTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const copyTimeout = ref<ReturnType<typeof setTimeout> | undefined>()
 
 onMounted(() => {
   if (navigator.clipboard) {
@@ -232,13 +222,13 @@ const copy = async () => {
   } catch {
     copyText.value = 'Could not copy'
   } finally {
-    if (copyTimeout.value !== null) {
+    if (copyTimeout.value !== undefined) {
       clearTimeout(copyTimeout.value)
     }
 
     copyTimeout.value = setTimeout(() => {
       copyText.value = 'Copy'
-      copyTimeout.value = null
+      copyTimeout.value = undefined
     }, 2500)
   }
 }
@@ -253,85 +243,135 @@ const resizing = ref(false)
 </script>
 
 <style scoped lang="postcss">
-$radius: 0.25rem;
-$border: 1.5rem;
-$overlap: 0.5rem;
-
-.custom-resizable {
+.v3dr {
   transform: translate(0px) !important;
 
   & .widget-preview-container {
     outline: 4px dashed rgb(29, 78, 216);
     outline-offset: 0px;
-    border-radius: $radius;
+    border-radius: theme('spacing.drag-radius');
     overflow: hidden;
   }
 
-  &::v-deep {
-    .custom-handle {
-      position: absolute;
-      height: $border;
-      width: $border;
+  &:deep(.handle) {
+    position: absolute;
+    height: theme('spacing.drag-border');
+    width: theme('spacing.drag-border');
 
-      &-tl {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        top: calc(-$border + $overlap);
-        left: calc(-$border + $overlap);
-        cursor: nw-resize;
-      }
+    &-tl {
+      width: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      top: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      left: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      cursor: nw-resize;
+    }
 
-      &-tr {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        top: calc(-$border + $overlap);
-        right: calc(-$border + $overlap);
-        cursor: ne-resize;
-      }
+    &-tr {
+      width: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      top: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      right: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      cursor: ne-resize;
+    }
 
-      &-bl {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        bottom: calc(-$border + $overlap);
-        left: calc(-$border + $overlap);
-        cursor: sw-resize;
-      }
+    &-bl {
+      width: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      bottom: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      left: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      cursor: sw-resize;
+    }
 
-      &-br {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        bottom: calc(-$border + $overlap);
-        right: calc(-$border + $overlap);
-        cursor: se-resize;
-      }
+    &-br {
+      width: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
+      );
+      bottom: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      right: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      cursor: se-resize;
+    }
 
-      &-tm {
-        top: calc(-$border + $overlap);
-        left: calc($overlap + $radius / 2);
-        width: calc(100% - 2 * $overlap - $radius);
-        cursor: n-resize;
-      }
+    &-tm {
+      top: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      left: calc(
+        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
+      );
+      width: calc(
+        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
+      );
+      cursor: n-resize;
+    }
 
-      &-bm {
-        bottom: calc(-$border + $overlap);
-        left: calc($overlap + $radius / 2);
-        width: calc(100% - 2 * $overlap - $radius);
-        cursor: s-resize;
-      }
+    &-bm {
+      bottom: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      left: calc(
+        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
+      );
+      width: calc(
+        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
+      );
+      cursor: s-resize;
+    }
 
-      &-ml {
-        left: calc(-$border + $overlap);
-        top: calc($overlap + $radius / 2);
-        height: calc(100% - 2 * $overlap - $radius);
-        cursor: w-resize;
-      }
+    &-ml {
+      left: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      top: calc(
+        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
+      );
+      cursor: w-resize;
+    }
 
-      &-mr {
-        right: calc(-$border + $overlap);
-        top: calc($overlap + $radius / 2);
-        height: calc(100% - 2 * $overlap - $radius);
-        cursor: e-resize;
-      }
+    &-mr {
+      right: calc(
+        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
+      );
+      top: calc(
+        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
+      );
+      height: calc(
+        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
+      );
+      cursor: e-resize;
     }
   }
 }

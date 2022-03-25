@@ -1,10 +1,10 @@
-import booleanParameter from '../parameters/booleanParameter'
-import stringParameter from '../parameters/stringParameter'
-import numberParameter from '../parameters/numberParameter'
+import { booleanParameter } from '../parameters/booleanParameter'
+import { stringParameter } from '../parameters/stringParameter'
+import { numberParameter } from '../parameters/numberParameter'
 
-import Configuration, { addParameter } from './configuration'
+import { Configuration, addParameter } from './configuration'
 
-export default class MenuConfiguration extends Configuration {
+export class ProgressBarsConfiguration extends Configuration {
   @addParameter(stringParameter('Title', 'Progress bars'))
   public title: string = 'Progress bars'
 
@@ -17,7 +17,15 @@ export default class MenuConfiguration extends Configuration {
   @addParameter(numberParameter('Number of symbols', 3, 50, 1))
   public numberOfSymbols: number = 10
 
-  @addParameter(booleanParameter('Ascending periods', 'Off', 'On', true, '6ch'))
+  @addParameter(
+    booleanParameter(
+      'Time period order',
+      'Descending',
+      'Ascending',
+      true,
+      '14ch'
+    )
+  )
   public ascendingPeriods: boolean = true
 
   @addParameter(booleanParameter('Minute', 'Off', 'On', true, '6ch'))

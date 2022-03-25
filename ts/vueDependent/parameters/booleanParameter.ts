@@ -1,6 +1,6 @@
 import { Parameter, parameter } from './parameter'
 
-import Select from '~/components/blue/select.vue'
+import BlueSelect from '~/components/blue/BlueSelect.vue'
 
 export interface BooleanParameter extends Parameter<boolean> {
   type: 'boolean'
@@ -10,7 +10,7 @@ export interface BooleanParameter extends Parameter<boolean> {
   minWidth: string
 }
 
-export default (
+export const booleanParameter = (
   name: string,
   falseLabel: string,
   trueLabel: string,
@@ -22,8 +22,9 @@ export default (
     name,
     'boolean',
     (_) => true,
+    (input) => input.toString(),
     (input) => input === 'true',
-    Select,
+    BlueSelect,
     (value) => value as boolean,
     {
       options: [defaultBoolean, !defaultBoolean],

@@ -1,37 +1,37 @@
-import WIDGET_URLS from '~/ts/widgetUrls'
-import Configuration from '~/ts/vueDependent/configurations/configuration'
+import { WIDGET_URLS } from '~/ts/widgetUrls'
+import { Configuration } from '~/ts/vueDependent/configurations/configuration'
 
-import ProgressBars from '~/components/widgets/progressBars.vue'
-import ProgressBarsConfiguration from '~/ts/vueDependent/configurations/progressBarsConfiguration'
+import WidgetsProgressBars from '~/components/widgets/WidgetsProgressBars.vue'
+import { ProgressBarsConfiguration } from '~/ts/vueDependent/configurations/progressBarsConfiguration'
 
-import ThreeHourForecast from '~/components/widgets/threeHourForecast.vue'
-import ThreeHourForecastConfiguration from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
+import WidgetsThreeHourForecast from '~/components/widgets/WidgetsThreeHourForecast.vue'
+import { ThreeHourForecastConfiguration } from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
 
-import Menu from '~/components/widgets/menu.vue'
-import MenuConfiguration from '~/ts/vueDependent/configurations/menuConfiguration'
+import WidgetsMenu from '~/components/widgets/WidgetsMenu.vue'
+import { MenuConfiguration } from '~/ts/vueDependent/configurations/menuConfiguration'
+
+import type { Component } from 'vue'
 
 export interface Widget {
   name: string
-  component: Vue.Component
+  component: Component
   configuration: typeof Configuration
 }
 
-const widgets: { [url in typeof WIDGET_URLS[number]]: Widget } = {
+export const widgets: { [url in typeof WIDGET_URLS[number]]: Widget } = {
   progressbars: {
     name: 'Progress bars',
-    component: ProgressBars,
+    component: WidgetsProgressBars,
     configuration: ProgressBarsConfiguration,
   },
   threehourforecast: {
     name: 'Three hour forecast',
-    component: ThreeHourForecast,
+    component: WidgetsThreeHourForecast,
     configuration: ThreeHourForecastConfiguration,
   },
   menu: {
     name: 'Buttery menu',
-    component: Menu,
+    component: WidgetsMenu,
     configuration: MenuConfiguration,
   },
 }
-
-export default widgets

@@ -1,36 +1,16 @@
 <template>
   <input
-    v-bind="$attrs"
-    class="
-      text-white
-      placeholder-gray-200 placeholder-opacity-60
-      w-full
-      py-2
-      px-4
-      font-bold
-      mb-2
-      mr-2
-      leading-relaxed
-      focus:outline-none
-      appearance-textfield
-      selection-class
-    "
-    :value="value"
+    class="text-white placeholder-gray-200 placeholder-opacity-60 w-full py-2 px-4 font-bold mb-2 mr-2 leading-relaxed focus:outline-none appearance-textfield selection-class"
+    :value="modelValue"
     :class="classes"
     :disabled="disabled"
     @input="updateValue"
   />
 </template>
 
-<script lang="ts">
-export default {
-  inheritAttrs: false,
-}
-</script>
-
 <script setup lang="ts">
 interface Props {
-  value: string | number
+  modelValue: string | number
   disabled?: boolean
   active?: boolean
   rounding?: string
@@ -42,14 +22,13 @@ const props = withDefaults(defineProps<Props>(), {
   rounding: 'rounded',
 })
 
-const emit =
-  defineEmits<{
-    (e: 'input', payload: Event): void
-  }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', payload: string | number): void
+}>()
 
 const updateValue = (event: Event) => {
   if (!props.disabled) {
-    emit('input', event)
+    emit('update:modelValue', (event.target as any).value as string | number)
   }
 }
 

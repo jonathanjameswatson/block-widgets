@@ -1,14 +1,14 @@
-import unionParameter from '../parameters/unionParameter'
-import booleanParameter from '../parameters/booleanParameter'
-import stringParameter from '../parameters/stringParameter'
-import numberParameter from '../parameters/numberParameter'
+import { unionParameter } from '../parameters/unionParameter'
+import { booleanParameter } from '../parameters/booleanParameter'
+import { stringParameter } from '../parameters/stringParameter'
+import { numberParameter } from '../parameters/numberParameter'
 
-import Configuration, { addParameter } from './configuration'
+import { Configuration, addParameter } from './configuration'
 
 const temperatureUnits = ['°C', '°F', 'K']
 const temperatureTypes = ['Feels like', 'Minimum', 'Maximum', 'Average']
 
-export default class ThreeHourForecastConfiguration extends Configuration {
+export class ThreeHourForecastConfiguration extends Configuration {
   @addParameter(stringParameter('Met Office API endpoint', '/proxy'))
   public endpoint: string = ''
 
@@ -28,10 +28,10 @@ export default class ThreeHourForecastConfiguration extends Configuration {
   )
   public clientSecret: string = ''
 
-  @addParameter(numberParameter('Latitude', -85, 85, null))
+  @addParameter(numberParameter('Latitude', -85, 85))
   public latitude: number = 52.2018
 
-  @addParameter(numberParameter('Longitude', -180, 180, null))
+  @addParameter(numberParameter('Longitude', -180, 180))
   public longitude: number = 0.1144
 
   @addParameter(numberParameter('Number of items', 0, 50, 1))

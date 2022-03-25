@@ -1,27 +1,21 @@
 <template>
-  <blue-input
-    v-bind="$attrs"
+  <BlueInput
     type="number"
-    :value="value"
+    :model-value="modelValue"
     :disabled="disabled"
     :active="active"
     :rounding="rounding"
     :minimum="minimum"
     :maximum="maximum"
     :step="step"
-    @input="updateValue"
+    @update:model-value="updateValue"
+    ref="input"
   />
 </template>
 
-<script lang="ts">
-export default {
-  inheritAttrs: false,
-}
-</script>
-
 <script setup lang="ts">
 interface Props {
-  value: number
+  modelValue: number
   disabled?: boolean
   active?: boolean
   rounding?: string
@@ -34,24 +28,22 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   active: false,
   rounding: 'rounded',
-  minimum: undefined,
-  maximum: undefined,
-  step: undefined,
 })
 
-const emit =
-  defineEmits<{
-    (e: 'input', payload: number): void
-  }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', payload: number): void
+}>()
 
-const updateValue = (event: Event) => {
-  const { value } = event.target as unknown as {
-    value: string | number | undefined | null
+const input = ref<HTMLInputElement | undefined>()
+
+const updateValue = (payload: string | number) => {
+  if (input.value === undefined) {
+    return
   }
 
-  let numberValue = Number(value)
+  let numberValue = Number(payload)
 
-  if (!props.disabled && value !== '' && !isNaN(numberValue)) {
+  if (!props.disabled && payload !== '' && !isNaN(numberValue)) {
     if (props.step !== undefined && (numberValue / props.step) % 1 === 0) {
       numberValue = Math.floor(numberValue / props.step) * props.step
     }
@@ -64,11 +56,13 @@ const updateValue = (event: Event) => {
       numberValue = props.maximum
     }
 
-    emit('input', numberValue)
+    emit('update:modelValue', numberValue)
   }
 
   nextTick(() => {
-    ;(event.target as unknown as HTMLInputElement).checkValidity()
+    if (input.value !== undefined) {
+      input.value.checkValidity()
+    }
   })
 }
 </script>

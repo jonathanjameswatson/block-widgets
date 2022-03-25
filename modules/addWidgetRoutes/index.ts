@@ -1,9 +1,9 @@
-import { Module } from '@nuxt/types'
+import { defineNuxtModule } from '@nuxt/kit'
 
-import WIDGET_URLS from '../../ts/widgetUrls'
+import { WIDGET_URLS } from '../../ts/widgetUrls'
 
-const module: Module<{}> = function (_moduleOptions) {
-  this.options.generate.routes = Object.assign([], WIDGET_URLS)
-}
-
-export default module
+export default defineNuxtModule({
+  setup(_options, nuxt) {
+    nuxt.options.generate.routes = Object.assign([], WIDGET_URLS)
+  },
+})

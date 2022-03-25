@@ -1,41 +1,38 @@
 <template>
   <div class="w-full h-full">
     <div class="flex flex-col">
-      <widget-title :text="title" />
-      <a :href="metOfficeUrl" target="_blank" rel="noopener noreferrer">
-        <widget-block v-for="(weatherInformation, i) in forecast" :key="i">
-          <widget-emoji-container v-if="configuration.icons">
+      <WidgetTitle :text="title" />
+      <NuxtLink :to="metOfficeUrl" target="_blank">
+        <WidgetBlock v-for="(weatherInformation, i) in forecast" :key="i">
+          <WidgetEmojiContainer v-if="configuration.icons">
             <widget-weather-icon
               :icon="weatherInformation.icon"
               :name="weatherInformation.name"
             />
-          </widget-emoji-container>
-          <widget-text>
-            <widget-inline :text="weatherInformation.text" underline />
-          </widget-text>
-        </widget-block>
-      </a>
+          </WidgetEmojiContainer>
+          <WidgetText>
+            <WidgetInline :text="weatherInformation.text" underline />
+          </WidgetText>
+        </WidgetBlock>
+      </NuxtLink>
     </div>
-    <widget-warning v-if="example" />
+    <WidgetWarning v-if="example" />
   </div>
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs'
+import dayjs, { extend as dayjsExtend } from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from 'dayjs/plugin/utc'
 import Geohash from 'latlon-geohash'
 
-import useConfiguration from '~/composables/useConfiguration'
-import useSchedule from '~/composables/useSchedule'
+import { codeToWeatherInformation } from '~/ts/codeToWeatherInformation'
+import { definitions } from '~/ts/threeHourSchema'
 
-import codeToWeatherInformation from '~/ts/codeToWeatherInformation'
-import definitions from '~/ts/threeHourSchema'
+import { ThreeHourForecastConfiguration } from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
 
-import ThreeHourForecastConfiguration from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
-
-dayjs.extend(advancedFormat)
-dayjs.extend(utc)
+dayjsExtend(advancedFormat)
+dayjsExtend(utc)
 
 const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
 
@@ -71,15 +68,17 @@ const configuration = useConfiguration<ThreeHourForecastConfiguration>()
 const geohash = computed(() =>
   Geohash.encode(configuration.value.latitude, configuration.value.longitude, 6)
 )
+
 const metOfficeUrl = computed(
   () => `https://www.metoffice.gov.uk/weather/forecast/${geohash.value}`
 )
 
 const rawData = ref<definitions['Properties']>(defaultRawData)
 const failed = ref(false)
-const startTime = ref<number | null>(null)
-const exampleThreeHours =
-  ref<definitions['SpotForecastFeatureCollection'] | null>(null)
+const startTime = ref<number | undefined>()
+const exampleThreeHours = ref<
+  definitions['SpotForecastFeatureCollection'] | undefined
+>()
 
 const title = computed(() => {
   if (failed.value) {
@@ -143,13 +142,12 @@ const forecast = computed(() => {
 
 const example = computed(() => configuration.value.endpoint === '')
 
-const { $axios } = useContext()
 const setData = async () => {
   if (!example.value) {
     let response: definitions['SpotForecastFeatureCollection']
 
     try {
-      response = (await $axios.$get(configuration.value.endpoint, {
+      response = (await $fetch(configuration.value.endpoint, {
         headers: {
           'X-IBM-Client-Id': configuration.value.clientId,
           'X-IBM-Client-Secret': configuration.value.clientSecret,
@@ -180,13 +178,13 @@ const setData = async () => {
 
     rawData.value = newData
   } else {
-    if (exampleThreeHours.value === null) {
-      const imported = (await import(
+    if (exampleThreeHours.value === undefined) {
+      const { example } = (await import(
         '~/ts/exampleThreeHours.generated'
       )) as unknown as {
-        default: definitions['SpotForecastFeatureCollection']
+        example: definitions['SpotForecastFeatureCollection']
       }
-      exampleThreeHours.value = imported.default
+      exampleThreeHours.value = example
     }
     const { features } = exampleThreeHours.value
     const [feature] = features
@@ -201,11 +199,14 @@ const update = async () => {
     return
   }
 
-  if (startTime.value !== null && dayjs().utc().hour() === startTime.value) {
+  if (
+    startTime.value !== undefined &&
+    dayjs().utc().hour() === startTime.value
+  ) {
     return
   }
 
-  startTime.value = null
+  startTime.value = undefined
 
   if (rawData.value.timeSeries.length > configuration.value.items) {
     rawData.value.timeSeries.shift()
@@ -229,7 +230,7 @@ watch(
   ],
   async () => {
     rawData.value = defaultRawData
-    startTime.value = null
+    startTime.value = undefined
     await setData()
   }
 )

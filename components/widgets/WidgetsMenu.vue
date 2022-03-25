@@ -1,39 +1,35 @@
 <template>
   <div class="w-full h-full">
     <div class="flex flex-col">
-      <widget-title :text="title" />
-      <a
-        href="https://www.queens.cam.ac.uk/life-at-queens/catering/cafeteria/cafeteria-menu"
+      <WidgetTitle :text="title" />
+      <NuxtLink
+        to="https://www.queens.cam.ac.uk/life-at-queens/catering/cafeteria/cafeteria-menu"
         target="_blank"
-        rel="noopener noreferrer"
       >
-        <widget-block v-for="(menuItem, i) in menu" :key="i">
-          <widget-emoji-container v-if="configuration.emojis">
+        <WidgetBlock v-for="(menuItem, i) in menu" :key="i">
+          <WidgetEmojiContainer v-if="configuration.emojis">
             <img
               class="w-full h-full"
               draggable="false"
               :alt="menuItem.emoji"
               :src="menuItem.emojiUrl"
             />
-          </widget-emoji-container>
-          <widget-text>
-            <widget-inline :text="menuItem.name" underline />
-          </widget-text>
-        </widget-block>
-      </a>
+          </WidgetEmojiContainer>
+          <WidgetText>
+            <WidgetInline :text="menuItem.name" underline />
+          </WidgetText>
+        </WidgetBlock>
+      </NuxtLink>
     </div>
-    <widget-warning v-if="example" />
+    <WidgetWarning v-if="example" />
   </div>
 </template>
 
 <script lang="ts">
 import twemoji from 'twemoji'
 
-import useConfiguration from '~/composables/useConfiguration'
-import useSchedule from '~/composables/useSchedule'
-
-import wordToFoodEmoji from '~/ts/wordToFoodEmoji.generated'
-import MenuConfiguration from '~/ts/vueDependent/configurations/menuConfiguration'
+import { wordToFoodEmoji } from '~/ts/wordToFoodEmoji.generated'
+import { MenuConfiguration } from '~/ts/vueDependent/configurations/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
 const getEmoji = (string: string) => {
@@ -47,6 +43,7 @@ const getEmoji = (string: string) => {
 
 const getEmojiUrl = (emoji: string) => {
   let url = ''
+  // eslint-disable-next-line
   twemoji.parse(emoji, {
     callback(icon: string, options: object) {
       url = ''.concat(
@@ -112,7 +109,6 @@ const menu = computed<MenuItem[]>(() =>
   })
 )
 
-const { $axios } = useContext()
 const setData = async () => {
   if (!example.value) {
     let weekdayNumber: Weekday
@@ -124,7 +120,7 @@ const setData = async () => {
         weekday: weekdayNumber,
         meal: newMeal,
         menu: newRawMenu,
-      } = (await $axios.$get(
+      } = (await $fetch(
         `${configuration.value.butteryBotUrl}/menu/`
       )) as ApiResponse)
 

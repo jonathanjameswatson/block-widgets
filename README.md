@@ -40,15 +40,15 @@ $ yarn install
 $ yarn dev
 
 # generate project
-$ yarn generate
+$ yarn build
 
-# serve the dist/ directory for testing (without proxies)
+# serve the .output/ directory for testing (without proxies)
 $ yarn start
 ```
 
 ### Proxies
 
-Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and are automatically used by the development server and Netlify. If you are hosting this project on another provider, you may need to add these manually.
+Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and automatically used by Vite and Netlify. If you are hosting this project on a provider other than Netlify, you may need to add these manually.
 
 ### How to create a new widget
 
@@ -60,9 +60,9 @@ Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and are automatically
 ### How to create a new type of parameter
 
 1. Consider the type of the value that this parameter will store. Let this be `T`.
-2. Create or find a component to control the parameter. This component must have a `value` prop that can take values of type `T` and a `disabled` prop that takes a `boolean`. This component must also emit an `input` event with any value.
+2. Create or find a component to control the parameter. This component must have a `modelValue` prop that can take values of type `T` and a `disabled` prop that takes a `boolean`. This component must also emit an `update:modelValue` event with any value.
 3. Create a new file exporting an interface that extends `Parameter<T>` from [parameter.ts](./ts/vueDependent/parameters/parameter.ts). Set `type` to be a unique string not used by any other parameters (found in [parameters](./ts/vueDependent/parameters)). Add any custom properties relevant to your new parameter not found in `Parameter<T>`.
-4. Add a function to this file that returns a function that creates an object that implements this new interface. This function should be the default export of the file. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step 3 and an argument that determines whether or not the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [parameter.ts](./ts/vueDependent/parameters/parameter.ts). `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `stringToType` (a function that converts a string argument to type `T`), `component` (the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step 3) and `disabled`.
+4. Add and export a function to this file that returns a function that creates an object that implements this new interface. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step 3 and an argument that determines whether the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [parameter.ts](./ts/vueDependent/parameters/parameter.ts). `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `serialise` (a function that converts a type `T` argument to a string), `deserialise` (a function that converts a string argument to type `T`), `component` (the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step 3) and `disabled`.
 
 ### How to create a new proxy
 
