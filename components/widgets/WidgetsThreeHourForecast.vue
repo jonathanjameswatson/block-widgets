@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import dayjs, { extend as dayjsExtend } from 'dayjs'
+import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from 'dayjs/plugin/utc'
 import Geohash from 'latlon-geohash'
@@ -29,10 +29,10 @@ import Geohash from 'latlon-geohash'
 import { codeToWeatherInformation } from '~/ts/codeToWeatherInformation'
 import { definitions } from '~/ts/threeHourSchema'
 
-import { ThreeHourForecastConfiguration } from '~/ts/vueDependent/configurations/threeHourForecastConfiguration'
+import { ThreeHourForecastConfiguration } from '~/ts/configurations/threeHourForecastConfiguration'
 
-dayjsExtend(advancedFormat)
-dayjsExtend(utc)
+dayjs.extend(advancedFormat)
+dayjs.extend(utc)
 
 const getWeatherInformation = (code: number) => codeToWeatherInformation[code]
 
@@ -140,7 +140,11 @@ const forecast = computed(() => {
     )
 })
 
-const example = computed(() => configuration.value.endpoint === '')
+const example = computed(
+  () =>
+    configuration.value.endpoint === '' ||
+    configuration.value.configurationName !== 'threeHourForecastConfiguration'
+)
 
 const setData = async () => {
   if (!example.value) {

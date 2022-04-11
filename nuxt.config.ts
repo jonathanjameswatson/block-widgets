@@ -3,7 +3,6 @@ import { defineNuxtConfig } from 'nuxt3'
 export default defineNuxtConfig({
   // Target
   target: 'static',
-  ssr: false, // possibly remove later
   loading: {},
 
   // Global page headers
@@ -67,24 +66,12 @@ export default defineNuxtConfig({
     strict: true,
   },
 
-  // Native ESM transpilation
-  /*
-  build: {
-    transpile: [
-      'dayjs',
-      'dayjs/plugin/advancedFormat',
-      'dayjs/plugin/utc',
-      'dayjs/plugin/duration',
-      'dayjs/plugin/isLeapYear',
-    ],
+  alias: {
+    dayjs: 'dayjs/esm',
   },
 
-  alias: {
-    dayjs: 'dayjs/dayjs.min.js',
-    'dayjs/plugin/advancedFormat': 'dayjs/plugin/advancedFormat.js',
-    'dayjs/plugin/utc': 'dayjs/plugin/utc.js',
-    'dayjs/plugin/duration': 'dayjs/plugin/duration.js',
-    'dayjs/plugin/isLeapYear': 'dayjs/plugin/isLeapYear.js',
+  components: {
+    global: true,
+    dirs: ['~/components'],
   },
-  */
 })

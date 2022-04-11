@@ -1,7 +1,5 @@
 import { Parameter, parameter } from './parameter'
 
-import BlueInput from '~/components/blue/BlueInput.vue'
-
 export interface StringParameter extends Parameter<string> {
   type: 'string'
   placeholder: string
@@ -10,6 +8,7 @@ export interface StringParameter extends Parameter<string> {
 export const stringParameter = (
   name: string,
   placeholder: string,
+  defaultValue: string,
   disabled: boolean = false
 ) =>
   parameter<string, StringParameter>(
@@ -18,7 +17,8 @@ export const stringParameter = (
     (input) => input !== '',
     (input) => input,
     (input) => input,
-    BlueInput,
+    defaultValue,
+    'BlueInput',
     (input: string | number) => input as string,
     {
       placeholder,

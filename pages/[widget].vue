@@ -22,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-import { WIDGET_URLS } from '~/ts/widgetUrls'
-import { widgets } from '~/ts/vueDependent/widgets'
+import { WIDGET_URLS, widgets } from '~/ts/widgets'
+import { configurationProperties } from '~/ts/configurations/configuration'
 
-import type { Component } from 'vue'
+import type { ConcreteComponent } from 'vue'
 
 const colorMode = useColorMode()
 const configuration = useConfiguration()
@@ -34,21 +34,25 @@ watchEffect(() => {
   colorMode.preference = configuration.value.theme.toLowerCase()
 })
 
-const widgetComponent = ref<Component | undefined>()
+const widgetComponent = shallowRef<string | ConcreteComponent | undefined>()
 const route = useRoute()
 
 watchEffect(() => {
   const widgetName = route.params.widget
 
   if (typeof widgetName === 'string' && widgetName in widgets) {
-    const { configuration: Constructor, component: newComponent } =
+    const { configurationName, componentName } =
       widgets[widgetName as typeof WIDGET_URLS[number]]
 
-    const newConfiguration = new Constructor()
-    newConfiguration.setFromParameterObject(route.query)
+    const newConfiguration =
+      configurationProperties[configurationName].factory()
+    configurationProperties[configurationName].setFromParameterObject(
+      newConfiguration,
+      route.query as any
+    )
 
     configuration.value = newConfiguration
-    widgetComponent.value = newComponent
+    widgetComponent.value = componentName // resolveComponent(componentName)
   }
 })
 </script>

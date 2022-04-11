@@ -29,7 +29,7 @@
 import twemoji from 'twemoji'
 
 import { wordToFoodEmoji } from '~/ts/wordToFoodEmoji.generated'
-import { MenuConfiguration } from '~/ts/vueDependent/configurations/menuConfiguration'
+import { MenuConfiguration } from '~/ts/configurations/menuConfiguration'
 
 const keywords = Object.keys(wordToFoodEmoji)
 const getEmoji = (string: string) => {
@@ -43,7 +43,6 @@ const getEmoji = (string: string) => {
 
 const getEmojiUrl = (emoji: string) => {
   let url = ''
-  // eslint-disable-next-line
   twemoji.parse(emoji, {
     callback(icon: string, options: object) {
       url = ''.concat(
@@ -96,7 +95,11 @@ const meal = ref('')
 const rawMenu = ref<string[]>([])
 const failed = ref(false)
 
-const example = computed(() => configuration.value.butteryBotUrl === '')
+const example = computed(
+  () =>
+    configuration.value.butteryBotUrl === '' ||
+    configuration.value.configurationName !== 'menuConfiguration'
+)
 const menu = computed<MenuItem[]>(() =>
   rawMenu.value.map((name: string) => {
     const emoji = configuration.value.emojis ? getEmoji(name) : ''

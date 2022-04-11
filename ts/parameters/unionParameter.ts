@@ -1,7 +1,5 @@
 import { Parameter, parameter } from './parameter'
 
-import BlueSelect from '~/components/blue/BlueSelect.vue'
-
 export interface UnionParameter extends Parameter<string> {
   type: 'union'
   options: string[]
@@ -20,7 +18,8 @@ export const unionParameter = (
     (input) => options.includes(input),
     (input) => input,
     (input) => input,
-    BlueSelect,
+    options[0],
+    'BlueSelect',
     (input) => input as string,
     {
       options,

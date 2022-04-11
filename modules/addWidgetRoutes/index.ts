@@ -1,6 +1,6 @@
 import { defineNuxtModule } from '@nuxt/kit'
 
-import { WIDGET_URLS } from '../../ts/widgetUrls'
+import { WIDGET_URLS } from '../../ts/widgets'
 
 export default defineNuxtModule({
   setup(_options, nuxt) {

@@ -1,7 +1,5 @@
 import { Parameter, parameter } from './parameter'
 
-import BlueNumberInput from '~/components/blue/BlueNumberInput.vue'
-
 export interface NumberParameter extends Parameter<number> {
   type: 'number'
   minimum?: number
@@ -11,9 +9,10 @@ export interface NumberParameter extends Parameter<number> {
 
 export const numberParameter = (
   name: string,
-  minimum: number | undefined = undefined,
-  maximum: number | undefined = undefined,
-  step: number | undefined = undefined,
+  minimum: number | undefined,
+  maximum: number | undefined,
+  step: number | undefined,
+  defaultValue: number,
   disabled: boolean = false
 ) =>
   parameter<number, NumberParameter>(
@@ -28,7 +27,8 @@ export const numberParameter = (
       ),
     (input) => input.toString(),
     (input) => Number(input),
-    BlueNumberInput,
+    defaultValue,
+    'BlueNumberInput',
     (input) => input as number,
     {
       minimum,

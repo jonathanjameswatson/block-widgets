@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts">
-import dayjs, { Dayjs, extend as dayjsExtend } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import duration, { Duration } from 'dayjs/plugin/duration'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
 
-import { ProgressBarsConfiguration } from '~/ts/vueDependent/configurations/progressBarsConfiguration'
+import { ProgressBarsConfiguration } from '~/ts/configurations/progressBarsConfiguration'
 
-dayjsExtend(duration)
-dayjsExtend(isLeapYear)
+dayjs.extend(duration)
+dayjs.extend(isLeapYear)
 
 const MONTH_LENGTHS = [
   31,
