@@ -90,18 +90,13 @@ interface ApiResponse {
 
 const configuration = useConfiguration<MenuConfiguration>()
 
-const weekday = ref('')
-const meal = ref('')
-const rawMenu = ref<string[]>([])
-const failed = ref(false)
-
 const example = computed(
   () =>
     configuration.value.butteryBotUrl === '' ||
     configuration.value.configurationName !== 'menuConfiguration'
 )
 const menu = computed<MenuItem[]>(() =>
-  rawMenu.value.map((name: string) => {
+  data.value.rawMenu.map((name: string) => {
     const emoji = configuration.value.emojis ? getEmoji(name) : ''
     const emojiUrl = getEmojiUrl(emoji)
     return {
@@ -112,75 +107,90 @@ const menu = computed<MenuItem[]>(() =>
   })
 )
 
-const setData = async () => {
-  if (!example.value) {
-    let weekdayNumber: Weekday
-    let newMeal: Meal
-    let newRawMenu: string[]
+const { data, refresh } = await useAsyncData<{
+  weekday: Weekday | ''
+  meal: Lowercase<Meal> | ''
+  rawMenu: string[]
+  failed: boolean
+}>(
+  'menuData',
+  async (): Promise<{
+    weekday: Weekday | ''
+    meal: Lowercase<Meal> | ''
+    rawMenu: string[]
+    failed: boolean
+  }> => {
+    if (!example.value) {
+      let weekdayNumber: Weekday
+      let newMeal: Meal
+      let newRawMenu: string[]
 
-    try {
-      ;({
-        weekday: weekdayNumber,
-        meal: newMeal,
-        menu: newRawMenu,
-      } = (await $fetch(
-        `${configuration.value.butteryBotUrl}/menu/`
-      )) as ApiResponse)
+      try {
+        ;({
+          weekday: weekdayNumber,
+          meal: newMeal,
+          menu: newRawMenu,
+        } = (await $fetch(
+          `${configuration.value.butteryBotUrl}/menu/`
+        )) as ApiResponse)
 
-      if (weekdayNumber === undefined) {
-        throw new Error('Invalid payload given')
+        if (weekdayNumber === undefined) {
+          throw new Error('Invalid payload given')
+        }
+      } catch {
+        return {
+          weekday: '',
+          meal: '',
+          rawMenu: [],
+          failed: true,
+        } as {
+          weekday: Weekday | ''
+          meal: Lowercase<Meal> | ''
+          rawMenu: string[]
+          failed: boolean
+        }
       }
 
-      failed.value = false
-    } catch {
-      failed.value = true
-      return
+      return {
+        weekday: Weekday[weekdayNumber] as unknown as Weekday,
+        meal: newMeal.toLowerCase() as Lowercase<Meal>,
+        rawMenu: newRawMenu,
+        failed: false,
+      }
+    } else {
+      return {
+        weekday: Weekday[0] as unknown as Weekday,
+        meal: 'lunch',
+        rawMenu: [
+          'Soup of the Day',
+          'Vegan - Aubergine Bolognaise With Spaghetti',
+          'Chicken, Leek & Sweetcorn Topcrust Pie',
+          'New Potatoes',
+          'Broccoli',
+          'Apple and Blackberry Crumble',
+        ],
+        failed: false,
+      }
     }
-
-    weekday.value = Weekday[weekdayNumber]
-    meal.value = newMeal.toLowerCase()
-    rawMenu.value = newRawMenu
-  } else {
-    weekday.value = 'Monday'
-    meal.value = 'Lunch'
-    rawMenu.value = [
-      'Soup of the Day',
-      'Vegan - Aubergine Bolognaise With Spaghetti',
-      'Chicken, Leek & Sweetcorn Topcrust Pie',
-      'New Potatoes',
-      'Broccoli',
-      'Apple and Blackberry Crumble',
-    ]
-  }
-}
-
-const update = async () => {
-  if (example.value) {
-    return
-  }
-
-  await setData()
-}
-
-onMounted(async () => {
-  await setData()
-})
-
-useSchedule('5 1,15 * * *', update)
-
-watch(
-  () => configuration.value.butteryBotUrl,
-  async () => {
-    weekday.value = ''
-    meal.value = ''
-    rawMenu.value = []
-    await setData()
+  },
+  {
+    watch: [
+      () => configuration.value.butteryBotUrl,
+      () => configuration.value.configurationName,
+      example,
+    ],
   }
 )
 
+useSchedule('5 1,15 * * *', async () => {
+  if (!example.value) {
+    await refresh()
+  }
+})
+
 const title = computed(() =>
-  failed.value
+  data.value.failed
     ? 'Could not access buttery bot'
-    : `${weekday.value} ${meal.value}`
+    : `${data.value.weekday} ${data.value.meal}`
 )
 </script>
