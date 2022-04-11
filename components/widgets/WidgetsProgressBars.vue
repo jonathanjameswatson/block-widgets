@@ -128,7 +128,7 @@ const filteredPeriodList = computed(() =>
   periodList.value.filter((period) => allowedPeriods.value.includes(period))
 )
 
-const textBlocks = ref<TextBlock[]>([])
+const textBlocks = useState<TextBlock[]>('progressBarsTextBlocks', () => [])
 
 const setData = () => {
   textBlocks.value = filteredPeriodList.value.map((period) => {
@@ -151,13 +151,11 @@ const setData = () => {
   })
 }
 
-const update = () => {
-  setData()
-}
+setData()
 
 onMounted(setData)
 
-useSchedule('* * * * * *', update)
+useSchedule('* * * * * *', setData)
 
 watch(
   [
