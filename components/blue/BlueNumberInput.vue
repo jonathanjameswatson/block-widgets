@@ -9,7 +9,7 @@
     :maximum="maximum"
     :step="step"
     @update:model-value="updateValue"
-    ref="input"
+    validate
   />
 </template>
 
@@ -34,13 +34,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', payload: number): void
 }>()
 
-const input = ref<HTMLInputElement | undefined>()
-
 const updateValue = (payload: string | number) => {
-  if (input.value === undefined) {
-    return
-  }
-
   let numberValue = Number(payload)
 
   if (!props.disabled && payload !== '' && !isNaN(numberValue)) {
@@ -58,12 +52,6 @@ const updateValue = (payload: string | number) => {
 
     emit('update:modelValue', numberValue)
   }
-
-  nextTick(() => {
-    if (input.value !== undefined) {
-      input.value.checkValidity()
-    }
-  })
 }
 </script>
 

@@ -5,6 +5,7 @@
     :class="classes"
     :disabled="disabled"
     @input="updateValue"
+    ref="input"
   />
 </template>
 
@@ -14,21 +15,33 @@ interface Props {
   disabled?: boolean
   active?: boolean
   rounding?: string
+  validate?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   active: false,
   rounding: 'rounded',
+  validate: false,
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', payload: string | number): void
 }>()
 
+const input = ref<HTMLInputElement | undefined>()
+
 const updateValue = (event: Event) => {
   if (!props.disabled) {
     emit('update:modelValue', (event.target as any).value as string | number)
+
+    if (props.validate) {
+      nextTick(() => {
+        if (input.value !== undefined) {
+          input.value.checkValidity()
+        }
+      })
+    }
   }
 }
 
