@@ -174,11 +174,7 @@ const { data, refresh } = await useAsyncData<{
     }
   },
   {
-    watch: [
-      () => configuration.value.butteryBotUrl,
-      () => configuration.value.configurationName,
-      example,
-    ],
+    watch: [() => configuration.value.butteryBotUrl, example],
   }
 )
 
