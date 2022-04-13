@@ -17,13 +17,9 @@
     "css-tree": "^2.1.0",
     "dayjs": "^1.11.0",
     "latlon-geohash": "^2.0.0",
-    "reflect-metadata": "^0.1.10",
     "twemoji": "^14.0.2",
     "vue-router": "^4.0.14",
     "weather-icons": "https://github.com/erikflowers/weather-icons.git"
-  },
-  "dependenciesComments": {
-    "reflect-metadata": "Version 0.1.13 does not work for some reason"
   },
   "devDependencies": {
     "@iarna/toml": "^2.2.5",
