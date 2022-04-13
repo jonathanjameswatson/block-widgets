@@ -27,12 +27,7 @@ import { configurationProperties } from '~/ts/configurations/configuration'
 
 import type { ConcreteComponent } from 'vue'
 
-const colorMode = useColorMode()
 const configuration = useConfiguration()
-
-watchEffect(() => {
-  colorMode.preference = configuration.value.theme.toLowerCase()
-})
 
 const widgetComponent = shallowRef<string | ConcreteComponent>()
 const route = useRoute()
@@ -54,5 +49,10 @@ watchEffect(() => {
     configuration.value = newConfiguration
     widgetComponent.value = componentName // resolveComponent(componentName)
   }
+})
+
+const colorMode = useColorMode()
+watchEffect(() => {
+  colorMode.preference = configuration.value.theme.toLowerCase()
 })
 </script>

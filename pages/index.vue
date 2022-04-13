@@ -194,14 +194,9 @@ const url = computed(() => `${protocol}//${host}/${queryPage.value}`)
 // Colour theme
 
 const colorMode = useColorMode()
-watch(
-  () => configuration.value.theme,
-  (newTheme: string, oldTheme: string) => {
-    if (newTheme !== oldTheme) {
-      colorMode.preference = newTheme.toLowerCase()
-    }
-  }
-)
+watchEffect(() => {
+  colorMode.preference = configuration.value.theme.toLowerCase()
+})
 
 // URL Copying
 
