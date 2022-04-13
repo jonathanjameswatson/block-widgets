@@ -1,7 +1,11 @@
 <template>
   <div :class="classes">
     <slot></slot>
-    <div ref="customCssContainer" />
+    <Style
+      v-if="customStyle !== undefined"
+      type="text/css"
+      :children="customStyle"
+    />
   </div>
 </template>
 
@@ -14,13 +18,9 @@ const props = defineProps<{
 
 const configuration = useConfiguration()
 
-const customCssContainer = ref<HTMLDivElement>()
+const customStyle = ref<string>()
 
 const setStyle = async (css: string) => {
-  if (customCssContainer.value === undefined) {
-    return
-  }
-
   let newCss = css
 
   const { modifyCss } = props
@@ -55,10 +55,7 @@ const setStyle = async (css: string) => {
     newCss = generate(ast)
   }
 
-  const style = document.createElement('style')
-  style.appendChild(document.createTextNode(newCss))
-  customCssContainer.value.innerHTML = ''
-  customCssContainer.value.appendChild(style)
+  customStyle.value = newCss
 }
 
 watch(
@@ -66,7 +63,7 @@ watch(
   async (css: string) => await setStyle(css)
 )
 
-onMounted(async () => await setStyle(configuration.value.css))
+await setStyle(configuration.value.css)
 
 const classes = computed(() => {
   const fontFamily = `font-${configuration.value.style.toLowerCase()}`
