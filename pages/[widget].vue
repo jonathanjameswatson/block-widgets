@@ -34,7 +34,7 @@ watchEffect(() => {
   colorMode.preference = configuration.value.theme.toLowerCase()
 })
 
-const widgetComponent = shallowRef<string | ConcreteComponent | undefined>()
+const widgetComponent = shallowRef<string | ConcreteComponent>()
 const route = useRoute()
 
 watchEffect(() => {

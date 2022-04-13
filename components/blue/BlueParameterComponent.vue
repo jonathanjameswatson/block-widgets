@@ -32,7 +32,7 @@ const updateValue = (value: any) => {
     props.parameter.convertInput(value) as never
 }
 
-const parameterComponent = shallowRef<string | ConcreteComponent | undefined>()
+const parameterComponent = shallowRef<string | ConcreteComponent>()
 watchEffect(() => {
   parameterComponent.value = props.parameter.componentName // resolveComponent(props.parameter.componentName)
 })

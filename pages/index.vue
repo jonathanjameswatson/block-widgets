@@ -136,7 +136,7 @@ const parameterObject = computed(() => {
     configuration.value
   )
 })
-const widgetComponent = shallowRef<string | ConcreteComponent | undefined>()
+const widgetComponent = shallowRef<string | ConcreteComponent>()
 
 watchEffect(() => {
   const { configurationName, componentName } = widget.value

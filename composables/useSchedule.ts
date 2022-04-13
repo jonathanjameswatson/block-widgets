@@ -1,7 +1,7 @@
 import { CronJob } from 'cron'
 
 export const useSchedule = (expression: string, update: () => void) => {
-  const schedule = ref<CronJob | undefined>()
+  const schedule = ref<CronJob>()
 
   onMounted(() => {
     schedule.value = new CronJob(

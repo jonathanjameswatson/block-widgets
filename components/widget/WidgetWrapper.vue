@@ -14,7 +14,7 @@ const props = defineProps<{
 
 const configuration = useConfiguration()
 
-const customCssContainer = ref<HTMLDivElement | undefined>()
+const customCssContainer = ref<HTMLDivElement>()
 
 const setStyle = async (css: string) => {
   if (customCssContainer.value === undefined) {
