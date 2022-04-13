@@ -49,52 +49,33 @@
     <div class="lg:inline-block lg:w-3/4 p-8 h-screen overflow-auto">
       <div class="w-full h-full flex justify-center">
         <div class="flex flex-col items-center self-center">
-          <ClientOnly>
-            <VueDraggableResizable
-              :w="343"
-              :h="500"
-              :min-width="20"
-              :min-height="20"
-              :active="true"
-              :prevent-deactivation="true"
-              :draggable="false"
-              @resizing="() => (resizing = true)"
-              @resizestop="() => (resizing = false)"
+          <BlueResizable
+            v-model:width="width"
+            v-model:height="height"
+            :min-width="20"
+            :min-height="20"
+          >
+            <div
+              v-if="preview === 'Normal'"
+              class="w-full h-full transform overflow-hidden"
             >
-              <div v-if="resizing" class="w-full h-full z-10 absolute" />
-              <div
-                class="inline border-blue absolute -top-10 w-0 whitespace-nowrap"
-              >
-                <p class="text-blue-700 font-bold text-lg">
-                  Drag outline to resize preview
-                </p>
-              </div>
-              <div class="widget-preview-container w-full h-full">
-                <div
-                  v-if="preview === 'Normal'"
-                  class="w-full h-full transform overflow-hidden"
+              <div class="widget-preview w-full h-full overflow-auto relative">
+                <WidgetWrapper
+                  v-if="widgetComponent !== undefined"
+                  modify-css="widget-preview"
                 >
-                  <div
-                    class="widget-preview w-full h-full overflow-auto relative"
-                  >
-                    <WidgetWrapper
-                      v-if="widgetComponent !== undefined"
-                      modify-css="widget-preview"
-                    >
-                      <component :is="widgetComponent" />
-                    </WidgetWrapper>
-                  </div>
-                </div>
-                <iframe
-                  v-else
-                  :src="queryPage"
-                  frameborder="0"
-                  sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
-                  class="w-full h-full"
-                />
+                  <component :is="widgetComponent" />
+                </WidgetWrapper>
               </div>
-            </VueDraggableResizable>
-          </ClientOnly>
+            </div>
+            <iframe
+              v-else
+              :src="queryPage"
+              frameborder="0"
+              sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
+              class="w-full h-full"
+            />
+          </BlueResizable>
         </div>
       </div>
     </div>
@@ -261,143 +242,11 @@ const preview = useState<'Normal' | 'iFrame'>('preview', () => 'Normal')
 
 // Resizing
 
-const resizing = useState('resizing', () => false)
+const width = useState<number>('width', () => 343)
+const height = useState<number>('height', () => 500)
 </script>
 
 <style scoped lang="postcss">
-.v3dr {
-  transform: translate(0px) !important;
-
-  & .widget-preview-container {
-    outline: 4px dashed rgb(29, 78, 216);
-    outline-offset: 0px;
-    border-radius: theme('spacing.drag-radius');
-    overflow: hidden;
-  }
-
-  &:deep(.handle) {
-    position: absolute;
-    height: theme('spacing.drag-border');
-    width: theme('spacing.drag-border');
-
-    &-tl {
-      width: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      top: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      left: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      cursor: nw-resize;
-    }
-
-    &-tr {
-      width: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      top: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      right: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      cursor: ne-resize;
-    }
-
-    &-bl {
-      width: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      bottom: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      left: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      cursor: sw-resize;
-    }
-
-    &-br {
-      width: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        theme('spacing.drag-border') + theme('spacing.drag-radius') / 2
-      );
-      bottom: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      right: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      cursor: se-resize;
-    }
-
-    &-tm {
-      top: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      left: calc(
-        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
-      );
-      width: calc(
-        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
-      );
-      cursor: n-resize;
-    }
-
-    &-bm {
-      bottom: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      left: calc(
-        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
-      );
-      width: calc(
-        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
-      );
-      cursor: s-resize;
-    }
-
-    &-ml {
-      left: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      top: calc(
-        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
-      );
-      cursor: w-resize;
-    }
-
-    &-mr {
-      right: calc(
-        -1 * theme('spacing.drag-border') + theme('spacing.drag-overlap')
-      );
-      top: calc(
-        theme('spacing.drag-overlap') + theme('spacing.drag-radius') / 2
-      );
-      height: calc(
-        100% - 2 * theme('spacing.drag-overlap') - theme('spacing.drag-radius')
-      );
-      cursor: e-resize;
-    }
-  }
-}
-
 html,
 body {
   @apply bg-gray-100 !important;

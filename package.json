@@ -19,7 +19,6 @@
     "latlon-geohash": "^2.0.0",
     "reflect-metadata": "^0.1.10",
     "twemoji": "^14.0.2",
-    "vue-draggable-resizable-ts": "^0.1.3",
     "vue-router": "^4.0.14",
     "weather-icons": "https://github.com/erikflowers/weather-icons.git"
   },
@@ -43,7 +42,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
-    "nuxt3": "3.0.0-27488730.0cbc9cb",
+    "nuxt3": "latest",
     "prettier": "^2.6.2"
   }
 }
