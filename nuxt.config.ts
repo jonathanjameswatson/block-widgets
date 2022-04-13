@@ -1,28 +1,29 @@
 import { defineNuxtConfig } from 'nuxt3'
 
 export default defineNuxtConfig({
-  // Target
+  // Loading bar
   loading: {},
 
   // Global page headers
-  meta: {
-    title: 'BlockWidgets',
-    htmlAttrs: {
-      lang: 'en',
-    },
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      {
-        hid: 'description',
-        name: 'description',
-        content: 'Customisable Notion widgets',
+  app: {
+    head: {
+      title: 'BlockWidgets',
+      htmlAttrs: {
+        lang: 'en',
       },
-    ],
-    link: [
-      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-      { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-    ],
+      viewport: 'width=device-width, initial-scale=1',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Customisable Notion widgets',
+        },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+      ],
+    },
   },
 
   // Global CSS
