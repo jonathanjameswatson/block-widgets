@@ -54,12 +54,6 @@ const celsiusConverters: { [unit: string]: (celsius: number) => number } = {
   '°F': (celsius) => celsius * (9 / 5) + 32,
   K: (celsius) => celsius + 273.15,
 }
-
-const defaultRawData = {
-  requestPointDistance: 0,
-  modelRunDate: '?',
-  timeSeries: [],
-}
 </script>
 
 <script setup lang="ts">
@@ -73,19 +67,14 @@ const metOfficeUrl = computed(
   () => `https://www.metoffice.gov.uk/weather/forecast/${geohash.value}`
 )
 
-const rawData = ref<definitions['Properties']>(defaultRawData)
-const failed = ref(false)
-const startTime = ref<number | undefined>()
-const exampleThreeHours = ref<
-  definitions['SpotForecastFeatureCollection'] | undefined
->()
+const exampleThreeHours = ref<definitions['SpotForecastFeatureCollection']>()
 
 const title = computed(() => {
-  if (failed.value) {
+  if (data.value.rawData === undefined) {
     return 'Could not access Met Office'
   }
 
-  const { location } = rawData.value
+  const { location } = data.value.rawData
 
   if (location === undefined) {
     return ''
@@ -97,7 +86,11 @@ const title = computed(() => {
 })
 
 const forecast = computed(() => {
-  const { timeSeries } = rawData.value
+  if (data.value.rawData === undefined) {
+    return []
+  }
+
+  const { timeSeries } = data.value.rawData
 
   return timeSeries
     .slice(0, configuration.value.items)
@@ -146,96 +139,99 @@ const example = computed(
     configuration.value.configurationName !== 'threeHourForecastConfiguration'
 )
 
-const setData = async () => {
-  if (!example.value) {
-    let response: definitions['SpotForecastFeatureCollection']
-
-    try {
-      response = (await $fetch(configuration.value.endpoint, {
-        headers: {
-          'X-IBM-Client-Id': configuration.value.clientId,
-          'X-IBM-Client-Secret': configuration.value.clientSecret,
-        },
-        params: {
-          excludeParameterMetadata: true,
-          includeLocationName: true,
-          latitude: configuration.value.latitude,
-          longitude: configuration.value.longitude,
-        },
-      })) as definitions['SpotForecastFeatureCollection']
-
-      if (response.features === undefined) {
-        throw new Error('Invalid payload given')
-      }
-
-      startTime.value = dayjs().utc().hour()
-
-      failed.value = false
-    } catch {
-      failed.value = true
-      return
-    }
-
-    const { features } = response
-    const [feature] = features
-    const { properties: newData } = feature
-
-    rawData.value = newData
-  } else {
-    if (exampleThreeHours.value === undefined) {
-      const { example } = (await import(
-        '~/ts/exampleThreeHours.generated'
-      )) as unknown as {
-        example: definitions['SpotForecastFeatureCollection']
-      }
-      exampleThreeHours.value = example
-    }
-    const { features } = exampleThreeHours.value
-    const [feature] = features
-    const { properties: newData } = feature
-
-    rawData.value = newData
-  }
+interface Data {
+  rawData?: definitions['Properties']
+  startTime?: number
 }
 
-const update = async () => {
-  if (example.value) {
+const { data, refresh } = await useAsyncData<Data>(
+  'threeHourForecastData',
+  async (): Promise<Data> => {
+    if (!example.value) {
+      let response: definitions['SpotForecastFeatureCollection']
+
+      try {
+        response = await $fetch<definitions['SpotForecastFeatureCollection']>(
+          configuration.value.endpoint,
+          {
+            headers: {
+              'X-IBM-Client-Id': configuration.value.clientId,
+              'X-IBM-Client-Secret': configuration.value.clientSecret,
+            },
+            params: {
+              excludeParameterMetadata: true,
+              includeLocationName: true,
+              latitude: configuration.value.latitude,
+              longitude: configuration.value.longitude,
+            },
+          }
+        )
+
+        if (response.features === undefined) {
+          throw new Error('Invalid payload given')
+        }
+      } catch (error) {
+        return {
+          rawData: undefined,
+          startTime: undefined,
+        }
+      }
+
+      const { features } = response
+      const [feature] = features
+      const { properties: rawData } = feature
+
+      return {
+        rawData,
+        startTime: dayjs().utc().hour(),
+      }
+    } else {
+      if (exampleThreeHours.value === undefined) {
+        const { example } = (await import(
+          '~/ts/exampleThreeHours.generated'
+        )) as unknown as {
+          example: definitions['SpotForecastFeatureCollection']
+        }
+        exampleThreeHours.value = example
+      }
+      const { features } = exampleThreeHours.value
+      const [feature] = features
+      const { properties: rawData } = feature
+
+      return {
+        rawData,
+        startTime: undefined,
+      }
+    }
+  },
+  {
+    watch: [
+      () => configuration.value.endpoint,
+      () => configuration.value.clientId,
+      () => configuration.value.clientSecret,
+    ],
+  }
+)
+
+useSchedule('5 */3 * * *', async () => {
+  if (example.value || data.value.rawData === undefined) {
     return
   }
 
   if (
-    startTime.value !== undefined &&
-    dayjs().utc().hour() === startTime.value
+    data.value.startTime !== undefined &&
+    dayjs().utc().hour() === data.value.startTime
   ) {
     return
   }
 
-  startTime.value = undefined
+  data.value.startTime = undefined
 
-  if (rawData.value.timeSeries.length > configuration.value.items) {
-    rawData.value.timeSeries.shift()
+  if (data.value.rawData.timeSeries.length > configuration.value.items) {
+    data.value.rawData.timeSeries.shift()
     return
   }
 
-  await setData()
-}
-
-onMounted(async () => {
-  await setData()
+  await refresh()
 })
-
-useSchedule('5 */3 * * *', update)
-
-watch(
-  [
-    () => configuration.value.endpoint,
-    () => configuration.value.clientId,
-    () => configuration.value.clientSecret,
-  ],
-  async () => {
-    rawData.value = defaultRawData
-    startTime.value = undefined
-    await setData()
-  }
-)
 </script>

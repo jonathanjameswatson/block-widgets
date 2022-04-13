@@ -107,19 +107,16 @@ const menu = computed<MenuItem[]>(() =>
   })
 )
 
-const { data, refresh } = await useAsyncData<{
+interface Data {
   weekday: Weekday | ''
   meal: Lowercase<Meal> | ''
   rawMenu: string[]
   failed: boolean
-}>(
+}
+
+const { data, refresh } = await useAsyncData<Data>(
   'menuData',
-  async (): Promise<{
-    weekday: Weekday | ''
-    meal: Lowercase<Meal> | ''
-    rawMenu: string[]
-    failed: boolean
-  }> => {
+  async (): Promise<Data> => {
     if (!example.value) {
       let weekdayNumber: Weekday
       let newMeal: Meal
