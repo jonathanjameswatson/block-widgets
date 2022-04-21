@@ -31,6 +31,7 @@ export default defineNuxtConfig({
 
   // Modules for dev and build
   buildModules: [
+    '~/modules/getCloudflareWorkerVariables',
     '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
