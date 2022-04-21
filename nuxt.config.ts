@@ -32,7 +32,6 @@ export default defineNuxtConfig({
   // Modules for dev and build
   buildModules: [
     '~/modules/generateWordToFoodEmojis',
-    '~/modules/addWidgetRoutes',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '~/modules/addProxies',
