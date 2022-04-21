@@ -43,13 +43,13 @@ $ yarn dev
 # generate project
 $ yarn build
 
-# serve the .output/ directory for testing (without proxies)
+# serve the .output/ directory for testing
 $ yarn start
 ```
 
 ### Proxies
 
-Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and automatically used by Vite. If you are hosting this project on a provider other than Netlify, you may need to add these manually.
+This project has optional support for proxies to deal with CORS and privacy. Proxies are given as JSON string of an object mapping URL paths to API URLs, with optional headers. This string must be set as the `NUXT_PROXIES` environment variable, which can be done with a `.env` file.
 
 ### How to create a new widget
 
@@ -65,21 +65,12 @@ Proxies are defined in [getProxies.ts](./ts/getProxies.ts) and automatically use
 3. Create a new file exporting an interface that extends `Parameter<T>` from [parameter.ts](./ts/parameters/parameter.ts). Set `type` to be a unique string not used by any other parameters (found in [parameters](./ts/parameters)). Add any custom properties relevant to your new parameter not found in `Parameter<T>`.
 4. Add and export a function to this file that returns a function that creates an object that implements this new interface. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step three and an argument that determines whether the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [parameter.ts](./ts/parameters/parameter.ts). `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `serialise` (a function that converts a type `T` argument to a string), `deserialise` (a function that converts a string argument to type `T`), `defaultValue` (a value that the parameter defaults to), `componentName` (the name of the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step three) and `disabled`.
 
-### How to create a new proxy
-
-1. Assign a string of lowercase letters to environment variable `[INSERT NAME HERE]_PROXY`
-2. Assign the desired URL to environment variable `[INSERT NAME HERE]_URL`
-3. Add a new entry to the `proxies` object in [getProxies.ts](./ts/getProxies.ts) with key `[INSERT_NAME_HERE]_PROXY` and value `"[INSERT NAME HERE]_URL"`
-4. Add the new environment variables to the below table
-
 ### Environment variables
 
-| Environment variable                   | Purpose                                                                                | Example                                                                                              |
-| -------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `MET_OFFICE_THREE_HOUR_FORECAST_PROXY` | The path used to access the Met Office three hour forecast API. Do not set to disable. | `forecast`                                                                                           |
-| `MET_OFFICE_THREE_HOUR_FORECAST_URL`   | The URL of the Met Office three hour forecast API.                                     | `https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/three-hourly` |
-| `BUTTERY_BOT_PROXY`                    | The path used to access the buttery bot. Do not set to disable.                        | `buttery`                                                                                            |
-| `BUTTERY_BOT_URL`                      | The URL of the buttery bot.                                                            | `https://???.com`                                                                                    |
+| Environment variable | Purpose                                                                            | Example                                                                                                                                                                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NUXT_HOST_URL`      | The address that the website is hosted on, which is used for server-side proxying. | `https://widgets.jonathanjameswatson.com`                                                                                                                                                                                                 |
+| `NUXT_PROXIES`       | A JSON string of proxies to deal with CORS and privacy.                            | `{"forecast": { "destination": "https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/three-hourly", "headers": {"X-IBM-Client-Id": "edg4g-j74wg-3f43g","X-IBM-Client-Secret": "fbUT74txPLYfHRpaJ58s"}}}` |
 
 ### License
 

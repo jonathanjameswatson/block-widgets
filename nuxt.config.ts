@@ -34,20 +34,18 @@ export default defineNuxtConfig({
     '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '~/modules/addProxies',
   ],
 
-  // Axios module configuration (no longer used)
-  /*
-  axios: {
-    baseURL:
-      process.env.NETLIFY === 'true'
-        ? 'https://widgets.jonathanjameswatson.com:443'
-        : process.env.NETLIFY_DEV === 'true'
-        ? 'http://localhost:8888'
-        : 'http://localhost:3000',
+  // Runtime config
+  runtimeConfig: {
+    proxies: '{}',
+    public: {
+      hostUrl:
+        process.env.NODE_ENV === 'production'
+          ? 'https://widgets.jonathanjameswatson.com'
+          : 'http://localhost:3000',
+    },
   },
-  */
 
   // Color mode configuration
   colorMode: {

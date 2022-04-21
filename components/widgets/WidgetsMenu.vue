@@ -114,6 +114,7 @@ interface Data {
   failed: boolean
 }
 
+const hostFetch = useHostFetch()
 const { data, refresh } = await useAsyncData<Data>(
   'menuData',
   async (): Promise<Data> => {
@@ -127,14 +128,14 @@ const { data, refresh } = await useAsyncData<Data>(
           weekday: weekdayNumber,
           meal: newMeal,
           menu: newRawMenu,
-        } = (await $fetch(
+        } = await hostFetch<ApiResponse>(
           `${configuration.value.butteryBotUrl}/menu/`
-        )) as ApiResponse)
+        ))
 
         if (weekdayNumber === undefined) {
           throw new Error('Invalid payload given')
         }
-      } catch {
+      } catch (e) {
         return {
           weekday: '',
           meal: '',
