@@ -23,7 +23,7 @@ exports.default = {
           bg: {
             DEFAULT: 'white',
             dark: {
-              DEFAULT: 'rgb(32, 32, 32)',
+              DEFAULT: 'rgb(25, 25, 25)',
               old: 'rgb(47, 52, 55)',
             },
             hover: {
