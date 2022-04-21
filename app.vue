@@ -1,9 +1,7 @@
 <template>
   <div>
     <Body :class="oldDarkStyle" />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <NuxtPage />
   </div>
 </template>
 
