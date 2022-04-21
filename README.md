@@ -49,7 +49,7 @@ $ yarn start
 
 ### Proxies
 
-This project has optional support for proxies to deal with CORS and privacy. Proxies are given as JSON string of an object mapping URL paths to API URLs, with optional headers. This string must be set as the `NUXT_PROXIES` environment variable, which can be done with a `.env` file.
+This project has optional support for proxies to deal with CORS and privacy. Proxies are given as JSON string of an object mapping URL paths to API URLs, with optional headers. This string must be set as the `NUXT_PROXIES` environment variable, which can be done with a `.env` file. When deploying to a platform like Cloudflare workers, use the platform's settings.
 
 ### How to create a new widget
 
