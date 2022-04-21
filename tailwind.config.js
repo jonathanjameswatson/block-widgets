@@ -1,5 +1,6 @@
-module.exports = {
-  mode: 'jit',
+const plugin = require('tailwindcss/plugin')
+
+exports.default = {
   darkMode: 'class',
   theme: {
     fontFamily: {
@@ -14,19 +15,31 @@ module.exports = {
         notion: {
           text: {
             DEFAULT: 'rgb(55, 53, 47)',
-            dark: 'rgb(235, 235, 235)',
+            dark: {
+              DEFAULT: 'rgba(255, 255, 255, 0.87)',
+              old: 'rgb(235, 235, 235)',
+            },
           },
           bg: {
             DEFAULT: 'white',
-            dark: 'rgb(47, 52, 55)',
+            dark: {
+              DEFAULT: 'rgb(32, 32, 32)',
+              old: 'rgb(47, 52, 55)',
+            },
             hover: {
               DEFAULT: 'rgba(55, 53, 47, 0.08)',
-              dark: 'rgb(71, 76, 80)',
+              dark: {
+                DEFAULT: 'rgba(255, 255, 255, 0.055)',
+                old: 'rgb(71, 76, 80)',
+              },
             },
           },
           border: {
             DEFAULT: 'rgba(55, 53, 47, 0.16)',
-            dark: 'rgba(255, 255, 255, 0.14)',
+            dark: {
+              DEFAULT: 'rgba(255, 255, 255, 0.13)',
+              old: 'rgba(255, 255, 255, 0.14)',
+            },
           },
         },
       },
@@ -37,6 +50,9 @@ module.exports = {
         '2px': '2px',
         '3px': '3px',
         'notion-title': 'calc(1em - 4px)',
+        'drag-radius': '0.25rem',
+        'drag-border': '1.5rem',
+        'drag-overlap': '0.5rem',
       },
       fontSize: {
         'notion-normal': '17px',
@@ -45,14 +61,17 @@ module.exports = {
       },
     },
   },
-  purge: {
-    content: [
-      `components/**/*.{vue,js}`,
-      `layouts/**/*.vue`,
-      `pages/**/*.vue`,
-      `plugins/**/*.{js,ts}`,
-      `nuxt.config.{js,ts}`,
-      './safelist.txt',
-    ],
-  },
+  content: [
+    'components/**/*.{vue,js}',
+    'layouts/**/*.vue',
+    'pages/**/*.vue',
+    'plugins/**/*.{js,ts}',
+    // 'nuxt.config.{js,ts}',
+    './safelist.txt',
+  ],
+  plugins: [
+    plugin(({ addVariant }) => {
+      addVariant('old', '.old-dark &')
+    }),
+  ],
 }

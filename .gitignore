@@ -1,5 +1,6 @@
 .vscode
 target
+.output
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
@@ -91,3 +92,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Local Netlify folder
+.netlify

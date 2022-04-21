@@ -1,7 +1,7 @@
 import { CronJob } from 'cron'
 
-export default (expression: string, update: () => void) => {
-  const schedule = ref<CronJob | null>(null)
+export const useSchedule = (expression: string, update: () => void) => {
+  const schedule = ref<CronJob>()
 
   onMounted(() => {
     schedule.value = new CronJob(
@@ -17,8 +17,9 @@ export default (expression: string, update: () => void) => {
   })
 
   onBeforeUnmount(() => {
-    if (schedule.value !== null) {
+    if (schedule.value !== undefined) {
       schedule.value.stop()
+      schedule.value = undefined
     }
   })
 }

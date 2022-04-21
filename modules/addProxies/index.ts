@@ -1,89 +1,24 @@
-import { Module } from '@nuxt/types'
-import fse from 'fs-extra'
-import toml, { JsonMap } from '@iarna/toml'
+import { defineNuxtModule } from '@nuxt/kit'
 
-import getProxies from '../../ts/getProxies'
+import { readFile, writeFile } from 'fs-extra'
 
-interface NetlifyRedirectBase {
-  from: string
-  to: string
-  status?: number
-  force?: boolean
-}
+import { getProxies } from '../../ts/getProxies'
 
-type NetlifyRedirect = JsonMap & NetlifyRedirectBase
-
-interface NetlifyProxy extends NetlifyRedirect {
-  status: 200
-  force: true
-}
-
-interface NetlifyConfigBase {
-  redirects?: NetlifyRedirect[]
-}
-
-type NetlifyConfig = JsonMap & NetlifyConfigBase
-
-const isNetlifyProxy = (redirect: NetlifyRedirect): redirect is NetlifyProxy =>
-  redirect.status === 200 && redirect.force === true
-
-const createNetlifyProxy = (from: string, to: string): NetlifyProxy => {
-  return {
-    from,
-    to,
-    status: 200,
-    force: true,
-  }
-}
-
-const generateNetlifyProxies = (
-  proxy: string,
-  url: string
-): [NetlifyRedirect, NetlifyRedirect] => {
-  return [
-    createNetlifyProxy(`/${proxy}`, url),
-    createNetlifyProxy(`/${proxy}/*`, `${url}/:splat`),
-  ]
-}
-
-const module: Module<{}> = async function (_moduleOptions) {
-  const proxies = getProxies(process.env)
-
-  // Netlify
-
-  if (
-    process.env.NETLIFY === 'true' &&
-    process.env.npm_lifecycle_event === 'generate'
-  ) {
-    const configString = await fse.readFile('./netlify.toml', 'utf8')
-    const config = (await toml.parse.async(configString)) as NetlifyConfig
-
-    config.redirects =
-      config.redirects === undefined
-        ? ([] as NetlifyRedirect[])
-        : config.redirects.filter((redirect) => !isNetlifyProxy(redirect))
-
-    const newNetlifyProxies = Object.entries(proxies).flatMap(([proxy, url]) =>
-      generateNetlifyProxies(proxy, url)
-    )
-    config.redirects.push(...newNetlifyProxies)
-
-    const newConfigString = toml.stringify(config)
-    await fse.writeFile('./netlify.toml', newConfigString)
-  }
-
-  // @nuxtjs/proxy
-
-  this.options.proxy =
-    this.options.proxy === undefined ? {} : this.options.proxy
-  Object.entries(proxies).forEach(([proxy, url]) => {
-    this.options.proxy[`/${proxy}`] = {
-      target: url,
-      pathRewrite: {
-        [`^/${proxy}`]: '',
-      },
-    }
-  })
-}
-
-export default module
+export default defineNuxtModule({
+  hooks: {
+    'vite:extend'({ config }) {
+      const proxies = getProxies(process.env)
+      config.server.proxy =
+        config.server.proxy === undefined ? {} : config.server.proxy
+      Object.entries(proxies).forEach(([proxy, url]) => {
+        config.server.proxy[`/${proxy}`] = {
+          target: url,
+          changeOrigin: true,
+          rewrite(path: string) {
+            return path.replace(new RegExp(`^\/${proxy}`), '')
+          },
+        }
+      })
+    },
+  },
+})

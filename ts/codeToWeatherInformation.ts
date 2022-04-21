@@ -4,7 +4,10 @@ export interface WeatherInformation {
   icon: string
 }
 
-const codeToWeatherInformation: Record<number | 'null', WeatherInformation> = {
+export const codeToWeatherInformation: Record<
+  number | 'null',
+  WeatherInformation
+> = {
   null: {
     name: 'Not available',
     display: 'Not available',
@@ -166,5 +169,3 @@ const codeToWeatherInformation: Record<number | 'null', WeatherInformation> = {
     icon: 'thunderstorm',
   },
 }
-
-export default codeToWeatherInformation

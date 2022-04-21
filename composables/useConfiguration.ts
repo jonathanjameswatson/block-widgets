@@ -1,6 +1,10 @@
-import { inject, Ref } from '@nuxtjs/composition-api'
+import {
+  configurationProperties,
+  Configuration,
+} from '~/ts/configurations/configuration'
 
-import Configuration from '~/ts/vueDependent/configurations/configuration'
-
-export default <T extends Configuration = Configuration>() =>
-  inject('configuration') as Ref<T>
+export const useConfiguration = <T extends Configuration = Configuration>() =>
+  useState<T>(
+    'configuration',
+    () => configurationProperties['configuration'].factory() as any
+  )

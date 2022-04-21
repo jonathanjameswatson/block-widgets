@@ -9,3 +9,4 @@ truncate
 border-b
 border-notion-border
 dark:border-notion-border-dark
+dark:old:border-notion-border-dark-old

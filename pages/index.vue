@@ -1,106 +1,81 @@
 <template>
   <div class="lg:flex w-full min-h-screen lg:h-screen bg-gray-100">
     <div
-      class="
-        lg:w-1/4
-        lg:h-screen
-        lg:inline-block
-        bg-gray-200
-        p-8
-        pb-2
-        overflow-y-auto
-      "
+      class="lg:w-1/4 lg:h-screen lg:inline-block bg-gray-200 p-8 pb-2 overflow-y-auto"
     >
-      <h1 class="text-blue-700 text-4xl font-bold mb-8">
-        <a
+      <h1 class="text-blue-700 hover:text-blue-900 text-4xl font-bold mb-8">
+        <NuxtLink
           class="hover:text-blue-900"
-          href="https://github.com/jonathanjameswatson/block-widgets"
+          to="https://github.com/jonathanjameswatson/block-widgets"
           target="_blank"
-          rel="noopener noreferrer"
         >
           <span>BlockWidgets</span>
-        </a>
+        </NuxtLink>
       </h1>
 
-      <blue-control label="Widget">
-        <blue-select
+      <BlueControl label="Widget">
+        <BlueSelect
           v-model="widgetUrl"
-          :options="widgetUrls"
+          :options="WIDGET_URLS"
           :option-names="widgetNames"
           min-width="21ch"
         />
-      </blue-control>
+      </BlueControl>
 
-      <blue-control label="Preview">
-        <blue-select
+      <BlueControl label="Preview">
+        <BlueSelect
           v-model="preview"
           :options="['Normal', 'iFrame']"
           min-width="11ch"
         />
-      </blue-control>
+      </BlueControl>
 
-      <blue-configurator />
+      <BlueConfigurator />
 
-      <blue-control label="Link">
+      <BlueControl label="Link">
         <span class="flex">
-          <blue-input
+          <BlueInput
             class="flex-shrink opacity-100 cursor-text"
-            :value="url"
+            :model-value="url"
             disabled
           />
-          <blue-button class="mr-0" :disabled="!canCopy" @click="copy">
+          <BlueButton class="mr-0" :disabled="!canCopy" @click="copy">
             {{ copyText }}
-          </blue-button>
+          </BlueButton>
         </span>
-      </blue-control>
+      </BlueControl>
     </div>
 
     <div class="lg:inline-block lg:w-3/4 p-8 h-screen overflow-auto">
       <div class="w-full h-full flex justify-center">
         <div class="flex flex-col items-center self-center">
-          <vue-draggable-resizable
-            :w="343"
-            :h="500"
+          <BlueResizable
+            v-model:width="width"
+            v-model:height="height"
             :min-width="20"
             :min-height="20"
-            :active="true"
-            :prevent-deactivation="true"
-            :draggable="false"
-            class-name="custom-resizable"
-            class-name-handle="custom-handle"
-            @resizing="() => (resizing = true)"
-            @resizestop="() => (resizing = false)"
           >
-            <div v-if="resizing" class="w-full h-full z-10 absolute" />
             <div
-              class="inline border-blue absolute -top-10 w-0 whitespace-nowrap"
+              v-if="preview === 'Normal'"
+              class="w-full h-full transform overflow-hidden"
             >
-              <p class="text-blue-700 font-bold text-lg">
-                Drag outline to resize preview
-              </p>
-            </div>
-            <div class="widget-preview-container w-full h-full">
-              <div
-                v-if="preview === 'Normal'"
-                class="w-full h-full transform overflow-hidden"
-              >
-                <div
-                  class="widget-preview w-full h-full overflow-auto relative"
+              <div class="widget-preview w-full h-full overflow-auto relative">
+                <WidgetWrapper
+                  v-if="widgetComponent !== undefined"
+                  modify-css="widget-preview"
                 >
-                  <widget-wrapper modify-css="widget-preview">
-                    <component :is="widget.component" />
-                  </widget-wrapper>
-                </div>
+                  <component :is="widgetComponent" />
+                </WidgetWrapper>
               </div>
-              <iframe
-                v-else
-                :src="queryPage"
-                frameborder="0"
-                sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
-                class="w-full h-full"
-              />
             </div>
-          </vue-draggable-resizable>
+            <iframe
+              v-else
+              :src="queryPage"
+              frameborder="0"
+              sandbox="allow-scripts allow-popups allow-top-navigation-by-user-activation allow-forms allow-same-origin"
+              class="w-full h-full"
+            />
+          </BlueResizable>
         </div>
       </div>
     </div>
@@ -108,73 +83,85 @@
 </template>
 
 <script lang="ts">
-import useConfiguration from '~/composables/useConfiguration'
+import { stringifyQuery } from 'vue-router'
 
-import WIDGET_URLS from '~/ts/widgetUrls'
-import widgets from '~/ts/vueDependent/widgets'
-import stringifyQuery from '~/ts/stringifyQuery'
+import { WIDGET_URLS, widgets } from '~/ts/widgets'
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
+import { configurationProperties } from '~/ts/configurations/configuration'
+
+import { ConcreteComponent } from 'vue'
 
 const defaultUrl = WIDGET_URLS[0]
 </script>
 
 <script setup lang="ts">
-// Router and route
+// Route and NuxtApp
 
-const router = useRouter()
 const route = useRoute()
+const nuxtApp = useNuxtApp()
 
 // Widget
 
-const widgetUrls = WIDGET_URLS
-const widgetNames = widgetUrls.map((widgetUrl) => widgets[widgetUrl].name)
+const widgetNames = WIDGET_URLS.map((widgetUrl) => widgets[widgetUrl].name)
 
 const widgetUrl = computed<typeof WIDGET_URLS[number]>({
   get() {
-    const { hash } = route.value
-    const hashEnd = hash.slice(1)
-    if (narrowingIncludes(WIDGET_URLS, hashEnd)) {
-      return hashEnd
+    const { widget: queryWidgetUrl } = route.query
+    if (narrowingIncludes(WIDGET_URLS, queryWidgetUrl)) {
+      return queryWidgetUrl
     } else {
       return defaultUrl
     }
   },
   set(value) {
-    const hash = `#${value}`
-    if (route.value.hash !== hash) {
-      router.replace({ hash })
+    const { widget: queryWidgetUrl } = route.query
+    if (queryWidgetUrl !== value) {
+      if (queryWidgetUrl === undefined && value === defaultUrl) {
+        navigateTo({ query: { ...route.query, widget: value } })
+      } else {
+        navigateTo({ query: { widget: value } })
+      }
     }
   },
 })
+
 const widget = computed(() => widgets[widgetUrl.value])
 
 // Configuration
 
-const NewConstructor = widget.value.configuration
-const newConfiguration = new NewConstructor()
-newConfiguration.setFromParameterObject(route.value.query)
 const configuration = useConfiguration()
-configuration.value = newConfiguration
+const parameterObject = computed(() => {
+  const { configurationName } = widget.value
+  return configurationProperties[configurationName].toParameterObject(
+    configuration.value
+  )
+})
+const widgetComponent = shallowRef<string | ConcreteComponent>()
+
+watchEffect(() => {
+  const { configurationName, componentName } = widget.value
+  const newConfiguration = configurationProperties[configurationName].factory()
+  configurationProperties[configurationName].setFromParameterObject(
+    newConfiguration,
+    route.query as any
+  )
+  configuration.value = newConfiguration
+  widgetComponent.value = componentName // resolveComponent(componentName)
+})
 
 watch(
-  () => widget.value.configuration,
+  parameterObject,
   () => {
-    const NewConstructor = widget.value.configuration
-    configuration.value = new NewConstructor()
-  }
-)
-
-watch(
-  configuration,
-  () => {
-    const query = configuration.value.toParameterObject()
     if (
-      Object.keys(route.value.query).length !== 0 ||
-      Object.keys(query).length !== 0
+      Object.keys(route.query).length !== 0 ||
+      Object.keys(parameterObject.value).length !== 0
     )
-      router.replace({
-        hash: route.value.hash,
-        query,
+      navigateTo({
+        hash: route.hash,
+        query: {
+          ...(parameterObject.value as any),
+          widget: route.query.widget,
+        },
       })
   },
   { deep: true }
@@ -183,41 +170,42 @@ watch(
 // URL
 
 const queryPage = computed(() => {
-  const parameterObject = configuration.value.toParameterObject() as {
-    [key: string]: string
+  const queryString = stringifyQuery(parameterObject.value as any)
+  if (queryString.length > 0) {
+    return `${widgetUrl.value}?${queryString}`
+  } else {
+    return widgetUrl.value
   }
-  const queryString = stringifyQuery(parameterObject)
-  return `${widgetUrl.value}${queryString}`
 })
 
-const protocol = ref('')
-const titleBase = ref('')
-onMounted(() => {
-  protocol.value = window.location.protocol
-  titleBase.value = window.location.host
-})
+const protocol =
+  nuxtApp.ssrContext === undefined
+    ? window.location.protocol
+    : nuxtApp.ssrContext.req.headers['x-forwarded-proto'] === undefined
+    ? 'http:'
+    : 'https:'
+const host =
+  nuxtApp.ssrContext === undefined
+    ? window.location.host
+    : nuxtApp.ssrContext.req.headers.host
 
-const url = computed(
-  () => `${protocol.value}//${titleBase.value}/${queryPage.value}`
-)
+const url = computed(() => `${protocol}//${host}/${queryPage.value}`)
 
 // Colour theme
 
-const { $colorMode } = useContext()
-watch(
-  () => configuration.value.theme,
-  (newTheme: string, oldTheme: string) => {
-    if (newTheme !== oldTheme) {
-      $colorMode.preference = newTheme.toLowerCase()
-    }
-  }
-)
+const colorMode = useColorMode()
+watchEffect(() => {
+  colorMode.preference = configuration.value.theme.toLowerCase()
+})
 
 // URL Copying
 
-const canCopy = ref(false)
-const copyText = ref('Copy')
-const copyTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const canCopy = useState('canCopy', () => false)
+const copyText = useState('copyText', () => 'Copy')
+const copyTimeout = useState<ReturnType<typeof setTimeout> | undefined>(
+  'copyTimeout',
+  () => undefined
+)
 
 onMounted(() => {
   if (navigator.clipboard) {
@@ -232,110 +220,28 @@ const copy = async () => {
   } catch {
     copyText.value = 'Could not copy'
   } finally {
-    if (copyTimeout.value !== null) {
+    if (copyTimeout.value !== undefined) {
       clearTimeout(copyTimeout.value)
     }
 
     copyTimeout.value = setTimeout(() => {
       copyText.value = 'Copy'
-      copyTimeout.value = null
+      copyTimeout.value = undefined
     }, 2500)
   }
 }
 
 // Preview
 
-const preview = ref<'Normal' | 'iFrame'>('Normal')
+const preview = useState<'Normal' | 'iFrame'>('preview', () => 'Normal')
 
 // Resizing
 
-const resizing = ref(false)
+const width = useState<number>('width', () => 343)
+const height = useState<number>('height', () => 500)
 </script>
 
 <style scoped lang="postcss">
-$radius: 0.25rem;
-$border: 1.5rem;
-$overlap: 0.5rem;
-
-.custom-resizable {
-  transform: translate(0px) !important;
-
-  & .widget-preview-container {
-    outline: 4px dashed rgb(29, 78, 216);
-    outline-offset: 0px;
-    border-radius: $radius;
-    overflow: hidden;
-  }
-
-  &::v-deep {
-    .custom-handle {
-      position: absolute;
-      height: $border;
-      width: $border;
-
-      &-tl {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        top: calc(-$border + $overlap);
-        left: calc(-$border + $overlap);
-        cursor: nw-resize;
-      }
-
-      &-tr {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        top: calc(-$border + $overlap);
-        right: calc(-$border + $overlap);
-        cursor: ne-resize;
-      }
-
-      &-bl {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        bottom: calc(-$border + $overlap);
-        left: calc(-$border + $overlap);
-        cursor: sw-resize;
-      }
-
-      &-br {
-        width: calc($border + $radius / 2);
-        height: calc($border + $radius / 2);
-        bottom: calc(-$border + $overlap);
-        right: calc(-$border + $overlap);
-        cursor: se-resize;
-      }
-
-      &-tm {
-        top: calc(-$border + $overlap);
-        left: calc($overlap + $radius / 2);
-        width: calc(100% - 2 * $overlap - $radius);
-        cursor: n-resize;
-      }
-
-      &-bm {
-        bottom: calc(-$border + $overlap);
-        left: calc($overlap + $radius / 2);
-        width: calc(100% - 2 * $overlap - $radius);
-        cursor: s-resize;
-      }
-
-      &-ml {
-        left: calc(-$border + $overlap);
-        top: calc($overlap + $radius / 2);
-        height: calc(100% - 2 * $overlap - $radius);
-        cursor: w-resize;
-      }
-
-      &-mr {
-        right: calc(-$border + $overlap);
-        top: calc($overlap + $radius / 2);
-        height: calc(100% - 2 * $overlap - $radius);
-        cursor: e-resize;
-      }
-    }
-  }
-}
-
 html,
 body {
   @apply bg-gray-100 !important;
