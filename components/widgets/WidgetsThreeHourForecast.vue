@@ -135,7 +135,7 @@ const forecast = computed(() => {
 
 const example = computed(
   () =>
-    configuration.value.endpoint === '' ||
+    configuration.value.proxy === '' ||
     configuration.value.configurationName !== 'threeHourForecastConfiguration'
 )
 
@@ -144,6 +144,7 @@ interface Data {
   startTime?: number
 }
 
+const hostFetch = useHostFetch()
 const { data, refresh } = await useAsyncData<Data>(
   'threeHourForecastData',
   async (): Promise<Data> => {
@@ -151,21 +152,16 @@ const { data, refresh } = await useAsyncData<Data>(
       let response: definitions['SpotForecastFeatureCollection']
 
       try {
-        response = await $fetch<definitions['SpotForecastFeatureCollection']>(
-          configuration.value.endpoint,
-          {
-            headers: {
-              'X-IBM-Client-Id': configuration.value.clientId,
-              'X-IBM-Client-Secret': configuration.value.clientSecret,
-            },
-            params: {
-              excludeParameterMetadata: true,
-              includeLocationName: true,
-              latitude: configuration.value.latitude,
-              longitude: configuration.value.longitude,
-            },
-          }
-        )
+        response = await hostFetch<
+          definitions['SpotForecastFeatureCollection']
+        >(configuration.value.proxy, {
+          params: {
+            excludeParameterMetadata: true,
+            includeLocationName: true,
+            latitude: configuration.value.latitude,
+            longitude: configuration.value.longitude,
+          },
+        })
 
         if (response.features === undefined) {
           throw new Error('Invalid payload given')
@@ -205,11 +201,7 @@ const { data, refresh } = await useAsyncData<Data>(
     }
   },
   {
-    watch: [
-      () => configuration.value.endpoint,
-      () => configuration.value.clientId,
-      () => configuration.value.clientSecret,
-    ],
+    watch: [() => configuration.value.proxy],
   }
 )
 

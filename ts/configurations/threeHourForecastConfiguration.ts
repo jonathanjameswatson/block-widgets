@@ -13,9 +13,7 @@ const temperatureUnits = ['°C', '°F', 'K']
 const temperatureTypes = ['Feels like', 'Minimum', 'Maximum', 'Average']
 
 export interface ThreeHourForecastConfiguration extends Configuration {
-  endpoint: string
-  clientId: string
-  clientSecret: string
+  proxy: string
   latitude: number
   longitude: number
   items: number
@@ -28,17 +26,7 @@ export interface ThreeHourForecastConfiguration extends Configuration {
 initialiseConfiguration<ThreeHourForecastConfiguration>(
   'threeHourForecastConfiguration',
   {
-    endpoint: stringParameter('Met Office API endpoint', '/proxy', ''),
-    clientId: stringParameter(
-      'Met Office client ID',
-      '4hvrm3fb-nhjj-b1t2-6rg9-8lq48k4y4ofp',
-      ''
-    ),
-    clientSecret: stringParameter(
-      'Met Office client secret',
-      'lZ4HJNehFMJf9wRsyxw62TgdeNluiCVxslMlyvwKbSMNqtztXe',
-      ''
-    ),
+    proxy: stringParameter('Met Office API endpoint proxy', '/proxy', ''),
     latitude: numberParameter('Latitude', -85, 85, undefined, 52.2018),
     longitude: numberParameter('Longitude', -180, 180, undefined, 0.1144),
     items: numberParameter('Number of items', 0, 50, 1, 8),
