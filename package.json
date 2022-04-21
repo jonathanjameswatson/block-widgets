@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.6.0",
     "fs-extra": "^10.0.1",
-    "nuxt3": "latest",
+    "nuxt": "npm:nuxt3@latest",
     "prettier": "^2.6.2"
   }
 }
