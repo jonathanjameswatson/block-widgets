@@ -1,0 +1,14 @@
+name = "block-widgets"
+type = "javascript"
+account_id = "962cea70d7f942e71338b6aea07be47b"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[site]
+bucket = ".output/public"
+entry-point = ".output"
+
+[build]
+command = "true"
+upload.format = "service-worker"
