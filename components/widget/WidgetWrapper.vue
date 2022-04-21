@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { CssNode } from 'css-tree'
+import type { CssNode } from 'css-tree'
 
 const props = defineProps<{
   modifyCss?: string

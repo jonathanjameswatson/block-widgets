@@ -57,21 +57,22 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
-  // Nuxt generate configuration
-  generate: {
-    // @ts-ignore-next-line
-    fallback: true,
-  },
-
   // Typescript configuration
   typescript: {
     strict: true,
   },
 
+  // css-tree fix
+  build: {
+    transpile: ['css-tree'],
+  },
+
+  // DayJs fix
   alias: {
     dayjs: 'dayjs/esm',
   },
 
+  // Dynamic component import support
   components: {
     global: true,
     dirs: ['~/components'],
