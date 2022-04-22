@@ -1,6 +1,7 @@
 import { getProxy, fetchProxy } from '~/ts/proxy'
 
 export default defineEventHandler((event) => {
+  console.log(`EVENT TIME: ${event} and ${useRuntimeConfig()}`)
   const { proxies: proxiesJson } = useRuntimeConfig()
   const { proxy: name } = event.context.params
   const proxy = getProxy(proxiesJson, name)
