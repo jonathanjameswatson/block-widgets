@@ -49,7 +49,9 @@ $ yarn start
 
 ### Proxies
 
-This project has optional support for proxies to deal with CORS and privacy. Proxies are given as JSON string of an object mapping URL paths to API URLs, with optional headers. This string must be set as the `NUXT_PROXIES` environment variable, which can be done with a `.env` file. When building for Cloudflare workers, the `getCloudflareWorkerVariables` module is used to override the runtime config while building to deal with it not setting `process.env`.
+In order to deal with CORS and privacy, this project uses makes use of proxies for accessing APIs. The `NUXT_PUBLIC_PROXY_URL` environment variable can be set to a base URL for all relative API requests. This environment variable can also be set in a `.env` file. When building for Cloudflare workers, a module will set this base URL at build time as Cloudflare workers does not support `process.env`.
+
+See [jonathanjameswatson/jjw-proxy](https://github.com/jonathanjameswatson/jjw-proxy) for an example of a proxy that can be set up to complement this project.
 
 ### How to create a new widget
 
@@ -64,13 +66,6 @@ This project has optional support for proxies to deal with CORS and privacy. Pro
 2. Create or find a component to control the parameter. This component must have a `modelValue` prop that can take values of type `T` and a `disabled` prop that takes a `boolean`. This component must also emit an `update:modelValue` event with any value.
 3. Create a new file exporting an interface that extends `Parameter<T>` from [parameter.ts](./ts/parameters/parameter.ts). Set `type` to be a unique string not used by any other parameters (found in [parameters](./ts/parameters)). Add any custom properties relevant to your new parameter not found in `Parameter<T>`.
 4. Add and export a function to this file that returns a function that creates an object that implements this new interface. The arguments of this function should be a display name (`name: string`), arguments that will be used to set the parameter's custom properties from step three and an argument that determines whether the parameter is disabled (`disabled: boolean`). This function should return the output of the `parameter<T, U extends Parameter<T>>(...)` function from [parameter.ts](./ts/parameters/parameter.ts). `U` should be the interface from step three. Call `parameter` with `name`, `type` (from step three), `predicate` (a function returns true if its argument is a valid value of the parameter), `serialise` (a function that converts a type `T` argument to a string), `deserialise` (a function that converts a string argument to type `T`), `defaultValue` (a value that the parameter defaults to), `componentName` (the name of the component from step two), `convertInput` (a function that converts an argument given by `component`'s `input` event to type `T`), `props` (an object with any additional props that should be set on `component`), `extras` (an object with the parameter's custom properties from step three) and `disabled`.
-
-### Environment variables
-
-| Environment variable | Purpose                                                                            | Example                                                                                                                                                                                                                                   |
-| -------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NUXT_HOST_URL`      | The address that the website is hosted on, which is used for server-side proxying. | `https://widgets.jonathanjameswatson.com`                                                                                                                                                                                                 |
-| `NUXT_PROXIES`       | A JSON string of proxies to deal with CORS and privacy.                            | `{"forecast": { "destination": "https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/three-hourly", "headers": {"X-IBM-Client-Id": "edg4g-j74wg-3f43g","X-IBM-Client-Secret": "fbUT74txPLYfHRpaJ58s"}}}` |
 
 ### License
 

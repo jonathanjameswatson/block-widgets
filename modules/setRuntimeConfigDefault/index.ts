@@ -9,7 +9,7 @@ function entries<T>(obj: T): Entries<T> {
   return Object.entries(obj) as any
 }
 
-const getCloudflareEnvironmentVariables = <T extends { [key: string]: any }>(
+const withSetupEnvironmentVariables = <T extends { [key: string]: any }>(
   config: T
 ): {
   [key in keyof T]: any
@@ -17,26 +17,18 @@ const getCloudflareEnvironmentVariables = <T extends { [key: string]: any }>(
   return Object.fromEntries(
     entries(config).map(([key, value]) => {
       if (key === 'public') {
-        return [key, getCloudflareEnvironmentVariables(value)]
+        return [key, withSetupEnvironmentVariables(value)]
       }
       const variableName = `NUXT_${snakeCase(key.toString()).toUpperCase()}`
-      return [
-        key,
-        process.env[variableName] ??
-          // @ts-expect-error
-          (global[variableName] as string | undefined) ??
-          value,
-      ]
+      return [key, process.env[variableName] ?? value]
     })
   )
 }
 
 export default defineNuxtModule({
   async setup(_options, nuxt) {
-    if (process.env.NITRO_PRESET === 'cloudflare') {
-      nuxt.options.runtimeConfig = getCloudflareEnvironmentVariables(
-        nuxt.options.runtimeConfig
-      )
-    }
+    nuxt.options.runtimeConfig = withSetupEnvironmentVariables(
+      nuxt.options.runtimeConfig
+    )
   },
 })

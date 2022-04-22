@@ -1,8 +1,7 @@
 name: cloudflare
 
 env:
-  NUXT_PROXIES: ${{ secrets.NUXT_PROXIES }}
-  NUXT_HOST_URL: ${{ secrets.NUXT_HOST_URL }}
+  PROXY_URL: ${{ secrets.NUXT_PROXY_URL }}
 
 on:
   push:

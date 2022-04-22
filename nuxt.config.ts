@@ -31,7 +31,9 @@ export default defineNuxtConfig({
 
   // Modules for dev and build
   buildModules: [
-    '~/modules/getCloudflareWorkerVariables',
+    ...(process.env.NITRO_PRESET === 'cloudflare'
+      ? ['~/modules/setRuntimeConfigDefault']
+      : []),
     '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
@@ -39,12 +41,8 @@ export default defineNuxtConfig({
 
   // Runtime config
   runtimeConfig: {
-    proxies: '{}',
     public: {
-      hostUrl:
-        process.env.NODE_ENV === 'production'
-          ? 'https://widgets.jonathanjameswatson.com'
-          : 'http://localhost:3000',
+      proxyUrl: '',
     },
   },
 
