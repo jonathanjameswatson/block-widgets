@@ -10,6 +10,7 @@ function entries<T>(obj: T): Entries<T> {
 }
 
 const withSetupEnvironmentVariables = <T extends { [key: string]: any }>(
+  prefix: string,
   config: T
 ): {
   [key in keyof T]: any
@@ -17,9 +18,11 @@ const withSetupEnvironmentVariables = <T extends { [key: string]: any }>(
   return Object.fromEntries(
     entries(config).map(([key, value]) => {
       if (key === 'public') {
-        return [key, withSetupEnvironmentVariables(value)]
+        return [key, withSetupEnvironmentVariables('NUXT_PUBLIC', value)]
       }
-      const variableName = `NUXT_${snakeCase(key.toString()).toUpperCase()}`
+      const variableName = `${prefix}_${snakeCase(
+        key.toString()
+      ).toUpperCase()}`
       return [key, process.env[variableName] ?? value]
     })
   )
@@ -28,6 +31,7 @@ const withSetupEnvironmentVariables = <T extends { [key: string]: any }>(
 export default defineNuxtModule({
   async setup(_options, nuxt) {
     nuxt.options.runtimeConfig = withSetupEnvironmentVariables(
+      'NUXT',
       nuxt.options.runtimeConfig
     )
   },
