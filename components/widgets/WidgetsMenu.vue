@@ -135,7 +135,7 @@ const { data, refresh } = await useAsyncData<Data>(
         if (weekdayNumber === undefined) {
           throw new Error('Invalid payload given')
         }
-      } catch (e) {
+      } catch {
         return {
           weekday: '',
           meal: '',
