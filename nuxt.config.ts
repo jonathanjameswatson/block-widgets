@@ -34,7 +34,6 @@ export default defineNuxtConfig({
     ...(process.env.NITRO_PRESET === 'cloudflare'
       ? ['~/modules/setRuntimeConfigDefault']
       : []),
-    '~/modules/generateWordToFoodEmojis',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
   ],

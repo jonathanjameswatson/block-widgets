@@ -28,18 +28,7 @@
 <script lang="ts">
 import twemoji from 'twemoji'
 
-import { wordToFoodEmoji } from '~/ts/wordToFoodEmoji.generated'
 import { MenuConfiguration } from '~/ts/configurations/menuConfiguration'
-
-const keywords = Object.keys(wordToFoodEmoji)
-const getEmoji = (string: string) => {
-  const lowerString = string.toLowerCase()
-  const keyword = keywords.find((x) => lowerString.includes(x))
-  if (keyword === undefined) {
-    return '❓'
-  }
-  return wordToFoodEmoji[keyword]
-}
 
 const getEmojiUrl = (emoji: string) => {
   let url = ''
@@ -96,11 +85,12 @@ const example = computed(
     configuration.value.configurationName !== 'menuConfiguration'
 )
 const menu = computed<MenuItem[]>(() =>
-  data.value.rawMenu.map((name: string) => {
-    const emoji = configuration.value.emojis ? getEmoji(name) : ''
+  data.value.rawMenu.map((nameAndEmoji: string) => {
+    const characters = [...nameAndEmoji]
+    const emoji = configuration.value.emojis ? characters[0] : ''
     const emojiUrl = getEmojiUrl(emoji)
     return {
-      name,
+      name: characters.slice(1).join(''),
       emoji,
       emojiUrl,
     }
@@ -160,12 +150,12 @@ const { data, refresh } = await useAsyncData<Data>(
         weekday: Weekday[0] as unknown as Weekday,
         meal: 'lunch',
         rawMenu: [
-          'Soup of the Day',
-          'Vegan - Aubergine Bolognaise With Spaghetti',
-          'Chicken, Leek & Sweetcorn Topcrust Pie',
-          'New Potatoes',
-          'Broccoli',
-          'Apple and Blackberry Crumble',
+          '🍲 Soup of the Day',
+          '🍝 Vegan - Aubergine Bolognese With Spaghetti',
+          '🥧 Chicken, Leek & Sweetcorn Topcrust Pie',
+          '🥔 New Potatoes',
+          '🥦 Broccoli',
+          '🥣 Apple and Blackberry Crumble',
         ],
         failed: false,
       }
