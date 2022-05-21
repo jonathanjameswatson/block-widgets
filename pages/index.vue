@@ -187,8 +187,8 @@ const queryPage = computed(() => {
 const protocol =
   nuxtApp.ssrContext === undefined
     ? window.location.protocol
-    : nuxtApp.ssrContext.req.headers['x-forwarded-proto'] === undefined
-    ? 'https:' // fix later
+    : process.env.NODE_ENV === 'development'
+    ? 'http:'
     : 'https:'
 const host =
   nuxtApp.ssrContext === undefined
