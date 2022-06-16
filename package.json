@@ -1,7 +1,11 @@
 {
-  "name": "widgets",
+  "name": "block-widgets",
   "version": "1.0.0",
-  "private": true,
+  "description": "Customisable Notion widgets",
+  "homepage": "https://widgets.jonathanjameswatson.com",
+  "license": "MIT",
+  "author": "Jonathan Watson",
+  "repository": "github:jonathanjameswatson/block-widgets",
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
@@ -39,5 +43,6 @@
     "fs-extra": "^10.0.1",
     "nuxt": "npm:nuxt3@latest",
     "prettier": "^2.6.2"
-  }
+  },
+  "private": true
 }
