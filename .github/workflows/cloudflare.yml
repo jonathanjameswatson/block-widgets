@@ -7,36 +7,21 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        node: [ 14 ]
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-
       - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/checkout@v3
+        
+      - uses: actions/setup-node@v3
         with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          node-version: 14
 
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+      - name: Install
+        run: yarn install
 
       - name: Build
         run: yarn build
