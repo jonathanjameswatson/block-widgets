@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import dayjs, { Dayjs } from 'dayjs'
-import duration, { Duration } from 'dayjs/plugin/duration'
-import isLeapYear from 'dayjs/plugin/isLeapYear'
+import dayjs, { Dayjs } from 'dayjs/esm/index.js'
+import duration, { Duration } from 'dayjs/esm/plugin/duration/index.js'
+import isLeapYear from 'dayjs/esm/plugin/isLeapYear/index.js'
 
 import { ProgressBarsConfiguration } from '~/ts/configurations/progressBarsConfiguration'
 

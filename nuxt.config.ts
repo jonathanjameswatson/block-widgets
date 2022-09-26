@@ -64,7 +64,7 @@ export default defineNuxtConfig({
 
   // DayJs fix
   alias: {
-    dayjs: 'dayjs/esm',
+    dayjs: 'node_modules/dayjs',
   },
 
   // Dynamic component import support

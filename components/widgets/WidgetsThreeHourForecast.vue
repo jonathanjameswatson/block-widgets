@@ -21,9 +21,9 @@
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
-import utc from 'dayjs/plugin/utc'
+import dayjs from 'dayjs/esm/index.js'
+import advancedFormat from 'dayjs/esm/plugin/advancedFormat/index.js'
+import utc from 'dayjs/esm/plugin/utc/index.js'
 import Geohash from 'latlon-geohash'
 
 import { codeToWeatherInformation } from '~/ts/codeToWeatherInformation'
