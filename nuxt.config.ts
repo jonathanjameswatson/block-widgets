@@ -32,7 +32,8 @@ export default defineNuxtConfig({
   // Modules for dev and build
   buildModules: [
     ...(process.env.NITRO_PRESET === 'cloudflare'
-      ? ['~/modules/setRuntimeConfigDefault']
+      ? // Hopefully I can remove index.ts in the future
+        ['~/modules/setRuntimeConfigDefault/index.ts']
       : []),
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
