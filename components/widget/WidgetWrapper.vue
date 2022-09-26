@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <slot></slot>
+    <slot />
     <Style
       v-if="customStyle !== undefined"
       type="text/css"

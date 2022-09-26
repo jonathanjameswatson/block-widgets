@@ -70,7 +70,7 @@ const metOfficeUrl = computed(
 const exampleThreeHours = ref<definitions['SpotForecastFeatureCollection']>()
 
 const title = computed(() => {
-  if (data.value.rawData === undefined) {
+  if (data.value === null || data.value.rawData === undefined) {
     return 'Could not access Met Office'
   }
 
@@ -86,7 +86,7 @@ const title = computed(() => {
 })
 
 const forecast = computed(() => {
-  if (data.value.rawData === undefined) {
+  if (data.value === null || data.value.rawData === undefined) {
     return []
   }
 
@@ -206,7 +206,11 @@ const { data, refresh } = await useAsyncData<Data>(
 )
 
 useSchedule('5 */3 * * *', async () => {
-  if (example.value || data.value.rawData === undefined) {
+  if (
+    example.value ||
+    data.value === null ||
+    data.value.rawData === undefined
+  ) {
     return
   }
 

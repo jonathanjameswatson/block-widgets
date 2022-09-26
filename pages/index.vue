@@ -1,13 +1,7 @@
 <template>
   <div class="lg:flex w-full min-h-screen lg:h-screen bg-gray-100">
     <div
-      class="
-        lg:w-1/4 lg:h-screen lg:inline-block
-        bg-gray-200
-        p-8
-        pb-2
-        overflow-y-auto
-      "
+      class="lg:w-1/4 lg:h-screen lg:inline-block bg-gray-200 p-8 pb-2 overflow-y-auto"
     >
       <h1 class="text-blue-700 hover:text-blue-900 text-4xl font-bold mb-8">
         <NuxtLink
@@ -91,11 +85,10 @@
 <script lang="ts">
 import { stringifyQuery } from 'vue-router'
 
+import { ConcreteComponent } from 'vue'
 import { WIDGET_URLS, widgets } from '~/ts/widgets'
 import { narrowingIncludes } from '~/ts/helpers/typeHelpers'
 import { configurationProperties } from '~/ts/configurations/configuration'
-
-import { ConcreteComponent } from 'vue'
 
 const defaultUrl = WIDGET_URLS[0]
 </script>

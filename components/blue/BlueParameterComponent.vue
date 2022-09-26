@@ -9,10 +9,9 @@
 </template>
 
 <script setup lang="ts">
+import type { ConcreteComponent } from 'vue'
 import { Configuration } from '~/ts/configurations/configuration'
 import { Parameter } from '~/ts/parameters/parameter'
-
-import type { ConcreteComponent } from 'vue'
 
 interface Props {
   parameter: Parameter

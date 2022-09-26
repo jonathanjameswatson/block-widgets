@@ -6,5 +6,5 @@ import {
 export const useConfiguration = <T extends Configuration = Configuration>() =>
   useState<T>(
     'configuration',
-    () => configurationProperties['configuration'].factory() as any
+    () => configurationProperties.configuration.factory() as any
   )

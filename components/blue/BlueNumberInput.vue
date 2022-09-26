@@ -8,8 +8,8 @@
     :minimum="minimum"
     :maximum="maximum"
     :step="step"
-    @update:model-value="updateValue"
     validate
+    @update:model-value="updateValue"
   />
 </template>
 

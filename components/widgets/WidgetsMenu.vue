@@ -84,8 +84,11 @@ const example = computed(
     configuration.value.butteryBotUrl === '' ||
     configuration.value.configurationName !== 'menuConfiguration'
 )
-const menu = computed<MenuItem[]>(() =>
-  data.value.rawMenu.map((nameAndEmoji: string) => {
+const menu = computed<MenuItem[]>(() => {
+  if (data.value === null) {
+    return []
+  }
+  return data.value.rawMenu.map((nameAndEmoji: string) => {
     const characters = [...nameAndEmoji]
     const emoji = configuration.value.emojis ? characters[0] : ''
     const emojiUrl = getEmojiUrl(emoji)
@@ -95,7 +98,7 @@ const menu = computed<MenuItem[]>(() =>
       emojiUrl,
     }
   })
-)
+})
 
 interface Data {
   weekday: Weekday | ''
@@ -173,7 +176,7 @@ useSchedule('5 1,15 * * *', async () => {
 })
 
 const title = computed(() =>
-  data.value.failed
+  data.value === null || data.value.failed
     ? 'Could not access buttery bot'
     : `${data.value.weekday} ${data.value.meal}`
 )

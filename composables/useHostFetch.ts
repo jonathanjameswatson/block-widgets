@@ -3,7 +3,7 @@ import { $fetch } from 'ohmyfetch'
 export const useHostFetch = () => {
   const { proxyUrl } = useRuntimeConfig()
   return $fetch.create({
-    async onRequest({ request, options }) {
+    onRequest({ request, options }) {
       if (options.baseURL === undefined) {
         let url = ''
 
@@ -17,6 +17,8 @@ export const useHostFetch = () => {
           options.baseURL = proxyUrl
         }
       }
+
+      return Promise.resolve()
     },
   })
 }

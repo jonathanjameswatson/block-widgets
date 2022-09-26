@@ -7,15 +7,15 @@
     >
       <BlueParameterComponent
         :parameter="parameter"
-        :parameterKey="parameterKey"
+        :parameter-key="parameterKey"
       />
     </BlueControl>
   </div>
 </template>
 
 <script setup lang="ts">
-import { configurationProperties } from '~/ts/configurations/configuration'
 import BlueParameterComponent from './BlueParameterComponent.vue'
+import { configurationProperties } from '~/ts/configurations/configuration'
 
 const configuration = useConfiguration()
 

@@ -29,10 +29,11 @@ const withSetupEnvironmentVariables = <T extends { [key: string]: any }>(
 }
 
 export default defineNuxtModule({
-  async setup(_options, nuxt) {
+  setup(_options, nuxt) {
     nuxt.options.runtimeConfig = withSetupEnvironmentVariables(
       'NUXT',
       nuxt.options.runtimeConfig
     )
+    return Promise.resolve()
   },
 })

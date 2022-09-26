@@ -22,10 +22,9 @@
 </template>
 
 <script setup lang="ts">
+import type { ConcreteComponent } from 'vue'
 import { WIDGET_URLS, widgets } from '~/ts/widgets'
 import { configurationProperties } from '~/ts/configurations/configuration'
-
-import type { ConcreteComponent } from 'vue'
 
 const configuration = useConfiguration()
 

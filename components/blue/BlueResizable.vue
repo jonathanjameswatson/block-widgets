@@ -1,11 +1,12 @@
 <template>
-  <div class="resizable" ref="domElement" :style="style">
+  <div ref="domElement" class="resizable" :style="style">
     <div
       v-for="handle in HANDLES"
-      @mousedown.stop.prevent="handleDown(handle, $event)"
-      @touchstart.stop.prevent="handleDown(handle, $event)"
+      :key="handle"
       class="handle"
       :class="`handle-${handle}`"
+      @mousedown.stop.prevent="handleDown(handle, $event)"
+      @touchstart.stop.prevent="handleDown(handle, $event)"
     />
     <div class="inline border-blue absolute -top-10 w-0 whitespace-nowrap">
       <p class="text-blue-700 font-bold text-lg">
@@ -82,7 +83,7 @@ const handleDown = (
     return
   }
 
-  let { x: startX, y: startY } = getEventCoordinates(event)
+  const { x: startX, y: startY } = getEventCoordinates(event)
 
   const moveEvent = event instanceof MouseEvent ? 'mousemove' : 'touchmove'
   const endEvent = event instanceof MouseEvent ? 'mouseup' : 'touchend'
